@@ -1,2 +1,2 @@
 # django-tenants-portal
-A client portal for django tenants for managing multi tenants using django tenants and django tenants users
+A client portal for django tenants, manage multi tenants using django tenants and django tenants users. Customers can login to the portal and manage their tenants
