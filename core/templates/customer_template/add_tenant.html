@@ -1,0 +1,103 @@
+{% extends "customer_template/customer_base.html" %}
+{% block page_title %}Add Tenant{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Tenant</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    {% url 'create_tenant_save' as action_path %}
+                   {% include  'customer_template/customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Add Tenant" %}
+                </div>
+                <!-- /.card -->
+
+            </div>
+
+
+        </div><!-- /.container-fluid -->
+</section>
+
+
+
+<!-- /.content -->
+{% endblock main_content %}
+
+{% block custom_js %}
+    <script>
+    $(document).ready(function(){
+        $("#id_name").keyup(function(e){
+            e.preventDefault();
+            var name=$(this).val();
+
+           if(name!=""){
+                $.ajax({
+                    url:'{% url 'check_service_exist' %}',
+                    type:'POST',
+                    data:{name:name}
+                })
+                .done(function(response){
+                    console.log(response);
+                    if(response=="True"){
+                        $(".name_error").remove();
+                        $("<span class='name_error' style='padding: 5px;color: red;font-weight: bold;'>Name Not Available</span>").insertAfter("#id_name");
+                    }
+                    else{
+                        $(".name_error").remove();
+                        $("<span class='name_error' style='padding: 5px;color: green;font-weight: bold;'>Name Available</span>").insertAfter("#id_name");
+                    }
+                })
+                .fail(function(){
+                    console.log("failed");
+                })
+            }
+            else{
+              $(".name_error").remove();
+            }
+
+        });
+
+        $("#id_slug").keyup(function(){
+            var slug=$(this).val();
+
+            if(slug!=""){
+                $.ajax({
+                    url:'{% url 'check_slug_exist' %}',
+                    type:'POST',
+                    data:{slug:slug}
+                })
+                .done(function(response){
+                    console.log(response);
+                    if(response=="True"){
+                        $(".slug_error").remove();
+                        $("<span class='slug_error' style='padding: 5px;color: red;font-weight: bold;'>Domain Not Available</span>").insertAfter("#id_slug");
+                    }
+                    else{
+                        $(".slug_error").remove();
+                        $("<span class='slug_error' style='padding: 5px;color: green;font-weight: bold;'>Domain Available</span>").insertAfter("#id_slug");
+                    }
+                })
+                .fail(function(){
+                    console.log("failed");
+                })
+            }
+            else{
+                $(".slug_error").remove();
+            }
+
+        });
+
+    });
+</script>
+  
+
+{% endblock custom_js %}

@@ -1,0 +1,67 @@
+{% extends "customer_template/customer_base.html" %}
+{% block page_title %}Manage Accounts{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Tenant Details</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right"
+                                    placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Account Number</th>
+                                    <th>Account Slug</th>
+                                    <th>Account Name</th>
+                                    <th>Account Description</th>
+                                    <th>Date Created</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for tenant in tenants%}
+                                <tr>
+                                    <td>{{tenant.id}}</td>
+                                    <td><a href="http://{{tenant.slug}}.{% if DJANGO_SETTINGS_MODULE == cms.settings.dev %}site.localhost:8000/admin{% else%}site.bubbledigital.co.za/admin{%endif%}" target="_blank">{{tenant.slug}}.{% if DJANGO_SETTINGS_MODULE == cms.settings.dev %}site.localhost{% else%}site.bubbledigital.co.za{%endif%}</a></td>
+                                    <td>{{tenant.name}}</td>
+                                    <td>{{tenant.description}}</td>
+                                    <td>{{tenant.created}}</td>
+                                    <th> <a name="" id="" class="btn btn-success" href="/edit/tenant/{{ tenants.id }}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> </th>
+
+
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}

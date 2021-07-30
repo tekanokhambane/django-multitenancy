@@ -1,0 +1,61 @@
+{% extends "hod_template/base.html" %}
+{% block page_title %}Manage Customer{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Customer Details</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right"
+                                    placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table text-black table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                          
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for zones in zone%}
+                                <tr>
+                                    <td>{{zones.name}}</td>
+                              
+                                    <th> <a name="" id="" class="btn btn-success"
+                                            href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                                class="fas fa-edit"></i> Edit</a> </th>
+
+
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
