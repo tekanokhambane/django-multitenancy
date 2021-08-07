@@ -26,7 +26,7 @@ class AdminUser(models.Model):
     )
     #country = models.CharField(max_length=3, choices=COUNTRIES, blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^(\+27|0)[6-8][0-9]{8}$', message="Phone number must be entered in the format: '+999999999'. Up to 14 digits allowed.")
-    phone_number = models.CharField(validators=[phone_regex], max_length=14, blank=True) # validators should be a list
+    phone_number = models.CharField(validators=[phone_regex], max_length=14, null=True, blank=True) # validators should be a list
     educational_qualification = models.CharField(max_length=250, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
