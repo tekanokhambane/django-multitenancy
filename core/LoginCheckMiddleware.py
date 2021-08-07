@@ -9,23 +9,23 @@ class LoginCheckMiddleware(MiddlewareMixin):
         user=request.user
         if user.is_authenticated:
             if user.user_type == "1":
-                if modulename == "core.HodViews":
+                if modulename == "django_tenants_portal.core.HodViews":
                     pass
-                elif modulename == "core.views":
+                elif modulename == "django_tenants_portal.core.views":
                     pass
                 else:
                     return HttpResponseRedirect(reverse("dashboard"))
             elif user.user_type == "2":
-                if modulename == "core.StaffViews":
+                if modulename == "django_tenants_portal.core.StaffViews":
                     pass
-                elif modulename == "core.views":
+                elif modulename == "django_tenants_portal.core.views":
                     pass
                 else:
                     return HttpResponseRedirect(reverse("staff_dashboard"))
             elif user.user_type == "3":
-                if modulename == "core.CustomerViews":
+                if modulename == "django_tenants_portal.core.CustomerViews":
                     pass
-                elif modulename == "core.views":
+                elif modulename == "django_tenants_portal.core.views":
                     pass
                 else:
                     return HttpResponseRedirect(reverse("customer_dashboard"))
