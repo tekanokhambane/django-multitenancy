@@ -1,5 +1,5 @@
-{% extends "hod_template/base.html" %}
-{% block page_title %}Add Domain{% endblock page_title %}
+{% extends "core/hod_template/base.html" %}
+{% block page_title %}Create Mailcow Domain{% endblock page_title %}
 
 {% block main_content %}
 
@@ -12,11 +12,11 @@
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Add Domain</h3>
+                        <h3 class="card-title">Create Domain</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form role="form" action="/add_domain_save" method="post">
+                    <form role="form" action="/add_tenant_save" method="post">
                         {% csrf_token %}
                         <div class="card-body text-dark">
                             <div class="form-group">
@@ -34,30 +34,43 @@
                                 {% endif %}
 
                             </div>
-                           
-                            
                             <div class="form-group">
-                                <label>Tenant</label>
-                                <select class="form-control" name="tenant">
+                                <label>Domain</label>
+                                <input type="text" class="form-control" name="domain"
+                                    placeholder="Enter domain">
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" class="form-control" name="description"
+                                    placeholder="Description of domain eg NAme of Company">
+                            </div>
+                            <div class="form-group">
+                                <label>Aliases</label>
+                                <select class="form-control" name="aliases">
 
-                                    {% for tenants in tenant %}
-                                    <option value="{{tenants.id}}"> {{tenants.name}} </option>
+                                    {% for users in user %}
+                                    <option > {{users.email}} </option>
                                     {% endfor %}
 
                                 </select>
                             </div>
+
                             <div class="form-group">
-                                <label>Domain</label>
-                                <input type="text" class="form-control" name="domain" placeholder="Add Tenant Domain">
+                                <label>Slug</label>
+                                <input type="text" class="form-control" name="slug" placeholder="Tenant URL">
                             </div>
-                            <div class="form-group">
-                                <label>Is Primary Domain</label>
-                                <select class="form-control" name="is_primary">
-                                    <option>True</option>
-                                    <option>False</option>
+
+
+                             <div class="form-group">
+                                <label>Users</label>
+                                <select class="form-control" name="owner">
+
+                                    {% for users in user %}
+                                    <option > {{users.email}} </option>
+                                    {% endfor %}
+
                                 </select>
                             </div>
-                            
 
 
 
@@ -68,7 +81,7 @@
                             <!-- /.card-body -->
 
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary btn-block ">Add Domain</button>
+                                <button type="submit" class="btn btn-primary btn-block ">Add Tenant</button>
                             </div>
                     </form>
                 </div>

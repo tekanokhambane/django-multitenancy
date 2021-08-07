@@ -1,4 +1,4 @@
-{% extends "hod_template/base.html" %}
+{% extends "core/hod_template/base.html" %}
 
 {% block page_title %}Edit Customer | Username: {{ customer.username }}, ID: {{customer.admin.id}}
 {% endblock page_title %}
@@ -19,8 +19,8 @@
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    {% url 'edit_tenant_save' as action_path %}
-                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Tenant" %}
+                    {% url 'edit_customer_save' as action_path %}
+                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Customer" %}
                 </div>
     
 

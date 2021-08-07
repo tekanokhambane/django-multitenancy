@@ -32,25 +32,28 @@ import json
 
 @login_required
 def admin_home(request):
-    return render(request, 'hod_template/home_content.html',
+    tenants = Client.objects.all()
+    return render(request, 'core/hod_template/home_content.html',
                   {'nbar': 'admin',
-                   'title': 'Dashboard!'})
+                   'title': 'Dashboard!',
+                   'tenants': tenants})
 
 @login_required
 def admin_profile(request):
    # user=TenantUser.objects.get(id=request.user.id)
     administrator=AdminUser.objects.get(admin=request.user)
-    return render(request, 'hod_template/admin_profile.html', {'nbar': 'admin_profile', 'administrator':administrator })
+    
+    return render(request, 'core/hod_template/admin_profile.html', {'nbar': 'admin_profile', 'administrator':administrator })
 
 @login_required
 def admin_profile_manage(request):
-    return render(request, 'hod_template/admin_profile.html', {'nbar': 'admin_profile'})
+    return render(request, 'core/hod_template/admin_profile.html', {'nbar': 'admin_profile'})
 
 @login_required
 def edit_profile(request, admin_id):
     tenants = Client.objects.all()
     adminhod = AdminUser.objects.get(admin=request.user)
-    return render(request, 'hod_template/admin_profile.html', {'adminhod': adminhod, 'tenants': tenants})
+    return render(request, 'core/hod_template/admin_profile.html', {'adminhod': adminhod, 'tenants': tenants})
 
 @login_required
 def edit_profile_save(request):
@@ -83,7 +86,7 @@ def edit_profile_save(request):
 @login_required
 def add_staff(request):
     form = AddStaffForm() 
-    return render(request, 'hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
+    return render(request, 'core/hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
 
 
 @login_required
@@ -124,13 +127,13 @@ def add_staff_save(request):
                 return HttpResponseRedirect("/dashboard/add/staff")
         else:
             form=AddStaffForm(request.POST)
-            return render(request, 'hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
+            return render(request, 'core/hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
 
 
 @login_required
 def add_customer(request):
     form = AddCustomerForm() 
-    return render(request, 'hod_template/add_customer.html', {'nbar': 'add_customer', 'form': form})
+    return render(request, 'core/hod_template/add_customer.html', {'nbar': 'add_customer', 'form': form})
 
 
 @login_required
@@ -171,20 +174,20 @@ def add_customer_save(request):
                 return HttpResponseRedirect("add_customer/")
         else:
             form=AddCustomerForm(request.POST)
-            return render(request, 'hod_template/add_customer.html', {'nbar': 'add_customer', 'form': form})
+            return render(request, 'core/hod_template/add_customer.html', {'nbar': 'add_customer', 'form': form})
 
 
 
 @login_required
 def manage_staff(request):
     staff = Staff.objects.all()
-    return render(request, 'hod_template/manage_staff.html', {'nbar': 'manage_staff', 'staff': staff})
+    return render(request, 'core/hod_template/manage_staff.html', {'nbar': 'manage_staff', 'staff': staff})
 
 
 @login_required
 def manage_customer(request):
     customers = Customers.objects.all()
-    return render(request, 'hod_template/manage_customer.html', {'nbar': 'manage_customer', 'customers': customers})
+    return render(request, 'core/hod_template/manage_customer.html', {'nbar': 'manage_customer', 'customers': customers})
 
 
 @login_required
@@ -201,7 +204,7 @@ def edit_staff(request, staff_id):
     form.fields['skills'].initial=staff.skills
     form.fields['educational_qualification'].initial=staff.educational_qualification
     form.fields['address'].initial=staff.address
-    return render(request, 'hod_template/edit_staff_template.html', {'nbar': 'manage_staff','staff': staff, "form":form},)
+    return render(request, 'core/hod_template/edit_staff_template.html', {'nbar': 'manage_staff','staff': staff, "form":form},)
 
 
 @login_required
@@ -257,7 +260,7 @@ def edit_staff_save(request):
         else:
             form=EditstaffForm(request.POST)
             staff = Staff.objects.get(admin=staff_id)
-            return render(request, 'hod_template/edit_staff_template.html', {'staff':staff, 'form':form, "id":staff_id, "username":username})
+            return render(request, 'core/hod_template/edit_staff_template.html', {'staff':staff, 'form':form, "id":staff_id, "username":username})
 
 @login_required
 def edit_customer(request, customer_id):
@@ -275,7 +278,7 @@ def edit_customer(request, customer_id):
     form.fields['username'].initial=customer.admin.username
     form.fields['organisation'].initial=customer.organisation
     form.fields['address_line_1'].initial= location.address.address_line_1
-    return render(request, 'hod_template/edit_customer_template.html', {'nbar': 'manage_customer', "form":form, 'id': customer_id, "customer": customer, 'location':location},)
+    return render(request, 'core/hod_template/edit_customer_template.html', {'nbar': 'manage_customer', "form":form, 'id': customer_id, "customer": customer, 'location':location},)
 
 
 @login_required
@@ -318,7 +321,7 @@ def edit_customer_save(request):
         else:
             form=EditCustomerForm(request.POST)
             customer = Customers.objects.get(admin=customer_id)
-            return render(request, 'hod_template/edit_customer_template.html', {'customer':customer, 'form':form, "id":customer_id})
+            return render(request, 'core/hod_template/edit_customer_template.html', {'customer':customer, 'form':form, "id":customer_id})
 
 
 @login_required
@@ -327,7 +330,7 @@ def add_tenant(request):
     #user = TenantUser.objects.filter(user_type=3)
     #user = TenantUser.objects.all()
 
-    return render(request, 'hod_template/add_tenant.html', {'nbar': 'add_tenant', 'form': form})
+    return render(request, 'core/hod_template/add_tenant.html', {'nbar': 'add_tenant', 'form': form})
 
 
 @login_required
@@ -398,13 +401,13 @@ def add_tenant_save(request, is_staff=True):
                     return HttpResponseRedirect("/dashboard/add/tenant")
         else:
             form=AddTenantForm(request.POST)
-            return render(request, 'hod_template/add_tenant.html', {'nbar': 'add_tenant', 'form': form})
+            return render(request, 'core/hod_template/add_tenant.html', {'nbar': 'add_tenant', 'form': form})
 
 
 @login_required
 def manage_tenant(request):
     tenant = Client.objects.all()
-    return render(request, 'hod_template/manage_tenant.html', {'nbar': 'manage_tenant', 'tenant': tenant})
+    return render(request, 'core/hod_template/manage_tenant.html', {'nbar': 'manage_tenant', 'tenant': tenant})
 
 
 @login_required
@@ -418,7 +421,7 @@ def edit_tenant(request, tenant_id):
     form.fields['description'].initial=tenant.description
     form.fields['slug'].initial=tenant.slug
    # form.fields['owner_id'].initial=tenant.owner_id
-    return render(request, 'hod_template/edit_tenant_template.html', {'nbar': 'manage_tenant', 'tenant': tenant, 'form':form})
+    return render(request, 'core/hod_template/edit_tenant_template.html', {'nbar': 'manage_tenant', 'tenant': tenant, 'form':form})
 
 @login_required
 def edit_tenant_save(request):
@@ -452,7 +455,7 @@ def edit_tenant_save(request):
         else:
             form=EditTenantForm(request.POST)
             tenant = get_tenant_model().objects.get(pk=tenant_id)
-            return render(request, 'hod_template/edit_tenant_template.html', {'tenant':tenant, 'form':form, "id":tenant_id})
+            return render(request, 'core/hod_template/edit_tenant_template.html', {'tenant':tenant, 'form':form, "id":tenant_id})
 
 
 @login_required
@@ -460,7 +463,7 @@ def add_tenant_domain(request):
     domain = Domain.objects.all()
     tenant = Client.objects.filter()
     domain = Domain.objects.filter() 
-    return render(request, 'hod_template/add_domain_template.html', {'tenant': tenant, 'domain': domain, 'nbar': 'add_tenant_domain'},)
+    return render(request, 'core/hod_template/add_domain_template.html', {'tenant': tenant, 'domain': domain, 'nbar': 'add_tenant_domain'},)
 
 
 @login_required
@@ -487,7 +490,7 @@ def add_domain_save(request, is_primary=False):
 @login_required
 def manage_domain(request):
     domain = Domain.objects.all()
-    return render(request, 'hod_template/manage_domain.html', {'nbar': 'manage_domain', 'domain': domain})
+    return render(request, 'core/hod_template/manage_domain.html', {'nbar': 'manage_domain', 'domain': domain})
 
 
 @login_required
@@ -498,7 +501,7 @@ def edit_domain(request, domain_id):
     domain = get_tenant_domain_model().objects.filter(id=domain_id)
     #tenant = get_tenant_domain_model().filter(id=t)
     
-    return render(request, 'hod_template/edit_domain_template.html', {'nbar': 'manage_domain', 'domain':domain,})
+    return render(request, 'core/hod_template/edit_domain_template.html', {'nbar': 'manage_domain', 'domain':domain,})
 
 @login_required
 def edit_domain_save(request):

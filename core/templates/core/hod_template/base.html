@@ -60,12 +60,16 @@
                         </div>
                     </div>
                 </form>
-                {% include "hod_template/notifications.html" %}
+                {% include "core/hod_template/notifications.html" %}
                 <ul class="navbar-nav ml-auto">
 
                     <li class="nav-item ">
 
-                        <a href="{% url "admin_profile" %}" class="nav-link"><i class="fas fa-user"></i> Profile</a>
+                        <a href="{% url "admin_profile" %}" class="nav-link"><i class="fas fa-cog"></i> </a>
+                    </li>
+                    <li class="nav-item ">
+
+                        <a href="{% url "admin_profile" %}" class="nav-link"><i class="fas fa-user-cog"></i> </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-auto">
@@ -77,7 +81,7 @@
             </nav>
             <!-- /.navbar -->
 
-            {% include "hod_template/sidebar_template.html" with user=user id=id%}
+            {% include "core/hod_template/sidebar_template.html" with user=user id=id%}
 
 
             <!-- Content Wrapper. Contains page content -->
@@ -108,7 +112,7 @@
 
             </div>
             <!-- /.content-wrapper -->
-            {% include "hod_template/footer.html" %}
+            {% include "core/hod_template/footer.html" %}
 
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">

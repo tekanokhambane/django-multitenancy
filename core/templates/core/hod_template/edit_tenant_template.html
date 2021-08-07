@@ -1,9 +1,11 @@
-{% extends "hod_template/base.html" %}
-{% block page_title %}Edit Staff | Username: {{ staff.username }}, ID: {{staff.admin.id}}
+{% extends "core/hod_template/base.html" %}
+
+{% block page_title %}Edit Customer | Username: {{ customer.username }}, ID: {{customer.admin.id}}
 {% endblock page_title %}
 
 {% block main_content %}
 
+<!-- Main content -->
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -13,13 +15,19 @@
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Edit Staff</h3>
+                        <h3 class="card-title">Edit Customer</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <!-- form start -->
-                    {% url 'edit_staff_save' as action_path %}
-                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Customer" %}
+                    {% url 'edit_tenant_save' as action_path %}
+                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Tenant" %}
+                </div>
+    
+
+
+                            <!-- /.card-body -->
+
+          
                 </div>
                 <!-- /.card -->
 
@@ -28,7 +36,6 @@
 
         </div><!-- /.container-fluid -->
 </section>
-
 
 
 <!-- /.content -->

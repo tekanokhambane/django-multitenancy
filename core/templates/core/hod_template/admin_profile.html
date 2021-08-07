@@ -1,4 +1,4 @@
-{% extends "hod_template/base.html" %}
+{% extends "core/hod_template/base.html" %}
 {% load static %}
 {% block page_title %}User Profile{% endblock page_title %}
 
@@ -27,7 +27,7 @@
                                 <b><i class="fas fa-envelope mr-2"></i></b> <a class="float-right"> {{user.email}} </a>
                             </li>
                             <li class="list-group-item text-dark">
-                                <p>{{ administrator.phone }}</p>
+                                <p>{{ administrator.phone_number }}</p>
                             </li>
 
                         </ul>
@@ -44,7 +44,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <strong><i class="fas fa-book mr-1"></i> Education</strong>
+                        <strong class="text-muted"><i class="fas fa-book mr-1"></i> Education</strong>
 
                         <p class="text-muted">
                             {{administrator.educational_qualification}}
@@ -52,13 +52,14 @@
 
                         <hr>
 
-                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                        <strong class="text-muted"><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
 
-                        <p class="text-muted">Malibu, California</p>
+                        <p class="text-muted">{{administrator.address_line}}, {{administrator.suburb}} </p>
+                        <p class="text-muted">{{administrator.city}}, {{administrator.province}}, {{administrator.postcode}} </p>
 
                         <hr>
 
-                        <strong><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                        <strong class="text-muted"><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
 
                         <p class="text-muted">
                             <span class="tag tag-danger">UI Design</span>
@@ -70,7 +71,7 @@
 
                         <hr>
 
-                        <strong><i class="far fa-file-alt mr-1"></i> Notes</strong>
+                        <strong class="text-muted"><i class="far fa-file-alt mr-1"></i> Notes</strong>
 
                         <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum
                             enim neque.</p>

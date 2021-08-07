@@ -1,5 +1,5 @@
-{% extends "hod_template/base.html" %}
-{% block page_title %}Manage Domains{% endblock page_title %}
+{% extends "core/hod_template/base.html" %}
+{% block page_title %}Manage Customer{% endblock page_title %}
 
 {% block main_content %}
 
@@ -11,7 +11,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title text-dark">Domain Details</h3>
+                        <h3 class="card-title text-dark">Customer Details</h3>
 
                         <div class="card-tools">
                             <div class="input-group input-group-sm" style="width: 150px;">
@@ -26,25 +26,34 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body text-dark table-responsive p-0">
-                        <table class="table table-hover text-nowrap">
+                        <table class="table text-black table-hover text-nowrap">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Domain</th>
-                                    <th>Is Primary</th>
-                                    <th>Tenant ID</th>
-                                   
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    
+                                    <th>Email</th>
+                                    <th>Organisation</th>
+                                    <th>Celphone</th>
+                                    <th>Date Joined</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for domains in domain%}
+                                {% for customer in customers%}
                                 <tr>
-                                    <td>{{domains.id}}</td>
-                                    <td>{{domains.domain}}</td>
-                                    <td>{{domains.is_primary}}</td>
-                                    <td>{{domains.tenant_id}}</td>
-                                    <th> <a name="" id="" class="btn btn-success" href="/domain/edit/{{ domains.id }}"
-                                            role="button"><i class="fas fa-edit"></i> Edit</a> </th>
+                                    <td>{{customer.admin.id}}</td>
+                                    <td>{{customer.admin.first_name}}</td>
+                                    <td>{{customer.admin.last_name}}</td>
+                                   
+                                    <td>{{customer.admin.email}}</td>
+                                    <td>{{customer.organisation}}</td>
+                                    <td>{{customer.phone_number}}</td>
+                                    <td>{{customer.admin.date_joined}}</td>
+                                    <th> <a name="" id="" class="btn btn-success"
+                                            href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                                class="fas fa-edit"></i> Edit</a> </th>
 
 
                                     {% endfor %}

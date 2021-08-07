@@ -1,5 +1,6 @@
-{% extends "hod_template/base.html" %}
-{% block page_title %}Add Staff{% endblock page_title %}
+{% extends "core/hod_template/base.html" %}
+{% block page_title %}Edit Staff | Username: {{ staff.username }}, ID: {{staff.admin.id}}
+{% endblock page_title %}
 
 {% block main_content %}
 
@@ -12,12 +13,13 @@
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Add Staff</h3>
+                        <h3 class="card-title">Edit Staff</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    {% url 'add_staff_save' as action_path %}
-                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Add Staff" %}
+                    <!-- form start -->
+                    {% url 'edit_staff_save' as action_path %}
+                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Customer" %}
                 </div>
                 <!-- /.card -->
 
