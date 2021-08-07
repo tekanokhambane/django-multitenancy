@@ -13,17 +13,6 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.validators import RegexValidator
 
 
-DEPARTMENTS=(('marketing', 'Marketing'),
-            ('finance', 'Finance'),
-            ('management', 'Management'),
-            ('accounts', 'Accounts'),
-            ('technical', 'Technical'),
-            ('sales', 'Sales'))
-
-
-#class Department(models.Model):
-#    pass
-
 class AdminUser(models.Model):
     id = models.AutoField(primary_key=True)
     admin = models.OneToOneField(TenantUser, on_delete=models.CASCADE)
@@ -39,7 +28,6 @@ class AdminUser(models.Model):
     phone_regex = RegexValidator(regex=r'^(\+27|0)[6-8][0-9]{8}$', message="Phone number must be entered in the format: '+999999999'. Up to 14 digits allowed.")
     phone_number = models.CharField(validators=[phone_regex], max_length=14, blank=True) # validators should be a list
     educational_qualification = models.CharField(max_length=250, blank=True, null=True)
-    department = models.CharField(DEPARTMENTS, max_length=250, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     objects = models.Manager()
@@ -60,7 +48,7 @@ class Staff(models.Model):
     phone_number = models.CharField(validators=[phone_regex], max_length=14, blank=True) # validators should be a list
     #country = models.CharField(max_length=3, choices=COUNTRIES, blank=True, null=True)
     job_description = models.TextField(blank=True, null=True)
-    department = models.CharField(choices=DEPARTMENTS, max_length=250, blank=True, null=True)
+    department = models.ForeignKey("core.Department",on_delete=models.CASCADE, max_length=250, blank=True, null=True)
     skills = models.TextField(blank=True, null=True)
     educational_qualification = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
