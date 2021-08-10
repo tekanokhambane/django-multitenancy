@@ -8,6 +8,14 @@
     <div class="container-fluid">
         <!-- /.row -->
         <div class="row">
+            <div class="col">
+                <div class="mb-5 mr-3">
+                   <a href="{% url "add_staff" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new staff</i></button></a> 
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -32,13 +40,8 @@
                                     <th>ID</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
-                                    <th>User Name</th>
                                     <th>Email</th>
-                                    <th>Address</th>
-                                    <th>Job Description</th>
-                                    <th>Skills</th>
-                                    <th>Educational Qualification</th>
-                                    <th>Last Login</th>
+                                    <th>Department</th>
                                     <th>Date Joined</th>
                                     <th>Action</th>
                                 </tr>
@@ -49,17 +52,18 @@
                                     <td>{{staffs.admin.id}}</td>
                                     <td>{{staffs.admin.first_name}}</td>
                                     <td>{{staffs.admin.last_name}}</td>
-                                    <td>{{staffs.admin.username}}</td>
                                     <td>{{staffs.admin.email}}</td>
-                                    <td>{{staffs.address}}</td>
-                                    <td>{{staffs.job_description}}</td>
-                                    <td>{{staffs.skills}}</td>
-                                    <td>{{staffs.educational_qualification}}</td>
-                                    <td>{{staffs.admin.last_login}}</td>
+                                    <td>{{staffs.department}}</td>
                                     <td>{{staffs.admin.date_joined}}</td>
                                     <th> <a name="" id="" class="btn btn-success"
                                             href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
-                                                class="fas fa-edit"></i> Edit</a> </th>
+                                                class="fas fa-edit text-light"></i> </a> 
+                                                <a name="" id="" class="btn btn-danger "
+                                                href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
+                                                    class="fas fa-trash text-light"></i> </a>
+                                                    <a name="" id="" class="btn btn-dark"
+                                                    href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
+                                                        class="fas fa-eye text-light"></i> </a></th>
 
 
                                     {% endfor %}

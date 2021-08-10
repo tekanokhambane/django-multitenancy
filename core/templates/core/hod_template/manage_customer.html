@@ -8,6 +8,14 @@
     <div class="container-fluid">
         <!-- /.row -->
         <div class="row">
+            <div class="col">
+                <div class="mb-5 mr-3">
+                   <a href="{% url "add_customer" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new customer</i></button></a> 
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
@@ -34,7 +42,6 @@
                                     <th>Last Name</th>
                                     
                                     <th>Email</th>
-                                    <th>Organisation</th>
                                     <th>Celphone</th>
                                     <th>Date Joined</th>
                                     <th>Action</th>
@@ -48,12 +55,17 @@
                                     <td>{{customer.admin.last_name}}</td>
                                    
                                     <td>{{customer.admin.email}}</td>
-                                    <td>{{customer.organisation}}</td>
                                     <td>{{customer.phone_number}}</td>
                                     <td>{{customer.admin.date_joined}}</td>
                                     <th> <a name="" id="" class="btn btn-success"
                                             href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
-                                                class="fas fa-edit"></i> Edit</a> </th>
+                                                class="fas fa-edit text-white"></i></a>
+                                                <a name="" id="" class="btn btn-danger"
+                                                href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                                    class="fas fa-trash text-white"></i></a>
+                                                    <a name="" id="" class="btn btn-dark"
+                                                    href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                                        class="fas fa-eye text-white"></i></a> </th>
 
 
                                     {% endfor %}
