@@ -22,7 +22,7 @@ from tenant_users.compat import (get_tenant_model, TENANT_SCHEMAS, get_public_sc
                                  get_tenant_domain_model, schema_context)
 from tenant_users.tenants.models import InactiveError, ExistsError
 from ..users.models import TenantUser
-from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, EditCustomerForm, EditTenantForm, EditstaffForm, forms
+from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, EditCustomerForm, EditTenantForm, EditstaffForm, QuickAddStaffForm, forms
 from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth.decorators import login_required
 import json
@@ -97,6 +97,12 @@ def add_staff(request):
 
 
 @login_required
+def staff_quick_create(request):
+    form = AddStaffForm() 
+    return render(request, 'core/hod_template/modals/staff_create_form.html', {'nbar': 'add_staff', 'form': form})
+
+
+@login_required
 def add_staff_save(request):
     if request.method != "POST":
         return HttpResponseRedirect("Method Not Allowed")
@@ -129,6 +135,37 @@ def add_staff_save(request):
         else:
             form=AddStaffForm(request.POST)
             return render(request, 'core/hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
+
+
+@login_required
+def quick_staff_save(request):
+    if request.method != "POST":
+        return HttpResponseRedirect("Method Not Allowed")
+    else:
+        form=QuickAddStaffForm(request.POST, request.FILES)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            username = form.cleaned_data["username"]
+            
+           
+            try:
+                user = TenantUser.objects.create_user(
+                    email=email, first_name=first_name, last_name=last_name, username=username, password=password, user_type=2, is_active=True, is_staff=True)
+               
+                
+                user.save()
+                messages.success(request, "Successfully Added Staff!")
+                return HttpResponseRedirect("/admin/staff/view/")
+            except:
+                messages.error(request, "Failed to Add Staff!")
+                return HttpResponseRedirect("/admin/staff/view/")
+        else:
+            form=AddStaffForm(request.POST)
+            return render(request, 'core/hod_template/manage_staff.html', {'nbar': 'add_staff', 'form': form})
+
 
 
 @login_required
@@ -204,7 +241,7 @@ def edit_staff(request, staff_id):
     form.fields['department'].initial=staff.department
     form.fields['skills'].initial=staff.skills
     form.fields['educational_qualification'].initial=staff.educational_qualification
-    form.fields['address'].initial=staff.address
+    #form.fields['address'].initial=staff.address
     return render(request, 'core/hod_template/edit_staff_template.html', {'nbar': 'manage_staff','staff': staff, "form":form},)
 
 

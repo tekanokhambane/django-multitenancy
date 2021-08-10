@@ -1,3 +1,4 @@
+from django_tenants_portal.core.models.admin_models import Department
 from django.conf import settings
 from django.http import request
 from ..users.models import TenantUser
@@ -8,6 +9,8 @@ from .models import Staff, Customers
 #from phonenumber_field.formfields import PhoneNumberField
 #from phonenumber_field.widgets import PhoneNumber, PhoneNumberInternationalFallbackWidget
 from django.utils.text import slugify 
+from .utils import COUNTRIES
+department = Department.objects.all()
 
 
 class AddCustomerForm(forms.Form):
@@ -22,7 +25,7 @@ class AddCustomerForm(forms.Form):
     province = forms.CharField(label="Province", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
     postcode = forms.CharField(label="Postal Code", widget=forms.TextInput(attrs={"class":"form-control"}))
     phone_number = forms.RegexField(label="Cellphone",regex=r'^(\+27|0)[6-8][0-9]{8}$', error_messages= {'required':"Cellphone must be 10 or 14 digits"}, widget=forms.TextInput(attrs={"class":"form-control"}))
-    #country = forms.CharField(label="Country", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #country = forms.ChoiceField(label="Country", choices=COUNTRIES, widget=forms.Select(attrs={"class":"form-control"}))
     organisation = forms.CharField(label="Organisation", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
 
 class AddStaffForm(forms.Form):
@@ -32,15 +35,25 @@ class AddStaffForm(forms.Form):
     last_name = forms.CharField(label="Last Name", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
     username = forms.CharField(label="Username", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
     job_description = forms.CharField(label="Job Description", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    department = forms.CharField(label="Department", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    skills = forms.CharField(label="Skills", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    educational_qualification = forms.CharField(label="Educational Qualifications", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    address_line = forms.CharField(label="Street", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    suburb = forms.CharField(label="Address line 2", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    city = forms.CharField(label="City", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    province = forms.CharField(label="City", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
-    postcode = forms.CharField(label="Country", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    
+    #skills = forms.CharField(label="Skills", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #educational_qualification = forms.CharField(label="Educational Qualifications", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #address_line = forms.CharField(label="address_line", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #suburb = forms.CharField(label="Suburb", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #city = forms.CharField(label="City", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #province = forms.CharField(label="State/Province", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    #postcode = forms.CharField(label="Postal/Zip-code", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+   # country = forms.ChoiceField(label="Country", choices=COUNTRIES, widget=forms.Select(attrs={"class":"form-control"}))
     #phone = PhoneNumberField(label="Phone", )
+
+
+class QuickAddStaffForm(forms.Form):
+    email= forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class":"form-control"}))
+    password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput(attrs={"class":"form-control"}))
+    first_name = forms.CharField(label="First Name", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    last_name = forms.CharField(label="Last Name", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    username = forms.CharField(label="Username", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+
 
 
 class EditstaffForm(forms.Form):
@@ -57,6 +70,8 @@ class EditstaffForm(forms.Form):
     city = forms.CharField(label="City", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
     province = forms.CharField(label="City", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
     postcode = forms.CharField(label="Country", max_length=250, widget=forms.TextInput(attrs={"class":"form-control"}))
+    country = forms.ChoiceField(label="Country", choices=COUNTRIES, widget=forms.Select(attrs={"class":"form-control"}))
+    
     #phone = PhoneNumberField(label="Phone")
 
 
