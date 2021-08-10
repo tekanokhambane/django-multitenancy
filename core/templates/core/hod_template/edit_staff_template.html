@@ -1,5 +1,6 @@
 {% extends "core/hod_template/base.html" %}
-{% block page_title %}Edit Staff | Username: {{ staff.username }}, ID: {{staff.admin.id}}
+{% block page_title %}Edit Staff | Username: {{ staff.admin.username }}, ID: {{staff.admin.id}}
+<button class="btn btn-primary" type="submit">back </button>
 {% endblock page_title %}
 
 {% block main_content %}
@@ -19,7 +20,7 @@
                     <!-- form start -->
                     <!-- form start -->
                     {% url 'edit_staff_save' as action_path %}
-                   {% include  'hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Customer" %}
+                   {% include  'core/hod_template/add_customer_form_template.html' with messages=messages form=form action_path=action_path button_text="Edit Customer" %}
                 </div>
                 <!-- /.card -->
 

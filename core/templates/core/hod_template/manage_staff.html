@@ -10,7 +10,9 @@
         <div class="row">
             <div class="col">
                 <div class="mb-5 mr-3">
-                   <a href="{% url "add_staff" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new staff</i></button></a> 
+                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
+                        <i class="fas fa-plus"></i>   Add new staff
+                      </button>
                 </div>
             </div>
         </div>
@@ -56,7 +58,7 @@
                                     <td>{{staffs.department}}</td>
                                     <td>{{staffs.admin.date_joined}}</td>
                                     <th> <a name="" id="" class="btn btn-success"
-                                            href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
+                                            href="/admin/staff/edit/{{ staffs.admin.id }}" role="button"><i
                                                 class="fas fa-edit text-light"></i> </a> 
                                                 <a name="" id="" class="btn btn-danger "
                                                 href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
@@ -76,7 +78,7 @@
             </div>
         </div>
         <!-- /.row -->
-
+{% include "core/hod_template/modals/staff_create_form.html" %}
 
     </div><!-- /.container-fluid -->
 </section>

@@ -10,7 +10,9 @@
         <div class="row">
             <div class="col">
                 <div class="mb-5 mr-3">
-                   <a href="{% url "add_customer" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new customer</i></button></a> 
+                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
+                        <i class="fas fa-plus"></i>   Add new customer
+                      </button>
                 </div>
             </div>
         </div>
@@ -79,6 +81,7 @@
         </div>
         <!-- /.row -->
 
+        {% include "core/hod_template/modals/customer_create_form.html" %}
 
     </div><!-- /.container-fluid -->
 </section>
