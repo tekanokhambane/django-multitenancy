@@ -7,13 +7,21 @@ class Department(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
     #department_head = models.ForeignKey(Staff, blank=True, null=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.name
+
+        
 class Address(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True)
     address_line_1 = models.CharField(max_length=200, null=True, blank=True,)
     address_line_2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=200, null=True, blank=True)
     state = models.CharField(max_length=200, null=True, blank=True, verbose_name="State/Province")
     country = CountryField()
     postal_code = models.CharField(max_length=64, null=True, blank=True, verbose_name="Post/Zip-code")
+    
+    def __str__(self):
+        return "{}, {}, {}".format(self.name, self.city, self.country)
 
 class  CompanyDetails(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True, verbose_name="Company Name")
