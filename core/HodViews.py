@@ -1,3 +1,4 @@
+from django_tenants_portal.core.models.admin_models import Address, CompanyDetails, Department
 import os
 from django.views.decorators.csrf import csrf_exempt
 #import environ
@@ -22,9 +23,11 @@ from tenant_users.compat import (get_tenant_model, TENANT_SCHEMAS, get_public_sc
 from tenant_users.tenants.models import InactiveError, ExistsError
 from ..users.models import TenantUser
 from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, EditCustomerForm, EditTenantForm, EditstaffForm, forms
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, ListView, DetailView
 from django.contrib.auth.decorators import login_required
 import json
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 #from google.cloud import dns
 #from google.cloud import dns
 
@@ -33,10 +36,14 @@ import json
 @login_required
 def admin_home(request):
     tenants = Client.objects.all()
+    customers = Customers.objects.all()
+    staff = Staff.objects.all()
     return render(request, 'core/hod_template/home_content.html',
                   {'nbar': 'admin',
                    'title': 'Dashboard!',
-                   'tenants': tenants})
+                   'tenants': tenants,
+                   'customers': customers,
+                   'staff': staff})
 
 @login_required
 def admin_profile(request):
@@ -102,29 +109,23 @@ def add_staff_save(request):
             last_name = form.cleaned_data["last_name"]
             username = form.cleaned_data["username"]
             job_description = form.cleaned_data["job_description"]
-            department = form.cleaned_data["department"]
-            skills = form.cleaned_data["skills"]
-            educational_qualification = form.cleaned_data[
-                "educational_qualification"]
-            address = form.cleaned_data["address"]
-
+            #skills = form.cleaned_data["skills"]
+            #educational_qualification = form.cleaned_data[
+            #    "educational_qualification"]
+           
             try:
                 user = TenantUser.objects.create_user(
                     email=email, first_name=first_name, last_name=last_name, username=username, password=password, user_type=2, is_active=True, is_staff=True)
-               # user.staff.first_name = first_name
-               # user.staff.last_name = last_name
-               # user.staff.username = username
+               
                 user.staff.job_description = job_description
-                user.staff.department = department
-                user.staff.skills = skills
-                user.staff.educational_qualification = educational_qualification
-                user.staff.address = address
+                #user.staff.skills = skills
+                #user.staff.educational_qualification = educational_qualification
                 user.save()
                 messages.success(request, "Successfully Added Staff!")
-                return HttpResponseRedirect("/dashboard/add/staff")
+                return HttpResponseRedirect("/admin/staff/create/")
             except:
                 messages.error(request, "Failed to Add Staff!")
-                return HttpResponseRedirect("/dashboard/add/staff")
+                return HttpResponseRedirect("/admin/staff/create/")
         else:
             form=AddStaffForm(request.POST)
             return render(request, 'core/hod_template/add_staff.html', {'nbar': 'add_staff', 'form': form})
@@ -523,6 +524,21 @@ def edit_domain_save(request):
         except:
             messages.error(request, "Failed to Edit Tenant Domain!")
             return HttpResponseRedirect("/domain/edit/"+domain_id)
+
+
+class DepartmentListView(ListView, LoginRequiredMixin):
+    model = Department
+    template_name = 'core/hod_template/department_list.html'
+    #fields = ['name']
+
+
+class AddressListView(ListView, LoginRequiredMixin):
+    model = Address
+    template_name = 'core/hod_template/address_list.html'
+
+class CompanyListView(TemplateView, LoginRequiredMixin):
+    model = CompanyDetails
+    template_name = 'core/hod_template/company_detail.html'
 
 
 @csrf_exempt

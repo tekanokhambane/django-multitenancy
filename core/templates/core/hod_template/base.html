@@ -42,10 +42,12 @@
                         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                                 class="fas fa-bars"></i></a>
                     </li>
+                    <!--
 
                     <li class="nav-item d-none d-sm-inline-block">
                         <a href="#" class="nav-link">Contact</a>
                     </li>
+                    -->
                 </ul>
 
                 <!-- SEARCH FORM -->
@@ -61,23 +63,11 @@
                     </div>
                 </form>
                 {% include "core/hod_template/notifications.html" %}
-                <ul class="navbar-nav ml-auto">
+                <!-- Right navbar links -->
+                {% include "core/hod_template/general_settings.html" %}
 
-                    <li class="nav-item ">
 
-                        <a href="{% url "admin_profile" %}" class="nav-link"><i class="fas fa-cog"></i> </a>
-                    </li>
-                    <li class="nav-item ">
-
-                        <a href="{% url "admin_profile" %}" class="nav-link"><i class="fas fa-user-cog"></i> </a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ml-auto">
-
-                    <li class="nav-item ">
-                        <a href="{% url "logout" %}" class="nav-link">Logout</a>
-                    </li>
-                </ul>
+               
             </nav>
             <!-- /.navbar -->
 
