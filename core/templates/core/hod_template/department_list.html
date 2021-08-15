@@ -2,10 +2,13 @@
 {% block page_title %}Departments{% endblock page_title %}
 
 {% block main_content %}
-<div class="row">
+<div class="container">
+  <div class="row">
     <div class="col">
         <div class="mb-5 mr-3">
-            <button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new department</i></button>
+          <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
+            <i class="fas fa-plus"></i>   Add new department
+          </button>
         </div>
     </div>
 </div>
@@ -50,9 +53,14 @@
         </div>
         <!-- /.card-body -->
       </div>
+{% include "core/hod_template/modals/department_create_form.html" %}
+
       <!-- /.card -->
     </div>
   </div>
+
+</div>
+  
 
 
 {% endblock %}

@@ -51,7 +51,7 @@
                             <tbody>
                                 {% for staffs in staff%}
                                 <tr>
-                                    <td>{{staffs.admin.id}}</td>
+                                    <td>{{staffs.id}}</td>
                                     <td>{{staffs.admin.first_name}}</td>
                                     <td>{{staffs.admin.last_name}}</td>
                                     <td>{{staffs.admin.email}}</td>
@@ -61,10 +61,10 @@
                                             href="/admin/staff/edit/{{ staffs.admin.id }}" role="button"><i
                                                 class="fas fa-edit text-light"></i> </a> 
                                                 <a name="" id="" class="btn btn-danger "
-                                                href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
+                                                href="{% url 'delete_staff' staffs.pk %}" role="button"><i
                                                     class="fas fa-trash text-light"></i> </a>
                                                     <a name="" id="" class="btn btn-dark"
-                                                    href="/dashboard/edit/staff/{{ staffs.admin.id }}" role="button"><i
+                                                    href="{% url 'view_staff' staffs.pk%}" role="button"><i
                                                         class="fas fa-eye text-light"></i> </a></th>
 
 

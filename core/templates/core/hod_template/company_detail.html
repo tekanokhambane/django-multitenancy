@@ -1,28 +1,65 @@
 {% extends "core/hod_template/base.html" %}
+{% load static %}
 {% block page_title %}Company information{% endblock page_title %}
 
 {% block main_content %}
 <div class="container">
-  
+  <div class="card-body text-dark">
+    <div class="form-group">
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.tags == 'error' %}
+        <div class="alert alert-danger">{{ message }}</div>
+        {% endif %}
+        {% if message.tags == 'success' %}
+        <div class="alert alert-success">{{ message }}</div>
+        {% endif %}
+
+        {% endfor %}
+
+        {% endif %}
+
+    </div>
 <div class="row">
     <div class="col-md-6">
       <div class="card">
         <div class="card-header">
           <h3 class="card-title text-dark">
-            <i class="fas fa-text-width"></i>
+            <i class="fas fa-cog"></i>
             General Information
           </h3>
+          
+           <!-- /.row -->
+        <div class="row">
+            <div class="col">
+                <div class="mb-4 mr-3">
+                   <a href="{% url 'update_company' 1 %}">
+                    <button type="button" class="btn btn-success shadow float-right" >
+                      <i class="fas fa-pen"></i>   Update Info
+                    </button>
+                   </a> 
+                </div>
+            </div>
+        </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body text-dark">
           <dl>
-            <dt>Description lists</dt>
-            <dd>A description list is perfect for defining terms.</dd>
-            <dt>Euismod</dt>
-            <dd>Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-            <dd>Donec id elit non mi porta gravida at eget metus.</dd>
-            <dt>Malesuada porta</dt>
-            <dd>Etiam porta sem malesuada magna mollis euismod.</dd>
+           
+            <dt>Logo</dt>
+            <dd><img class="img-thumbnail" src="{{company_details.logo.url}}" style="width:100px" alt="Company Logo"/></dd> 
+            <dt>Name</dt>
+            <dd>{{company_details.name}}</dd>
+            <dt>Phone</dt>
+            <dd>{{company_details.phone}}</dd>
+            <dt>Email</dt>
+            <dd>{{company_details.email}}</dd>
+            <dt>Manager</dt>
+            <dd>{{company_details.manager}}</dd>
+            <dt>Website</dt>
+
+            <dd>{{company_details.website}}</dd>
+         
           </dl>
         </div>
         <!-- /.card-body -->
@@ -37,21 +74,30 @@
             <i class="fas fa-map-pin"></i>
             Address
           </h3>
+           <!-- /.row -->
+        <div class="row">
+            <div class="col">
+                <div class="mb-2 mr-2">
+                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
+                        <i class="fas fa-plus"></i>   Add new customer
+                      </button>
+                </div>
+            </div>
+        </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body text-dark">
           <dl class="row">
-            <dt class="col-sm-4">Description lists</dt>
-            <dd class="col-sm-8">A description list is perfect for defining terms.</dd>
-            <dt class="col-sm-4">Euismod</dt>
-            <dd class="col-sm-8">Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.</dd>
-            <dd class="col-sm-8 offset-sm-4">Donec id elit non mi porta gravida at eget metus.</dd>
-            <dt class="col-sm-4">Malesuada porta</dt>
-            <dd class="col-sm-8">Etiam porta sem malesuada magna mollis euismod.</dd>
-            <dt class="col-sm-4">Felis euismod semper eget lacinia</dt>
-            <dd class="col-sm-8">Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo
-              sit amet risus.
-            </dd>
+            <dt class="col-sm-4">Address line 1</dt>
+            <dd class="col-sm-8">{{company_details.address.address_line_1}}</dd>
+            <dt class="col-sm-4">Address line 2</dt>
+            <dd class="col-sm-8">{{company_details.address.address_line_2}}</dd>
+            <dt class="col-sm-4">City</dt>
+            <dd class="col-sm-8">{{company_details.address.city}}</dd>
+            <dt class="col-sm-4">State</dt>
+            <dd class="col-sm-8">{{company_details.address.state}}</dd>
+            <dt class="col-sm-4">Country</dt>
+            <dd class="col-sm-8">{{company_details.address.country}}</dd>
           </dl>
         </div>
         <!-- /.card-body -->

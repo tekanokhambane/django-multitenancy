@@ -1,0 +1,69 @@
+<div class="modal fade" id="modal-lg">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-dark">Add New Department</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form role="form" action="/quick_department_save" method="post">
+                    {% csrf_token %}
+
+                    <div class="card-body text-dark">
+                        <div class="form-group">
+                            {% if messages %}
+                            {% for message in messages %}
+                            {% if message.tags == 'error' %}
+                            <div class="alert alert-danger">{{ message }}</div>
+                            {% endif %}
+                            {% if message.tags == 'success' %}
+                            <div class="alert alert-success">{{ message }}</div>
+                            {% endif %}
+
+                            {% endfor %}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="id_name">Name:</label>
+                            <input type="text" name="name" class="form-control" maxlength="250" required=""
+                                id="id_name">
+
+
+
+
+                            <!-- /.card-body -->
+                            <!-- /.card-body 
+
+                                                <div class="card-footer">
+                                                    <button type="submit" class="btn btn-primary btn-block ">Add
+                                                        Staff</button>
+                                                </div>
+                                                -->
+
+                        </div>
+                        <!-- /.card -->
+
+
+
+                    </div><!-- /.container-fluid -->
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+            </form>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

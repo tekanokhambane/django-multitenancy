@@ -52,7 +52,7 @@
                             <tbody>
                                 {% for customer in customers%}
                                 <tr>
-                                    <td>{{customer.admin.id}}</td>
+                                    <td>{{customer.id}}</td>
                                     <td>{{customer.admin.first_name}}</td>
                                     <td>{{customer.admin.last_name}}</td>
                                    
@@ -60,10 +60,10 @@
                                     <td>{{customer.phone_number}}</td>
                                     <td>{{customer.admin.date_joined}}</td>
                                     <th> <a name="" id="" class="btn btn-success"
-                                            href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                            href="{% url "edit_customer" customer.admin.pk %}" role="button"><i
                                                 class="fas fa-edit text-white"></i></a>
                                                 <a name="" id="" class="btn btn-danger"
-                                                href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i
+                                                href="{% url 'delete_customer' customer.pk %}" role="button"><i
                                                     class="fas fa-trash text-white"></i></a>
                                                     <a name="" id="" class="btn btn-dark"
                                                     href="/dashboard/edit/customer/{{ customer.admin.id }}" role="button"><i

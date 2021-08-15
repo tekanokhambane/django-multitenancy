@@ -1,6 +1,6 @@
 {% extends "core/hod_template/base.html" %}
-{% block page_title %}Edit Staff | Username: {{ staff.admin.username }}, ID: {{staff.admin.id}}
-<button class="btn btn-primary" type="submit">back </button>
+{% block page_title %}Staff | Username: {{ staff.admin.username }}, ID: {{staff.admin.id}}
+<a href="{% url "manage_staff" %}"><button class="btn btn-primary shadow" type="button">  <i class="fas fa-arrow-left"></i> Back</button>
 {% endblock page_title %}
 
 {% block main_content %}
