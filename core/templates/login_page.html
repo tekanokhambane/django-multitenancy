@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %}{% load tenants_portal_tags %}
 <!DOCTYPE html>
 <html>
 
@@ -20,10 +20,10 @@
         <!-- Google Font: Source Sans Pro -->
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     </head>
-
+    {% get_company_details as details %}
     <body class="hold-transition login-page">
     <div class="image"> 
-               <img src="{% static "dist/img/logo.png" %}" href="https://bubbledigital.co.za/" height="120px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
+               <img src="{{details.logo.url}}" href="{{details.website}}" height="120px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
             </div>
         <div class="login-box">
             
