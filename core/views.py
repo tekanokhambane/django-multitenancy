@@ -1,3 +1,5 @@
+from django_tenants_portal.core.models.admin_models import Address, CompanyDetails
+from django_tenants_portal.core.decorators import unauthenticated_user
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -6,14 +8,17 @@ from .EmailBackEnd import EmailBackEnd
 from django.core.checks import messages
 from django.contrib import messages
 # Create your views here.
-
+from groups_manager.models import Group, GroupType, Member
 
 def showDemoPage(request):
     return render(request, 'demo.html')
 
-
+@unauthenticated_user
 def ShowLoginPage(request):
-    return render(request, 'login_page.html')
+    company_address = Address.objects.get_or_create(id=1)
+    #organization = GroupType.objects.create(label='Organization')
+    company_details = CompanyDetails.objects.get_or_create(id=1)
+    return render(request, 'login_page.html', {"company_details": company_details, "company_address": company_address})
 
 
 def doLogin(request):
