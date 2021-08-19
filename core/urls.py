@@ -56,10 +56,12 @@ urlpatterns = [
     path('admin//tenants/view', HodViews.manage_tenant, name="manage_tenant"),
     path('edit_domain_save', HodViews.edit_domain_save, name="edit_domain_save"),
     path('admin/edit/domain/<str:domain_id>', HodViews.edit_domain, name="edit_domain"),
-    path('admin/addresses', HodViews.AddressListView.as_view(), name="view_addresses"),
-    path('admin/companyinfo', HodViews.CompanyListView.as_view(), name="company_details"),
+    path('admin/addresses', HodViews.address_list, name="view_addresses"),
+    path('admin/companyinfo', HodViews.CompanyDetailsView.as_view(), name="company_details"),
     path('admin/companyinfo/<str:company_id>/update', HodViews.update_company, name="update_company"),
+    path('admin/companyinfo/address/<str:address_id>/update', HodViews.update_company_address, name="update_company_address"),
     path('update_company_save', HodViews.update_company_save, name="update_company_save"),
+    path('update_company_address_save', HodViews.update_company_address_save, name="update_company_address_save"),
     #path('dashboard/manage_email_domains/', HodViews.GetEmails.as_view(), name="view_email_domains"),
     path('check_email_exist', HodViews.check_email_exist, name="check_email_exist"),
     path('check_username_exist', HodViews.check_username_exist,name="check_username_exist"),
@@ -96,7 +98,3 @@ urlpatterns = [
     # of your site, rather than the site root:
     #    re_path(r"^pages/", include(codered_urls)),
 ]
-# Serve static and media files from development server
-urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_URL,
-                      document_root=settings.MEDIA_ROOT)
