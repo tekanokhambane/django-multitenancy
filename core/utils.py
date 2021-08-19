@@ -131,7 +131,6 @@ EVENT_STATUS = (
 
 
 COUNTRIES = (
-    ("GB", _("United Kingdom")),
     ("AF", _("Afghanistan")),
     ("AX", _("Aland Islands")),
     ("AL", _("Albania")),
@@ -363,6 +362,7 @@ COUNTRIES = (
     ("UG", _("Uganda")),
     ("UA", _("Ukraine")),
     ("AE", _("United Arab Emirates")),
+    ("GB", _("United Kingdom")),
     ("US", _("United States")),
     ("UM", _("United States Minor Outlying Islands")),
     ("UY", _("Uruguay")),
