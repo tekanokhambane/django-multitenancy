@@ -78,9 +78,11 @@
         <div class="row">
             <div class="col">
                 <div class="mb-2 mr-2">
-                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
-                        <i class="fas fa-plus"></i>   Add new customer
-                      </button>
+                  <a href="{% url 'update_company_address' 1 %}">
+                  <button type="button" class="btn btn-success shadow float-right" >
+                    <i class="fas fa-pen"></i>   Update Address
+                  </button>
+                 </a>
                 </div>
             </div>
         </div>

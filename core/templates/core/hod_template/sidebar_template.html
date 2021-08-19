@@ -1,12 +1,13 @@
-{% load static %}
+{% load static %}{% load tenants_portal_tags %}
+{% get_company_details as details %}
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar elevation-4 sidebar-light-olive">
     <!-- Brand Logo -->
     <a href="{% url "dashboard" %}" class="brand-link navbar-white">
-        <img src="{% static "dist/img/logo.png" %}" alt="AdminLTE Logo"
+        <img src="{{details.logo.url}}" alt="{{details.name}} Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">Bubble Digital</span>
+        <span class="brand-text font-weight-light">{{details.name}}</span>
     </a>
 
     <!-- Sidebar -->

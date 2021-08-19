@@ -37,11 +37,11 @@
               </tr>
             </thead>
             <tbody>
-                {% for address in object_list %}
+                {% for item in address %}
 
               <tr>
-                <td>{{address.id}}</td>
-                <td>{{address.name}}</td>
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
                
               </tr>
             {% endfor %}
