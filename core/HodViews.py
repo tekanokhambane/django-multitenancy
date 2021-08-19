@@ -27,12 +27,12 @@ from tenant_users.compat import (get_tenant_model, TENANT_SCHEMAS, get_public_sc
                                  get_tenant_domain_model, schema_context)
 from tenant_users.tenants.models import InactiveError, ExistsError
 from ..users.models import TenantUser
-from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, CompanyDetailForm, DepartmentCreateForm, EditCustomerForm, EditTenantForm, EditstaffForm, QuickAddCustomerForm, QuickAddStaffForm, forms
+from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, CompanyAddressForm, CompanyDetailForm, DepartmentCreateForm, EditCustomerForm, EditTenantForm, EditstaffForm, QuickAddCustomerForm, QuickAddStaffForm, forms
 from django.views.generic import TemplateView, ListView, DetailView, DeleteView
 from django.contrib.auth.decorators import login_required
 import json
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from groups_manager.models import Group, Member
 #from google.cloud import dns
 #from google.cloud import dns
 
@@ -42,7 +42,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Admin 
 @login_required
 def admin_home(request):
-    tenants = Client.objects.all()
+    tenants = Client.objects.all().exclude(id=1)
     customers = Customers.objects.all()
     staff = Staff.objects.all()
     user=request.user
@@ -385,7 +385,7 @@ def add_customer_save(request):
 
             try:
                 user = TenantUser.objects.create_user(
-                    email=email, password=password, first_name=first_name, last_name=last_name, username=username, user_type=3, is_active=True, is_staff=False)
+                    email=email, password=password, first_name=first_name, last_name=last_name, username=username, user_type=3, is_active=True)
                 user.customers.organisation = organisation
                 user.customers.phone_number = phone_number
                               
@@ -739,6 +739,7 @@ class DepartmentListView(ListView, LoginRequiredMixin):
     model = Department
     template_name = 'core/hod_template/department_list.html'
     #fields = ['name']
+    
 
 
 def create_department_view(request):
@@ -778,17 +779,21 @@ def quick_department_save(request):
             form=DepartmentCreateForm(request.POST)
             return render(request, 'core/hod_template/modals/department_create_form.html', {'nbar': 'department', 'form': form})
 
+@login_required
+def address_list(request):
+    address = Address.objects.all().exclude(id=1)
+    return render(request, 'core/hod_template/address_list.html', {"address": address})
 
 
-
-class AddressListView(ListView, LoginRequiredMixin):
-    model = Address
-    template_name = 'core/hod_template/address_list.html'
+#class AddressListView(ListView, LoginRequiredMixin):
+#    model = Address
+#    template_name = 'core/hod_template/address_list.html'
 
 
 # Company details
 
-class CompanyListView(TemplateView, LoginRequiredMixin):
+
+class CompanyDetailsView(TemplateView, LoginRequiredMixin):
    # model = CompanyDetails
     template_name = 'core/hod_template/company_detail.html'
 
@@ -808,6 +813,7 @@ class CompanyUpdateView(UpdateView, LoginRequiredMixin):
    # fields = ["name", "logo", "website", "phone", "email"]
     success_url = reverse_lazy('company_details')
     template_name = 'core/hod_template/companydetails_form.html'
+
 
 @login_required
 def update_company(request, company_id):
@@ -864,6 +870,69 @@ def update_company_save(request):
             form=CompanyDetailForm(request.POST)
             details= CompanyDetails.objects.get(id=company_id)
             return render(request, 'core/hod_template/update_company-details.html', {'nbar': 'update_company', "form":form, 'company_id': company_id, })
+
+
+@login_required
+def update_company_address(request, address_id):
+    request.session["address_id"]=address_id
+    company_address = Address.objects.get(id=address_id)
+    form=CompanyAddressForm()
+    form.fields['address_line_1'].initial=company_address.address_line_1
+    form.fields['address_line_2'].initial=company_address.address_line_2
+    form.fields['city'].initial=company_address.city
+    form.fields['state'].initial=company_address.state
+    form.fields['country'].initial=company_address.country
+    user=request.user
+    if user.is_authenticated:
+            if user.user_type == "1":
+                return render(request, 'core/hod_template/update_company_address.html', {'nbar': 'update_company', "form":form, 'company_id': address_id},)
+
+def update_company_address_save(request):
+    if request.method != "POST":
+        return HttpResponse("<h2>Method not Allowed!</h2>")
+    else:
+        address_id= request.session.get("address_id")
+        form=CompanyAddressForm(request.POST)
+        if form.is_valid():
+            address_line_1 = form.cleaned_data["address_line_1"]
+            address_line_2 = form.cleaned_data["address_line_2"]
+            city = form.cleaned_data["city"]
+            state = form.cleaned_data["state"]
+            country = form.cleaned_data["country"]
+                       
+            try:
+                details = Address.objects.get(id=address_id)
+                details.address_line_1 = address_line_1
+                details.address_line_2 = address_line_2
+                details.city = city
+                details.state = state
+                details.country = country
+                details.save()
+                del request.session["address_id"]
+                messages.success(request, "Successfully Updated Company Address!")
+                return HttpResponseRedirect(reverse_lazy("company_details"))
+            except:
+                messages.error(request, "Failed to update company Address!")
+                return HttpResponseRedirect(reverse_lazy("update_company_address", kwargs={"address_id": address_id}))
+        else:
+            form=CompanyAddressForm(request.POST)
+            details= Address.objects.get(id=address_id)
+            return render(request, 'core/hod_template/update_company-details.html', {'nbar': 'update_company', "form":form, 'company_id': company_id, })
+
+
+class PermissionsView(TemplateView, LoginRequiredMixin):
+    template_name = 'core/hod_template/company_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        group = Group.objects.create(id=1)
+        company_name = CompanyDetails.objects.get_or_create(id=1)
+       # address = CompanyDetails.objects.get(address_id=company_address)
+
+        context['company_details'] = company_name[0]
+       # context['company_address'] = address[0]
+        return context
+
 
 @csrf_exempt
 def check_email_exist(request):
