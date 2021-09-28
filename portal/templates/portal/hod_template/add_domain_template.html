@@ -1,0 +1,86 @@
+{% extends "portal/hod_template/base.html" %}
+{% block page_title %}Add Domain{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <!-- general form elements -->
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Add Domain</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <!-- form start -->
+                    <form role="form" action="/add_domain_save" method="post">
+                        {% csrf_token %}
+                        <div class="card-body text-dark">
+                            <div class="form-group">
+                                {% if messages %}
+                                {% for message in messages %}
+                                {% if message.tags == 'error' %}
+                                <div class="alert alert-danger">{{ message }}</div>
+                                {% endif %}
+                                {% if message.tags == 'success' %}
+                                <div class="alert alert-success">{{ message }}</div>
+                                {% endif %}
+
+                                {% endfor %}
+
+                                {% endif %}
+
+                            </div>
+                           
+                            
+                            <div class="form-group">
+                                <label>Tenant</label>
+                                <select class="form-control" name="tenant">
+
+                                    {% for tenants in tenant %}
+                                    <option value="{{tenants.id}}"> {{tenants.id}} </option>
+                                    {% endfor %}
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Domain</label>
+                                <input type="text" class="form-control" name="domain" placeholder="Add Tenant Domain">
+                            </div>
+                            <div class="form-group">
+                                <label>Is Primary Domain</label>
+                                <select class="form-control" name="is_primary">
+                                    <option>True</option>
+                                    <option>False</option>
+                                </select>
+                            </div>
+                            
+
+
+
+
+
+
+
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-primary btn-block ">Add Domain</button>
+                            </div>
+                    </form>
+                </div>
+                <!-- /.card -->
+
+            </div>
+
+
+        </div><!-- /.container-fluid -->
+</section>
+
+
+
+<!-- /.content -->
+{% endblock main_content %}

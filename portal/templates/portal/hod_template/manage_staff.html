@@ -1,0 +1,86 @@
+{% extends "portal/hod_template/base.html" %}
+{% block page_title %}Manage Staff{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col">
+                <div class="mb-5 mr-3">
+                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
+                        <i class="fas fa-plus"></i>   Add new staff
+                      </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Staff Details</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right"
+                                    placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card- text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Email</th>
+                                    <th>Department</th>
+                                    <th>Date Joined</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for staffs in staff%}
+                                <tr>
+                                    <td>{{staffs.id}}</td>
+                                    <td>{{staffs.admin.first_name}}</td>
+                                    <td>{{staffs.admin.last_name}}</td>
+                                    <td>{{staffs.admin.email}}</td>
+                                    <td>{{staffs.department}}</td>
+                                    <td>{{staffs.admin.date_joined}}</td>
+                                    <th> <a name="" id="" class="btn btn-success"
+                                            href="/admin/staff/edit/{{ staffs.admin.id }}" role="button"><i
+                                                class="fas fa-edit text-light"></i> </a> 
+                                                <a name="" id="" class="btn btn-danger "
+                                                href="{% url 'delete_staff' staffs.pk %}" role="button"><i
+                                                    class="fas fa-trash text-light"></i> </a>
+                                                    <a name="" id="" class="btn btn-dark"
+                                                    href="{% url 'view_staff' staffs.pk%}" role="button"><i
+                                                        class="fas fa-eye text-light"></i> </a></th>
+
+
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+{% include "portal/hod_template/modals/staff_create_form.html" %}
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}

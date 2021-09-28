@@ -1,0 +1,67 @@
+{% extends "portal/hod_template/base.html" %}
+{% block page_title %}Manage Domains{% endblock page_title %}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Domain Details</h3>
+
+                        <div class="card-tools">
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                                <input type="text" name="table_search" class="form-control float-right"
+                                    placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Mailbox Domain Name</th>
+                                    <th>Active</th>
+                                    <th>Description</th>
+                                    <th>Admin</th>
+                                
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for domain_lists in domain_list%}
+                                <tr>
+                                    <td>{{domain_lists.domain_name}}</td>
+                                    <td>{{domain_lists.active| safe}}</td>
+                                    <td>{{domain_lists.description}}<td>
+                                    <td>{{domain_lists.domain_admins}}</td>
+                                    
+                                    <th> <a name="" id="" class="btn btn-success" href="/edit_domain/{{ domains.id }}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> </th>
+
+
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}

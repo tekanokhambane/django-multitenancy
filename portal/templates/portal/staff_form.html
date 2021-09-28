@@ -1,0 +1,11 @@
+{% extends "portal/hod_template/base.html" %}
+{% block main_content %}
+
+<h1>Parents</h1>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <h2>children</h2>
+    {{ children.as_p }}
+    <input type="submit" value="Save">
+</form>
+{% endblock %}
