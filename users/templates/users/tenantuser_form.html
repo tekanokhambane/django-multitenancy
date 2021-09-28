@@ -1,0 +1,22 @@
+{% extends "core/hod_template/base.html" %}
+
+{% block main_content %}
+
+
+{% load bootstrap4 %}
+
+{# Display a form #}
+<div class="container">
+    <form action="post" method="post" class="form">
+        {% csrf_token %}
+        <h2 class="text-dark" >User Login</h2>
+        {% bootstrap_form form  label_class="text-dark" %}
+        {% bootstrap_formset children label_class="text-dark" %}
+        
+        {% buttons %}
+            <button type="submit" class="btn btn-primary">Submit</button>
+        {% endbuttons %}
+    </form>
+        
+</div>
+{% endblock %}
