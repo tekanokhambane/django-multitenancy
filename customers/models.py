@@ -6,6 +6,7 @@ from django.utils.text import slugify
 
 class Client(TenantBase):
     id = models.AutoField(primary_key=True, auto_created=True)
+    name = models.CharField(max_length=200, default="Name")
     description = models.TextField(max_length=200)
 
    # objects = models.Manager()
