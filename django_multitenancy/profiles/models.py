@@ -17,6 +17,8 @@ def avatar_upload(instance, filename):
 class Skills(models.Model):
     name = models.CharField(max_length=150, blank=False, null=False)
 
+    def __str__(self) -> str:
+        return self.name
 
 class Profile(models.Model):
 

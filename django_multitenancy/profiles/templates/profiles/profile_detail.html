@@ -1,11 +1,13 @@
 {% extends "django_multitenancy/admin/adminUser/base.html" %}
-
-{#% load wiki_tags %#}
+{% load static %}
 
 {% block head_title %}{{ profile.display_name }}{% endblock %}
 
 {% load thumbnail %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "profiles/profiles.css" %}">
 
+{%endblock%}
 {% block block %}
 <div class="container">
     <div class="row text-dark">
@@ -118,11 +120,12 @@
                 <h3 class="card-title">About Me</h3>
               </div>
               <!-- /.card-header -->
+              {% if profile.display_profile%}
               <div class="card-body">
                 {% if profile.bio %}    
                   <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Bio</strong>
-                    <p class="text-muted">
-                        {{ profile.bio|linebreaks }}
+                    <p class="text-muted text-dark">
+                        {{ profile.bio|safe }}
                     </p>
                     
                     <hr>
@@ -130,7 +133,7 @@
                     {% if profile.education %}    
                 <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Education</strong>
                 <p class="text-muted">
-                    {{ profile.education|linebreaks }}
+                    {{ profile.education }}
                 </p>
                 
                 <hr>
@@ -139,28 +142,23 @@
                 {% if profile.location %}    
                 <strong class="text-dark"><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
                     <p class="text-muted">
-                        {{ profile.location|linebreaks }}
+                        {{ profile.location }}
                     </p>
                     
                     <hr>
                     {% endif %}
-
+                    {% if profile.skills.all %}
                 <strong class="text-dark"><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
-
-                <p class="text-muted">
-                  <span class="tag tag-danger">UI Design</span>
-                  <span class="tag tag-success">Coding</span>
-                  <span class="tag tag-info">Javascript</span>
-                  <span class="tag tag-warning">PHP</span>
-                  <span class="tag tag-primary">Node.js</span>
+                <p class="text-muted skills">
+                  {%for skill in profile.skills.all%}
+                  <span class="tag tag-danger bg-gray p-1">{{skill.name}}</span>
+                  {%endfor%}
                 </p>
 
-                <hr>
-
-                <strong class="text-dark"><i class="far fa-file-alt mr-1"></i> Notes</strong>
-
-                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                {%endif%}
+                
               </div>
+              {%endif%}  
               <!-- /.card-body -->
             </div>
             <!-- /.card -->

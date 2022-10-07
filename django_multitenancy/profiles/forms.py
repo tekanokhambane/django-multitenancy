@@ -3,6 +3,13 @@ import re
 from django import forms
 
 from .models import Profile
+from django_select2.forms import Select2MultipleWidget
+from django_select2 import forms as s2forms
+
+class SkillsWidget(s2forms.ModelSelect2MultipleWidget):
+    search_fields = [
+        "name__icontains",
+    ]
 
 
 class ProfileForm(forms.ModelForm):
@@ -14,11 +21,18 @@ class ProfileForm(forms.ModelForm):
             "job_title",
             "avatar",
             "bio",
+            "skills",
+            "display_profile",
             "education",
             "location",
             "website",
             "twitter_username",
         ]
+        widgets = {
+            'skills': SkillsWidget,
+
+        }
+        
 
     def clean_twitter_username(self):
         value = self.cleaned_data["twitter_username"]

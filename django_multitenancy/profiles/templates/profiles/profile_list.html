@@ -15,7 +15,7 @@
 <div class="container">
     <div class="row p-3">
         {% for profile in profiles %}
-            <div class="col-md-3">
+            <div class="col-md-12">
                 <div class="media" style="margin-bottom: 16px;">
                     {% if profile.avatar %}
                         <img width="72" height="72" class="media-object pull-left" src="{% thumbnail profile.avatar 72x72 crop %}" alt="{{ profile.name|default:user.username }}">
@@ -25,14 +25,14 @@
                         </div>
                     {% endif %}
 
-                    <div class="media-body">
+                    <div class="media-body text-dark">
                         <h4 class="media-heading"><a href="{% url 'profiles_detail' username=profile.user.username %}">{{ profile.display_name }}</a></h4>
-                    {% if profile.affiliation %}
+                    {% if profile.education %}
                         <div>
                             <span class="dim">
                                 <i class="fa fa-institution"></i>
                             </span>
-                            {{ profile.affiliation }}
+                            {{ profile.education }}
                         </div>
                     {% endif %}
                     {% if profile.location %}

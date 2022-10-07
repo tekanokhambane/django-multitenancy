@@ -7,7 +7,10 @@
 {% block body_class %}{{ block.super }} profile{% endblock %}
 
 {% block head_title %}Edit Profile{% endblock %}
+{%block custom_css%}
+{{ form.media.css }}
 
+{% endblock%}
 {% block main_content %}
 <div class="container">
     <div class="row p-3 text-dark">
@@ -15,6 +18,7 @@
             <form class="form profile-form" action="" method="POST" enctype="multipart/form-data">
                 <legend>Edit Profile</legend>
                 {% csrf_token %}
+                
                 {% bootstrap_field form.name %}
                 <div id="div_id_avatar" class="control-group">
                     <label for="id_avatar" class="control-label">
@@ -43,7 +47,9 @@
                     </div>
                 </div>
                 {% bootstrap_field form.bio %}
-                {% bootstrap_field form.affiliation %}
+                {% bootstrap_field form.education %}
+                {% bootstrap_field form.skills %}
+                {% bootstrap_field form.display_profile %}
                 {#% bootstrap_field form.job_title %#}
                 {% bootstrap_field form.location %}
                 {% bootstrap_field form.website %}
@@ -74,3 +80,6 @@
     </div>
 </div>
 {% endblock %}
+{%block custom_js%}
+{{ form.media.js }}
+{%endblock%}

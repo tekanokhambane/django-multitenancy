@@ -24,7 +24,9 @@ django-environ==0.8.1
 django-formtools==2.3
 django-markdown-deux==1.0.5
 jsonfield==3.1.0
+django-select2==7.10.1
 django-compressor==3.1
+django-redis==5.2.0
 # django_sendmail_backend enables sending email from your web host server.
 # Remove this if using a different email backend.
 django_sendmail_backend
