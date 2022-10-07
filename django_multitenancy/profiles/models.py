@@ -1,3 +1,4 @@
+from email.policy import default
 import os
 import uuid
 
@@ -13,6 +14,10 @@ def avatar_upload(instance, filename):
     return os.path.join("avatars", filename)
 
 
+class Skills(models.Model):
+    name = models.CharField(max_length=150, blank=False, null=False)
+
+
 class Profile(models.Model):
 
     user = models.OneToOneField(TenantUser, related_name="profile", on_delete=models.PROTECT)  # type: ignore
@@ -20,7 +25,9 @@ class Profile(models.Model):
     job_title = models.CharField(max_length=75, blank=True)
     avatar = models.ImageField(upload_to=avatar_upload, blank=True)
     bio = models.TextField(blank=True)
-    affiliation = models.CharField(max_length=100, blank=True)
+    skills = models.ManyToManyField(Skills)
+    education = models.CharField(max_length=100, blank=True)
+    display_profile = models.BooleanField(default=True)
     location = models.CharField(max_length=100, blank=True)
     website = models.CharField(max_length=250, blank=True)
     twitter_username = models.CharField("Twitter Username", max_length=100, blank=True)

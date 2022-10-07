@@ -119,36 +119,31 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
+                {% if profile.bio %}    
                   <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Bio</strong>
-                  {% if profile.bio %}    
                     <p class="text-muted">
                         {{ profile.bio|linebreaks }}
                     </p>
-                    {%else%}
-                    <p class="text-muted">
-                        Edit Bio
-                    </p>
-                    {% endif %}
+                    
                     <hr>
+                    {% endif %}
+                    {% if profile.education %}    
                 <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Education</strong>
-
                 <p class="text-muted">
-                  B.S. in Computer Science from the University of Tennessee at Knoxville
+                    {{ profile.education|linebreaks }}
                 </p>
-
+                
                 <hr>
+                {% endif %}
 
+                {% if profile.location %}    
                 <strong class="text-dark"><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-                {% if profile.bio %}    
                     <p class="text-muted">
                         {{ profile.location|linebreaks }}
                     </p>
-                    {%else%}
-                    <p class="text-muted">
-                        Edit Location
-                    </p>
-                    {% endif %}
+                    
                     <hr>
+                    {% endif %}
 
                 <strong class="text-dark"><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
 
