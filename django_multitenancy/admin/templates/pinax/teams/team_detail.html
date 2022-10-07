@@ -1,0 +1,57 @@
+{% extends "django_multitenancy/admin/adminUser/base.html" %}
+
+{% load bootstrap4 %}
+{#% load thumbnail %#}
+{#% load wiki_tags %#}
+
+{% block head_title %}{{ team.name }}{% endblock %}
+
+{% block main_content %}
+<div class="container text-dark">
+    <div class="row">
+        <div class="col-md-4">
+            {% if team.avatar %}
+                {%comment %}<img class="img-polaroid avatar hidden-phone" src="{% thumbnail team.avatar 160x160 crop %}" alt="{{ team.name }}">{%endcomment %}
+            {% else %}
+                <div class="default-avatar-big">
+                    <i class="fa fa-group fa-5x"></i>
+                </div>
+            {% endif %}
+
+            <h2>{{ team.name }}</h2>
+            {% if role %}<p><span class="label label-default">{{ role }}</span></p>{% endif %}
+
+            {% if team.description %}<p>{{ team.description }}</p>{% endif %}
+
+            {% include "pinax/teams/_team_actions.html" %}
+
+            <h4>Owners</h4>
+            {% for membership in team.owners %}
+                <a href="{% url 'profiles_detail' membership.user.username %}">{{ membership.user }}</a>
+                {% if not forloop.last %}&bull;{% endif %}
+            {% empty %}
+                <p>None.</p>
+            {% endfor %}
+
+            <h4>Managers</h4>
+            {% for membership in team.managers %}
+                <a href="{% url 'profiles_detail' membership.user.username %}">{{ membership.user }}</a>
+                {% if not forloop.last %}&bull;{% endif %}
+            {% empty %}
+                <p>None.</p>
+            {% endfor %}
+
+            <h4>Members</h4>
+            {% for membership in team.members %}
+                <a href="{% url 'profiles_detail' membership.user.username %}">{{ membership.user }}</a>
+                {% if not forloop.last %}&bull;{% endif %}
+            {% empty %}
+                <p>None.</p>
+            {% endfor %}
+
+        </div>
+        {#% wiki_for team as wiki %#}
+        {#% include "_latest_wikis.html" %#}
+    </div>
+</div>
+{% endblock %}
