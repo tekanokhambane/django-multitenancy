@@ -1,0 +1,70 @@
+{% extends "portal/hod_template/base.html" %}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 text-dark">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class="fas fa-user"></i>
+                    General Information
+                  </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                  <dl>
+                    <dt>Personal Details</dt>
+                    <dd>First name: {{ object.user.first_name }} </dd>
+                    <dd>Last name: {{ object.user.last_name }} </dd>
+                    <dd>Username: {{ object.user.username }} </dd>
+                    <dd>Email: {{ object.user.email }} </dd>
+                    <dd>Phone Number: {{ object.phone }} </dd>
+                   
+                  </dl>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- ./col -->
+            <div class="col-md-6 text-dark">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">
+                    <i class=" fas fa-address-book"></i>
+                    Billing
+                  </h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <dt>Status</dt>
+                    <dd>{{object.status}}</dd>
+      
+                    <dt>Address</dt>
+                    {% if object.billing_address %}
+                    <dd>{{object.billing_address.name}}</dd>
+                    <dd>{{object.billing_address.address_line1}}</dd>
+                    <dd>{{object.billing_address.address_line2}}</dd>
+                    <dd>{{object.billing_address.city}}</dd>
+                    <dd>{{object.billing_address.state}}</dd>
+                    <dd>{{object.billing_address.country}}</dd>
+                    <dd>{{object.billing_address.postal_code}}</dd>
+                    {% else %}
+                    <dd>No address available</dd>
+                  {% endif %}
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+            <!-- ./col -->
+          </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}

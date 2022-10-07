@@ -1,0 +1,16 @@
+{% extends "portal/hod_template/base.html" %}
+{% block main_content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col text-center" >
+            <form method="post">{% csrf_token %}
+                <h4 class="text-dark">Are you sure you want to delete "{{ object.user.first_name }}" {{ object }}?</h4>
+               <a href="{% url "accounts_list" %}"><button class="btn btn-primary" type="button">Cancel </button> </a>  <input class="btn btn-danger" type="submit" value="Confirm"> 
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}
