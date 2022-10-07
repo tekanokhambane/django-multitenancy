@@ -1,0 +1,60 @@
+{% load static %}
+<!-- Right navbar links -->
+<ul class="navbar-nav ml-auto">
+    <!-- Messages Dropdown Menu -->
+    
+    <!-- Notifications Dropdown Menu -->
+    <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-cogs"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <a href="{% url 'pinax_teams:team_list'%} " class="dropdown-item">
+                <i class="fas fa-envelope mr-2"></i> Teams
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'view_addresses'%#}" class="dropdown-item">
+                <i class="fas fa-map-marker mr-2"></i> Address List
+                
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'company_details'%#}" class="dropdown-item">
+                <i class="fas fa-file mr-2"></i> Company Details
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'manage_tlds'%#}" class="dropdown-item">
+                <i class="fas fa-globe mr-2"></i>View TLD's
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'manage_packages'%#}" class="dropdown-item">
+                <i class="fas fa-list-ol mr-2"></i>View Packages
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'product_list'%#}" class="dropdown-item">
+                <i class="fas fa-gift mr-2"></i>View Products
+            </a>
+            
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'accounts_manager' %#}" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> Accounts Manager
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{#% url 'manage_tlds'%#}" class="dropdown-item dropdown-footer">All notifications</a>
+        </div>
+    </li>
+
+    <li class="nav-item ">
+
+        <a href="{% url 'profiles_detail' username=user.username %}" class="nav-link"><i class="fas fa-user-cog"></i> </a>
+    </li>
+</ul>   
+
+    
+    
+
+<ul class="navbar-nav ml-auto">
+
+    <li class="nav-item ">
+        <a href="{% url "account_logout" %}" class="nav-link">Logout</a>
+    </li>
+</ul>
