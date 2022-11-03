@@ -22,6 +22,7 @@ google-cloud-storage==2.1.0
 gunicorn==20.0.4
 django-environ==0.8.1
 django-formtools==2.3
+django-avatar==7.0.1
 django-markdown-deux==1.0.5
 jsonfield==3.1.0
 django-select2==7.10.1

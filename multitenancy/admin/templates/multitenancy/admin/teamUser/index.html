@@ -1,0 +1,18 @@
+{% extends 'multitenancy/admin/teamUser/base.html' %}
+{%load static %}
+{% block page_title %}Home{% endblock page_title %}
+{% block main_content %}
+
+    {% include "multitenancy/admin/teamUser/includes/dashboard.html" %}
+
+{% endblock main_content %}
+
+{% block custom_js %}
+
+    
+     <!-- ChartJS -->
+     <script src="{% static "plugins/chart.js/Chart.min.js" %}"></script>
+
+
+{% endblock custom_js %}
+    

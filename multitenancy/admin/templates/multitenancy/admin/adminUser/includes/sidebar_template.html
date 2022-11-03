@@ -1,0 +1,211 @@
+{% load static %}{#% load tenants_portal_tags %#}
+{% load thumbnail %}
+{% load avatar_tags %}
+{#% get_company_details as details %#}
+
+<!-- Main Sidebar Container -->
+<aside class="main-sidebar elevation-4 sidebar-light-navy">
+    <!-- Brand Logo -->
+    <a href="{% url "dashboard" %}" class="brand-link navbar-white">
+        <img src="{{details.logo.url}}" alt="{{details.name}} Logo"
+            class="brand-image img-circle elevation-3" style="opacity: .8">
+        <span class="brand-text font-weight-light">{{details.name}}</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar os-host os-theme-light os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+            <div class="image">
+                {% if user.profile.avatar %}
+                {% avatar user class="img-circle elevation-2" %}
+                {% comment %} <img src="{{ avatar.user}}" class="img-circle elevation-2" alt="User Image"> {% endcomment %}
+                {% else %}
+                <img src="{% static "admin/img/avatar.jpg" %}" class="img-circle elevation-2" alt="User Image">
+                {% endif %}
+            </div>
+            <div class="info">
+                <a href="{% url 'profiles_detail' username=user.username %}" class="d-block">Hi, {{user.profile.display_name}}!</a>
+            </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+                <li class="nav-item">
+                    <a href="{% url "dashboard" %}" class="nav-link {% if nbar == 'admin' %}active{% endif %}">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Home
+
+                        </p>
+                    </a>
+                </li>
+                {% comment "" %}
+                Tenants
+                {% endcomment %}
+                <li class="nav-item has-treeview ">
+                    <a href="#"
+                        class="nav-link {% if request.path ==   'tenant_list'%}active{% endif %}">
+                        <i class="nav-icon fas fa-home"></i>
+                        <p>
+                            Tenant Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{#% url "add_tenant" %#}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
+                                <i class="nav-icon fas fa-house-user"></i>
+                                <p>
+                                    Add Tenant
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url "tenant_list" %}"
+                                class="nav-link {% if url ==  'tenant_list' %}active{% endif %}">
+                                <i class="nav-icon fas fa-house-damage"></i>
+                                <p>
+                                    Manage Tenant
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                {% comment "" %}
+                users
+                {% endcomment %}
+                <li class="nav-item has-treeview ">
+                    <a href="#"
+                        class="nav-link {% if nbar == 'add_staff' or  nbar == 'manage_staff'%}active{% endif %}">
+                        <i class="nav-icon fas fa-users-cog"></i>
+                        <p>
+                            Manage Users
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url "profiles_list" %}" class="nav-link {% if nbar == 'add_staff'  %}active{% endif %}">
+                                <i class="nav-icon fas fa-users-cog"></i>
+                                <p>
+                                    Manage Staff
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url "customer_list" %}" class="nav-link {% if nbar ==  'manage_staff' %}active{% endif %}">
+                                <i class="nav-icon fas fa-user-tag"></i>
+                                <p>
+                                    Manage Customers
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                {%comment%}
+                <li class="nav-item has-treeview ">
+                    <a href="#"
+                        class="nav-link {% if nbar == 'add_staff' or  nbar == 'manage_staff'%}active{% endif %}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Staff Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{#% url "add_staff" %#}" class="nav-link {% if nbar == 'add_staff'  %}active{% endif %}">
+                                <i class="nav-icon fas fa-user-plus"></i>
+                                <p>
+                                    Add Staff
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url "manage_staff" %}" class="nav-link {% if nbar ==  'manage_staff' %}active{% endif %}">
+                                <i class="nav-icon fas fa-user-edit"></i>
+                                <p>
+                                    Manage Staff
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview ">
+                    <a href="#"
+                        class="nav-link {% if nbar == 'add_customer' or  nbar == 'manage_customer'%}active{% endif %}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Customer Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url "add_customer" %}" class="nav-link {% if nbar == 'add_customer'  %}active{% endif %}">
+                                <i class="nav-icon fas fa-user-plus"></i>
+                                <p>
+                                    Add Customer
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url "manage_customer" %}"
+                                class="nav-link {% if nbar ==  'manage_customer' %}active{% endif %}">
+                                <i class="nav-icon fas fa-user-edit"></i>
+                                <p>
+                                    Manage Customer
+                                </p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
+                
+                <li class="nav-item has-treeview ">
+                    <a href="#"
+                        class="nav-link {% if nbar == 'add_tenant_domain' or  nbar == 'manage_domain'%}active{% endif %}">
+                        <i class="nav-icon fas fa-globe"></i>
+                        <p>
+                            Domain Settings
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{% url "add_tenant_domain" %}" class="nav-link {% if nbar == 'add_tenant_domain'  %}active{% endif %}">
+                                <i class="nav-icon fab fa-chrome"></i>
+                                <p>
+                                    Add Domain
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url "manage_domain" %}"
+                                class="nav-link {% if nbar ==  'manage_domain' %}active{% endif %}">
+                                <i class="nav-icon fas fa-house-damage"></i>
+                                <p>
+                                    Manage Domain
+                                </p>
+                            </a>
+                        </li>
+                    {%endcomment%}
+                    </ul>
+
+                </li>
+                
+                </li>
+
+
+        </nav>
+        <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+</aside>

@@ -1,0 +1,220 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+{% load static %}
+
+{% block head_title %}{{ profile.display_name }}{% endblock %}
+
+{% load thumbnail %}
+{% block custom_css %}
+<link rel="stylesheet" href="{% static "profiles/profiles.css" %}">
+
+{%endblock%}
+{% block block %}
+<div class="container">
+    <div class="row text-dark">
+        <div class="col-md-4">
+            <div class="profile-widget">
+                {% if profile.avatar %}
+                    <img class="img-polaroid avatar hidden-phone" src="{% thumbnail profile.avatar 160x160 crop %}" alt="{{ profile.name }}">
+                {% endif %}
+
+                <h2>{{ profile.display_name }}</h2>
+
+                <div class="profile">
+                    {% if profile.bio %}
+                        <div class="bio">
+                            {{ profile.bio|linebreaks }}
+                        </div>
+                    {% endif %}
+                    {% if profile.affiliation %}
+                        <div class="item">
+                            <span class="dim">
+                                <i class="fa fa-institution"></i>
+                            </span>
+                            {{ profile.affiliation }}
+                        </div>
+                    {% endif %}
+                    {% if profile.location %}
+                        <div class="item">
+                            <span class="dim">
+                                <i class="fa fa-map-marker"></i>
+                            </span>
+                            {{ profile.location }}
+                        </div>
+                    {% endif %}
+                    {% if profile.website %}
+                        <div class="item">
+                            <span class="dim">
+                                <i class="fa fa-external-link"></i>
+                            </span>
+                            <a href="{{ profile.website }}">{{ profile.website }}</a>
+                        </div>
+                    {% endif %}
+                    {% if profile.twitter_username %}
+                        <div class="item">
+                            <span class="dim">
+                                <i class="fa fa-twitter"></i>
+                            </span>
+                            <a href="https://twitter.com/{{ profile.twitter_username }}/">@{{ profile.twitter_username }}</a>
+                        </div>
+                    {% endif %}
+                    <div class="item">
+                        <span class="dim">
+                            <i class="fa fa-clock-o"></i>
+                            Joined on
+                        </span>
+                        {{ profile.user.date_joined }}
+                    </div>
+                    {% if request.user == profile.user %}
+                        <a href="{% url 'profiles_edit' %}" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i> Edit Profile</a>
+                    {% endif %}
+                </div>
+                <h4>Teams</h4>
+                {% for membership in profile.user.memberships.all %}
+                    <a href="{% url 'pinax_teams:team_detail' membership.team.slug %}">{{ membership.team.name }}</a>
+                    {% if not forloop.last %}&bull;{% endif %}
+                {% empty %}
+                    <p>None.</p>
+                {% endfor %}
+            </div>
+        </div>
+        {#% wiki_for profile.user as wiki %#}
+        {#% include "_latest_wikis.html" %#}
+    </div>
+</div>
+{% endblock %}
+
+{% block page_title %}{{ profile.display_name }}{% endblock %}
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'profiles_list' %}">Profiles</a></li>
+<li class="breadcrumb-item active">{{ profile.display_name }}</li>
+{% endblock%}
+
+
+{% block main_content %}
+<div class="content-wrapper" style="min-height: 1419.25px;">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-3">
+
+            <!-- Profile Image -->
+            <div class="card card-info card-outline">
+              <div class="card-body box-profile">
+                <div class="text-center">
+                    {% if profile.avatar %}
+                    <img class="profile-user-img img-fluid img-circle" src="{% thumbnail profile.avatar 160x160 crop %}" alt="{{ profile.name }}">
+                    {% endif %}
+                </div>
+
+                <h3 class="profile-username text-center text-dark">{{ profile.display_name }}</h3>
+
+                <p class="text-muted text-center">{{ profile.job_title }}</p>
+
+                
+                    {% if request.user == profile.user %}
+                        <a href="{% url 'profiles_edit' %}" class="btn btn-info btn-block text-white"><b>Edit Profile</b></a>
+                    {% endif %}
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+
+            <!-- About Me Box -->
+            <div class="card card-info">
+              <div class="card-header">
+                <h3 class="card-title">About Me</h3>
+              </div>
+              <!-- /.card-header -->
+              {% if profile.display_profile%}
+              <div class="card-body">
+                {% if profile.website %}
+                <strong class="text-dark"><i class="fas fa-link mr-1 text-dark"></i> Portfolio</strong>
+
+                <p class="text-muted text-dark">
+                  <a href="{{ profile.website }}" target="_blank">{{ profile.website }}</a>
+                </p>
+              
+                <hr>
+                    {% endif %}
+                {% if profile.bio %}    
+                  <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Bio</strong>
+                    <p class="text-muted text-dark">
+                        {{ profile.bio|safe }}
+                    </p>
+                    
+                    <hr>
+                    {% endif %}
+                    {% if profile.education %}    
+                <strong class="text-dark"><i class="fas fa-book mr-1 text-dark"></i> Education</strong>
+                <p class="text-muted">
+                    {{ profile.education }}
+                </p>
+                
+                <hr>
+                {% endif %}
+
+                {% if profile.location %}    
+                <strong class="text-dark"><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
+                    <p class="text-muted">
+                        {{ profile.location }}
+                    </p>
+                    
+                    <hr>
+                    {% endif %}
+                    {% if profile.skills.all %}
+                <strong class="text-dark"><i class="fas fa-pencil-alt mr-1"></i> Skills</strong>
+                <p class="text-muted skills">
+                  {%for skill in profile.skills.all%}
+                  <span class="tag tag-danger bg-gray p-1">{{skill.name}}</span>
+                  {%endfor%}
+                </p>
+
+                {%endif%}
+                
+              </div>
+              {%endif%}  
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+          <!-- /.col -->
+          <div class="col-md-9">
+            <div class="card">
+              <div class="card-header p-2">
+                <ul class="nav nav-pills">
+                  <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Teams</a></li>
+                  <li class="nav-item"><a class="nav-link " href="#timeline" data-toggle="tab">Timeline</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Settings</a></li>
+                </ul>>
+              </div><!-- /.card-header -->
+              <div class="card-body">
+                <div class="tab-content">
+                  <div class="tab-pane active" id="activity">
+                    eee
+                  </div>
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="timeline">
+                    ffff
+                  </div>
+                  <!-- /.tab-pane -->
+                  <!-- /.tab-pane -->
+                  <div class="tab-pane" id="settings">
+                    ddd
+                  </div>
+                  <!-- /.tab-pane -->
+                </div>
+                <!-- /.tab-content -->
+              </div><!-- /.card-body -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+          </div>
+          <!-- /.col -->
+        </div>
+        <!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  {%endblock%}

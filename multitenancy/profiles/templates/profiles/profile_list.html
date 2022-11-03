@@ -1,0 +1,86 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+
+{% block head_title %}People{% endblock %}
+
+{% load thumbnail easy_thumbnails_tags%}
+{% block page_title %}Profiles{% endblock %}
+{%block breadcrumbs%}
+{% load avatar_tags %}
+<li class="breadcrumb-item active">Profiles</li>
+{% endblock%}
+
+{% block main_content %}
+<section class="content" style="height: 800px;">
+
+    <!-- Default box -->
+    <div class="card card-solid" style="height: 100%;">
+      <div class="card-body pb-0">
+        <div class="row d-flex align-items-stretch">
+            {% for profile in profiles %}
+          <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch">
+            <div class="card bg-navy">
+              <div class="card-header text-lightborder-bottom-0">
+                {% if profile.job_title  %}{{profile.job_title}}{%endif%}
+              </div>
+              <div class="card-body pt-0">
+                <div class="row">
+                  <div class="col-7">
+                    <h2 class="lead"><b>{{profile.display_name}}</b></h2>
+                    {% if profile.bio  %}<p class="text-light text-sm"><b>About: </b> {{ profile.bio }} </p>{%endif%}
+                    <ul class="ml-4 mb-0 fa-ul text-light">
+                      {% if profile.location  %}<li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Address: {{ profile.location }}</li>{%endif%}
+                      <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: + 800 - 12 12 23 52</li>
+                    </ul>
+                  </div>
+                  <div class="col-5 text-center">
+                  {% avatar profile.user class="img-circle elevation-2" %}
+
+                    {% comment %} {% if profile.avatar %}
+                        <img src="{% thumbnail profile.avatar 72x72 crop %}" alt="" class="img-circle img-fluid">
+                    {% else %}
+                        <div class="default-avatar media-object pull-left">
+                            <i class="fa fa-user fa-4x"></i>
+                        </div>
+                    {% endif %} {% endcomment %}
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer bg-light">
+                <div class="text-right">
+                  <a href="#" class="btn btn-sm bg-info">
+                    <i class="fas fa-comments"></i>
+                  </a>
+                  <a href="{% url 'profiles_detail' username=profile.user.username %}" class="btn btn-sm btn-success text-light">
+                    <i class="fas fa-user"></i> View Profile
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {%endfor%}
+          
+        </div>
+      </div>
+      <!-- /.card-body -->
+      <div class="card-footer">
+        <nav aria-label="Contacts Page Navigation">
+          <ul class="pagination justify-content-center m-0">
+            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">4</a></li>
+            <li class="page-item"><a class="page-link" href="#">5</a></li>
+            <li class="page-item"><a class="page-link" href="#">6</a></li>
+            <li class="page-item"><a class="page-link" href="#">7</a></li>
+            <li class="page-item"><a class="page-link" href="#">8</a></li>
+          </ul>
+        </nav>
+      </div>
+      <!-- /.card-footer -->
+    </div>
+    <!-- /.card -->
+
+  </section>
+
+
+{% endblock %}
