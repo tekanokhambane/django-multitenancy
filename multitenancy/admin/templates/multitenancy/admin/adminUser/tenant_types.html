@@ -1,13 +1,10 @@
 {% extends "multitenancy/admin/adminUser/base.html" %}
 
-
-{% block page_title %}Manage Customers{% endblock page_title %}
-
+{% block page_title %}Tenant Types{% endblock page_title %}
 {%block breadcrumbs%}
-
-<li class="breadcrumb-item active">Customers</li>
+<li class="breadcrumb-item " ><a href="{% url 'tenant_list' %}">Tenants</a></li>
+<li class="breadcrumb-item active">Tenant Types</li>
 {% endblock%}
-
 
 {% block main_content %}
 
@@ -16,17 +13,19 @@
     <div class="container-fluid">
         <!-- /.row -->
         <div class="row">
+            
             <div class="col">
                 <div class="mb-5 mr-3">
-                   <a href="{% url "create_customer" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new cutomer</i></button></a> 
+                   <a href="{% url "create_tenant_type" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new type</i></button></a> 
                 </div>
+                
             </div>
         </div>
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title text-dark">Customer Details</h3>
+                        <h3 class="card-title text-dark">Tenant Details</h3>
 
                         <div class="card-tools">
                             <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
@@ -43,28 +42,23 @@
                         <table class="table table-hover text-nowrap">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Full Name</th>
-                                    <th>Emaill</th>
-                                    <th>UserName</th>
+                                    <th >ID</th>
+                                    <th>Name</th>
                                     
+                                    
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for customer in filter.qs%}
+                                {% for type in object_list%}
                                 <tr>
-                                    <td>{{customer.id}}</td>
-                                    <td>{{customer.first_name}} {{customer.last_name}}</td>
-                                    <td>{{customer.email}}</td>
-                                    <td>{{customer.username}}</td>
+                                    <td>{{type.id}}</td>
+                                    <td>{{type.name}}</td>
                                     
-                                    <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'update_customer' customer.pk %}"
-                                            role="button"><i class="fas fa-edit"></i> Edit</a> 
-                                            <a name="" id="" class="btn btn-danger text-white" href="{% url 'delete_customer' customer.pk %}"
-                                            role="button"><i class="fas fa-trash"></i> Delete</a> 
-                                        </th>
-                                    
-
+                                    {% if tenant.schema_name != "public" %}
+                                    <th> <a name="" id="" class="btn btn-success" href="{#% url 'edit_tenant' tenants.pk %#}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> </th>
+                                        {% endif %}
 
                                     {% endfor %}
                             </tbody>
@@ -82,13 +76,3 @@
 </section>
 <!-- /.content -->
 {% endblock main_content %}
-
-{%block custom_js%}
-<script>
-    let filter = document.getElementById("filter-form")
-    filter.addEventListener("submit", ()=>{
-        alert("submit")
-    })
-    
-</script>
-{%endblock%}

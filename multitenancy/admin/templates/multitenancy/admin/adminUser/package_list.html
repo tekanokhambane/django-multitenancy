@@ -1,11 +1,11 @@
 {% extends "multitenancy/admin/adminUser/base.html" %}
 
 
-{% block page_title %}Manage Customers{% endblock page_title %}
+{% block page_title %}Manage Packages{% endblock page_title %}
 
 {%block breadcrumbs%}
-
-<li class="breadcrumb-item active">Customers</li>
+<li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
+<li class="breadcrumb-item active">Packages</li>
 {% endblock%}
 
 
@@ -18,7 +18,7 @@
         <div class="row">
             <div class="col">
                 <div class="mb-5 mr-3">
-                   <a href="{% url "create_customer" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new cutomer</i></button></a> 
+                   <a href="{% url "create_package" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new package</i></button></a> 
                 </div>
             </div>
         </div>
@@ -26,12 +26,12 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title text-dark">Customer Details</h3>
+                        <h3 class="card-title text-dark">Package Details</h3>
 
                         <div class="card-tools">
                             <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
                                 <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
-                                    placeholder="Search tenant">
+                                    placeholder="Search package">
                                 <div class="input-group-append">
                                     <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
                                 </div>
@@ -44,19 +44,17 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Full Name</th>
-                                    <th>Emaill</th>
-                                    <th>UserName</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
                                     
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for customer in filter.qs%}
+                                {% for package in filter.qs%}
                                 <tr>
-                                    <td>{{customer.id}}</td>
-                                    <td>{{customer.first_name}} {{customer.last_name}}</td>
-                                    <td>{{customer.email}}</td>
-                                    <td>{{customer.username}}</td>
+                                    <td>{{package.id}}</td>
+                                    <td>{{package.name}} </td>
+                                    <td>{{package.price}}</td>
                                     
                                     <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'update_customer' customer.pk %}"
                                             role="button"><i class="fas fa-edit"></i> Edit</a> 

@@ -1,0 +1,35 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+
+
+{% block page_title %}Delete Customer{% endblock page_title %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'customer_list' %}">Customers</a></li>
+
+<li class="breadcrumb-item active">Delete Customer</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container">
+        <div class="row">
+            <div class="col text-center" >
+                <form method="post">{% csrf_token %}
+                    <h4 class="text-dark">Are you sure you want to delete "{{ object }}"?</h4>
+                   <a href="{% url "customer_list" %}"><button class="btn btn-primary" type="button">Cancel </button> </a>  <input class="btn btn-danger" type="submit" value="Confirm"> 
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+
+{%endblock%}

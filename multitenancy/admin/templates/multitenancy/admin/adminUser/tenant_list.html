@@ -15,10 +15,17 @@
     <div class="container-fluid">
         <!-- /.row -->
         <div class="row">
-            <div class="col">
+            <div class="col-md-6">
                 <div class="mb-5 mr-3">
-                   <a href="{#% url "add_tenant" %#}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new tenant</i></button></a> 
+                   <a href="{% url "tenant_types" %}"><button type="submit" class="btn btn-info shadow float-right"><i class="fas fa-cog"></i> Manage Tenant Types</i></button></a> 
                 </div>
+                
+            </div>
+            <div class="col-md-6">
+                <div class="mb-5 mr-3">
+                   <a href="{% url "create_tenant" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new tenant</i></button></a> 
+                </div>
+                
             </div>
         </div>
         <div class="row">
@@ -46,7 +53,7 @@
                                     <th>Schema Name</th>
                                     <th>Tenant Slug</th>
                                     <th>Tenant Name</th>
-                                    <th>Tenant Description</th>
+                                    <th>Is Template</th>
                                     <th>Owner ID</th>
                                     <th>Date Created</th>
                                     <th>Date Modified</th>
@@ -60,14 +67,20 @@
                                     <td>{{tenant.schema_name}}</td>
                                     <td>{{tenant.slug}}</td>
                                     <td>{{tenant.name}}</td>
-                                    <td>{{tenant.description}}</td>
+                                    <td>{{tenant.is_template}}</td>
                                     <td>{{tenant.owner_id}}</td>
 
                                     <td>{{tenant.created}}</td>
                                     <td>{{tenant.modified}}</td>
-                                    <th> <a name="" id="" class="btn btn-success" href="{#% url 'edit_tenant' tenants.pk %#}"
-                                            role="button"><i class="fas fa-edit"></i> Edit</a> </th>
-
+                                    {% if tenant.schema_name != "public" %}
+                                    <th> <a name="" id="" class="btn btn-success text-light" href="{#% url 'edit_tenant' tenants.pk %#}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> 
+                                            {% if tenant.is_template == True %}
+                                            <a name="" id="" class="btn btn-danger text-light" href="{% url 'delete_tenant' tenant.pk %}"
+                                            role="button"><i class="fas fa-trash"></i> Delete</a> 
+                                            {%endif%}
+                                    </th>
+                                        {% endif %}
 
                                     {% endfor %}
                             </tbody>

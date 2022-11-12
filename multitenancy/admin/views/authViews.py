@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponseRe
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.urls.base import reverse
+from multitenancy.admin.decorators import unauthenticated_user
 from multitenancy.core.EmailBackEnd import EmailBackEnd
 # from ..portal.forms import CreateUserForm
 
@@ -31,7 +32,6 @@ import account.views
 class LoginView(account.views.LoginView):
 
     form_class = account.forms.LoginEmailForm
-
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             if self.request.user.type == "Admin":  # type: ignore

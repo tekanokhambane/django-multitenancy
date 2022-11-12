@@ -57,10 +57,10 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{#% url "add_tenant" %#}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
+                            <a href="{% url "create_tenant" %}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
                                 <i class="nav-icon fas fa-house-user"></i>
                                 <p>
-                                    Add Tenant
+                                    Create Tenant
                                 </p>
                             </a>
                         </li>
@@ -76,6 +76,7 @@
 
                     </ul>
                 </li>
+                
                 {% comment "" %}
                 users
                 {% endcomment %}
@@ -107,6 +108,15 @@
                         </li>
 
                     </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url "settings_index" %}" class="nav-link {% if nbar == 'settings' %}active{% endif %}">
+                        <i class="nav-icon fas fa-cogs"></i>
+                        <p>
+                            Settings
+
+                        </p>
+                    </a>
                 </li>
                 {%comment%}
                 <li class="nav-item has-treeview ">

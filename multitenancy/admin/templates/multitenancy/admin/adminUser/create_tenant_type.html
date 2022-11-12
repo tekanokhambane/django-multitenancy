@@ -1,0 +1,39 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_title %}Create Tenant Templates{% endblock page_title %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'tenant_list' %}">Tenants</a></li>
+
+<li class="breadcrumb-item active">Create Tenant Templates</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container text-dark">
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- Security token -->
+            {% csrf_token %}
+        
+            
+            {% bootstrap_field form.name %}
+            
+            
+            <input type="submit" class="btn btn-info" value="Submit">
+            <a class="btn btn-danger text-light" href="{% url "create_tenant_type" %}" >Cancel</a>
+        </form>
+        
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+
+{%endblock%}
