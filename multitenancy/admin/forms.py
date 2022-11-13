@@ -1,5 +1,6 @@
 from django import forms
 from multitenancy.apps.models import Package, Tenant, TenantType
+from multitenancy.subscriptions.models import Plan
 
 from multitenancy.users.models import Customer
 
@@ -24,23 +25,12 @@ class CustomerForm(forms.ModelForm):
 
 class TenantForm(forms.ModelForm):
     
-    type_list = []
-    try:
-        types = TenantType.objects.filter()
-        for type in types:
-            one_type = (type.name, type.name)
-            type_list.append(one_type)
-    except:
-        plan_list = []
-    
-    type = forms.ChoiceField(label="Type", choices=type_list, widget=forms.Select(
-        attrs={"class": "form-control"}))
     class Meta:
         model = Tenant
         fields = ['name', 'slug', 'type']
 
-class PackageForm(forms.ModelForm):
+class PlanForm(forms.ModelForm):
     
     class Meta:
-        model = Package
-        fields = ['name', 'price']
+        model = Plan
+        fields = ['name', 'description', 'price']

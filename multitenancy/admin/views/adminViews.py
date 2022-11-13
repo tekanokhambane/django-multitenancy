@@ -32,8 +32,9 @@ from django.views.generic import TemplateView, ListView, DetailView, DeleteView,
 from django.contrib.auth.decorators import login_required
 import json
 from account.mixins import LoginRequiredMixin
-from multitenancy.admin.filters import CustomerFilter, PackageFilter, TenantFilter
-from multitenancy.admin.forms import CustomerForm, PackageForm, TenantForm
+from multitenancy.admin.filters import CustomerFilter, PlanFilter, PlanFilter, TenantFilter
+from multitenancy.admin.forms import CustomerForm, PlanForm, TenantForm
+from multitenancy.subscriptions.models import Plan, UserSubcriptions
 from pinax.teams.models import SimpleTeam, Team
 from tenant_users.permissions.models import UserTenantPermissions
 # from django_tenants_portal.portal.models.admin_models import Address, CompanyDetails, Department
@@ -47,7 +48,7 @@ from multitenancy.apps.models import Package, Tenant, TenantType
 
 class AdminIndexView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
-        tenants = get_tenant_model().objects.all().exclude(schema_name='public')
+        tenants = get_tenant_model().objects.all().exclude(schema_name='public').exclude(is_template=True)
         users = TenantUser.objects.all()
         staff = Staff.objects.filter()
         customers = Customer.objects.filter()
@@ -104,20 +105,20 @@ class TeamsIndexView(TemplateView, LoginRequiredMixin):
         return context
 
 
-class TenantListView(TemplateView, LoginRequiredMixin):
-    template_name = "multitenancy/admin/adminUser/tenant_list.html"
+class TemplateListView(TemplateView, LoginRequiredMixin):
+    template_name = "multitenancy/admin/adminUser/template_list.html"
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        queryset =  TenantFilter(queryset=Tenant.objects.filter())   # type: ignore
+        queryset =  TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
 
         context['filter'] = queryset
         return context
 
-class CreateTenantView(CreateView, LoginRequiredMixin):
+class CreateTemplateView(CreateView, LoginRequiredMixin):
     model = Tenant
     form_class = TenantForm
     success_url = reverse_lazy('tenant_list')
-    template_name = 'multitenancy/admin/adminUser/create_tenant.html'
+    template_name = 'multitenancy/admin/adminUser/create_template.html'
 
     def post(self, request,is_staff=True, *args, **kwargs):
         form=self.get_form()
@@ -160,7 +161,7 @@ class CreateTenantView(CreateView, LoginRequiredMixin):
                 # Create cursor
                 sweetify.success(request, "Successfully Created Tenant!", icon='success', timer=5000)                          
                 #messages.success(request, "Successfully Added Tenant!")
-                return redirect("tenant_list")
+                return redirect("template_list")
             except:
                 if domain is not None: 
                     domain.delete() 
@@ -171,11 +172,17 @@ class CreateTenantView(CreateView, LoginRequiredMixin):
                 return tenant_domain
         #return super().post(request, *args, **kwargs)
 
+class UpdateTemplateView(UpdateView, LoginRequiredMixin):
+    model= Tenant
+    form_class = TenantForm
+    success_url = reverse_lazy('template_list')
+    template_name = 'multitenancy/admin/adminUser/update_template.html'
+
 
 class DeleteTenantView(LoginRequiredMixin, DeleteView):
     model = Tenant
     template_name = "multitenancy/admin/adminUser/delete_tenant.html"
-    success_url = reverse_lazy("tenant_list")
+    success_url = reverse_lazy("template_list")
 
     
     def delete(self, request, *args, **kwargs):
@@ -217,16 +224,35 @@ class SettingsIndexView(TemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/settings_list.html"
 
 
-class PackageListView(ListView, LoginRequiredMixin):
-    model = Package
-    template_name= 'multitenancy/admin/adminUser/package_list.html'
+class PlanListView(ListView, LoginRequiredMixin):
+    model = Plan
+    template_name= 'multitenancy/admin/adminUser/plan_list.html'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        f = PackageFilter(self.request.GET, queryset=Package.objects.all())
+        f = PlanFilter(self.request.GET, queryset=Plan.objects.all())
         context['filter'] = f
         return context
 
-class CreatePackageView(CreateView, LoginRequiredMixin):
-    model = Package
-    form_class = PackageForm
-    template_name = 'multitenancy/admin/adminUser/create_package.html'
+class CreatePlanView(CreateView, LoginRequiredMixin):
+    model = Plan
+    form_class = PlanForm
+    success_url = reverse_lazy('plan_list')
+    template_name = 'multitenancy/admin/adminUser/create_plan.html'
+
+class UpdatePlanView(UpdateView, LoginRequiredMixin):
+    model = Plan
+    form_class = PlanForm
+    success_url = reverse_lazy('plan_list')
+    template_name = 'multitenancy/admin/adminUser/update_plan.html'
+
+class DeletePlanView(LoginRequiredMixin, DeleteView):
+    model = Plan
+    template_name = "multitenancy/admin/adminUser/delete_plan.html"
+    success_url = reverse_lazy("plan_list")
+
+class UserSubcriptionsListView(ListView, LoginRequiredMixin):
+    model = UserSubcriptions
+    template_name = 'multitenancy/admin/adminUser/usersubscriptions_list.html'  
+
+class GeneralSettingsIndexView(TemplateView, LoginRequiredMixin):
+    template_name = 'multitenancy/admin/adminUser/generalsettings_index.html'

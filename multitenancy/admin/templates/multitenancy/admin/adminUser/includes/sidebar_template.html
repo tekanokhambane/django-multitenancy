@@ -49,27 +49,27 @@
                 <li class="nav-item has-treeview ">
                     <a href="#"
                         class="nav-link {% if request.path ==   'tenant_list'%}active{% endif %}">
-                        <i class="nav-icon fas fa-home"></i>
+                        <i class="nav-icon fas fa-clone"></i>
                         <p>
-                            Tenant Settings
+                            Template
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "create_tenant" %}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
-                                <i class="nav-icon fas fa-house-user"></i>
+                            <a href="{% url "create_template" %}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
+                                <i class="nav-icon fas fa-paste"></i>
                                 <p>
-                                    Create Tenant
+                                    Create Template
                                 </p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "tenant_list" %}"
+                            <a href="{% url "template_list" %}"
                                 class="nav-link {% if url ==  'tenant_list' %}active{% endif %}">
-                                <i class="nav-icon fas fa-house-damage"></i>
+                                <i class="nav-icon fa-solid fa-folder-open"></i>
                                 <p>
-                                    Manage Tenant
+                                    Manage Templates
                                 </p>
                             </a>
                         </li>

@@ -8,12 +8,14 @@ from django.utils.text import slugify
 from django_tenants.utils import get_tenant_type_choices
 from phonenumber_field.modelfields import PhoneNumberField
 
+from multitenancy.subscriptions.models import Subscription
+
 #from ..billing.models import Charge
 
 DEFAULT_TYPE = "personal"
 
 
-class Packages(models.Model):
+class Package(models.Model):
     name = models.CharField(max_length=100, default=DEFAULT_TYPE, choices=get_tenant_type_choices())
     price = models.DecimalField(default=75, #type: ignore
         max_digits=12, verbose_name="Price", decimal_places=2)
@@ -26,11 +28,19 @@ class Packages(models.Model):
         price = self.price * 12
         return price
 
+class TenantType(models.Model):
+    name = models.CharField(max_length=150, null=False, blank=False, default=DEFAULT_TYPE, choices=get_tenant_type_choices())
+
+    def __str__(self) -> str:
+        return self.name
+
 class Tenant(TenantBase):
     id = models.AutoField(primary_key=True, auto_created=True)
-    type = models.CharField(max_length=200, default="personal")
-    name = models.CharField(max_length=100, default='name')
-    plan = models.ForeignKey(Packages, null=True, on_delete=models.PROTECT)
+    type = models.CharField(max_length=200, default=DEFAULT_TYPE, choices=get_tenant_type_choices())
+    name = models.CharField(max_length=100)
+    is_template = models.BooleanField(default=True)
+    plan = models.ForeignKey(Package, null=True, on_delete=models.PROTECT)
+    subscription = models.OneToOneField(Subscription, null=True, blank=True, on_delete=models.CASCADE)
     description = models.TextField(max_length=200)
     #paid_until = models.DateField()
     on_trial = models.BooleanField(default=True)

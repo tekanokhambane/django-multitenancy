@@ -25,6 +25,7 @@ django-formtools==2.3
 django-avatar==7.0.1
 django-markdown-deux==1.0.5
 jsonfield==3.1.0
+channels==4.0.0
 django-select2==7.10.1
 django-compressor==3.1
 django-redis==5.2.0

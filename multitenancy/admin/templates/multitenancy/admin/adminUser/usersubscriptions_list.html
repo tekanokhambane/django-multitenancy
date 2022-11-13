@@ -1,11 +1,10 @@
 {% extends "multitenancy/admin/adminUser/base.html" %}
 
 
-{% block page_title %}Manage Packages{% endblock page_title %}
-
+{% block page_title %}Manage User Subscriptions{% endblock page_title %}
 {%block breadcrumbs%}
 <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
-<li class="breadcrumb-item active">Packages</li>
+<li class="breadcrumb-item active">User Subscriptions</li>
 {% endblock%}
 
 
@@ -15,23 +14,17 @@
 <section class="content">
     <div class="container-fluid">
         <!-- /.row -->
-        <div class="row">
-            <div class="col">
-                <div class="mb-5 mr-3">
-                   <a href="{% url "create_package" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new package</i></button></a> 
-                </div>
-            </div>
-        </div>
+        
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title text-dark">Package Details</h3>
+                        <h3 class="card-title text-dark">User Subscriptions Details</h3>
 
                         <div class="card-tools">
                             <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
                                 <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
-                                    placeholder="Search package">
+                                    placeholder="Search subscriptions">
                                 <div class="input-group-append">
                                     <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
                                 </div>
@@ -44,25 +37,27 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
+                                    <th>User</th>
+                                    <th>Subscriptions</th>
                                     
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for package in filter.qs%}
+                                {% for subscription in filter.qs%}
                                 <tr>
-                                    <td>{{package.id}}</td>
-                                    <td>{{package.name}} </td>
-                                    <td>{{package.price}}</td>
+                                    <td>{{subscription.id}}</td>
+                                    <td>{{subscription.user}}</td>
+                                    <td>{{subscription.subscriptions.count}}</td>
                                     
-                                    <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'update_customer' customer.pk %}"
+                                    
+                                    <th> <a name="" id="" class="btn btn-success text-light" href="{% url 'update_template' subscription.pk %}"
                                             role="button"><i class="fas fa-edit"></i> Edit</a> 
-                                            <a name="" id="" class="btn btn-danger text-white" href="{% url 'delete_customer' customer.pk %}"
+                                            
+                                            <a name="" id="" class="btn btn-danger text-light" href="{% url 'delete_tenant' subscription.pk %}"
                                             role="button"><i class="fas fa-trash"></i> Delete</a> 
-                                        </th>
+                                    </th>
                                     
-
 
                                     {% endfor %}
                             </tbody>

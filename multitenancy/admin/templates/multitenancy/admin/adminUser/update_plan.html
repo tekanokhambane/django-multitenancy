@@ -1,12 +1,12 @@
 {% extends "multitenancy/admin/adminUser/base.html" %}
 {% load bootstrap4 %}
 
-{% block page_title %}Create Package{% endblock page_title %}
+{% block page_title %}Update {{ object.name }}{% endblock page_title %}
 
 {%block breadcrumbs%}
-<li class="breadcrumb-item " ><a href="{% url 'package_list' %}">Customers</a></li>
+<li class="breadcrumb-item " ><a href="{% url 'plan_list' %}">Plans</a></li>
 
-<li class="breadcrumb-item active">Create Package</li>
+<li class="breadcrumb-item active">Update {{object.name}}</li>
 {% endblock%}
 
 
@@ -22,12 +22,13 @@
         
             
             {% bootstrap_field form.name %}
+            {% bootstrap_field form.type %}
             {% bootstrap_field form.price %}
             
             
             
             <input type="submit" class="btn btn-info" value="Submit">
-            <a class="btn btn-danger text-light" href="{% url "customer_list" %}" >Cancel</a>
+            <a class="btn btn-danger text-light" href="{% url "plan_list" %}" >Cancel</a>
         </form>
         
 

@@ -3,15 +3,26 @@
 {% block head_title %}People{% endblock %}
 
 {% load thumbnail easy_thumbnails_tags%}
-{% block page_title %}Profiles{% endblock %}
+{% block page_title %}
+Profiles
+
+{% endblock %}
 {%block breadcrumbs%}
 {% load avatar_tags %}
 <li class="breadcrumb-item active">Profiles</li>
 {% endblock%}
 
 {% block main_content %}
-<section class="content" style="height: 800px;">
-
+<section class="content" style="height: 800px; overflow-y: scroll;">
+       <!-- /.row -->
+    <div class="row">
+      
+      <div class="col">
+        <div class="mb-5 mr-3">
+            <a href="{% url "create_customer" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new cutomer</i></button></a> 
+        </div>
+      </div>
+    </div>
     <!-- Default box -->
     <div class="card card-solid" style="height: 100%;">
       <div class="card-body pb-0">

@@ -1,5 +1,6 @@
 import  django_filters 
-from multitenancy.apps.models import Tenant, Package
+from multitenancy.apps.models import Tenant
+from multitenancy.subscriptions.models import Plan
 from multitenancy.users.models import Customer
 
 class TenantFilter(django_filters.FilterSet):
@@ -7,9 +8,9 @@ class TenantFilter(django_filters.FilterSet):
         model = Tenant
         fields = ['id']
 
-class PackageFilter(django_filters.FilterSet):
+class PlanFilter(django_filters.FilterSet):
     class Meta:
-        model = Package
+        model = Plan
         fields = ['id']
 
 

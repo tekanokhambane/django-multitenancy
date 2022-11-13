@@ -1,0 +1,94 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+
+
+{% block page_title %}Manage Plans{% endblock page_title %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
+<li class="breadcrumb-item active">Plan</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col">
+                <div class="mb-5 mr-3">
+                   <a href="{% url "create_plan" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Add new plan</i></button></a> 
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Plan Details</h3>
+
+                        <div class="card-tools">
+                            <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
+                                <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
+                                    placeholder="Search plans">
+                                <div class="input-group-append">
+                                    <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            <form />
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Price</th>
+                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for plan in filter.qs%}
+                                <tr>
+                                    <td>{{plan.id}}</td>
+                                    <td>{{plan.name}} </td>
+                                    <td>{{plan.description}} </td>
+                                    <td>{{plan.price}}</td>
+                                    
+                                    <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'update_plan' plan.pk %}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> 
+                                            <a name="" id="" class="btn btn-danger text-white" href="{% url 'delete_plan' plan.pk %}"
+                                            role="button"><i class="fas fa-trash"></i> Delete</a> 
+                                        </th>
+                                    
+
+
+                                    {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+<script>
+    let filter = document.getElementById("filter-form")
+    filter.addEventListener("submit", ()=>{
+        alert("submit")
+    })
+    
+</script>
+{%endblock%}

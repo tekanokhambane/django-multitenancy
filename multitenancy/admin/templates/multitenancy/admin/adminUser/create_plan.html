@@ -1,12 +1,12 @@
 {% extends "multitenancy/admin/adminUser/base.html" %}
 {% load bootstrap4 %}
 
-{% block page_title %}Create Tenant Templates{% endblock page_title %}
+{% block page_title %}Create Plan{% endblock page_title %}
 
 {%block breadcrumbs%}
-<li class="breadcrumb-item " ><a href="{% url 'tenant_list' %}">Tenants</a></li>
+<li class="breadcrumb-item " ><a href="{% url 'plan_list' %}">Plans</a></li>
 
-<li class="breadcrumb-item active">Create Tenant Templates</li>
+<li class="breadcrumb-item active">Create Plan</li>
 {% endblock%}
 
 
@@ -22,12 +22,13 @@
         
             
             {% bootstrap_field form.name %}
-            {% bootstrap_field form.slug %}
-            {% bootstrap_field form.type %}
+            {% bootstrap_field form.description %}
+            {% bootstrap_field form.price %}
+            
             
             
             <input type="submit" class="btn btn-info" value="Submit">
-            <a class="btn btn-danger text-light" href="{% url "tenant_list" %}" >Cancel</a>
+            <a class="btn btn-danger text-light" href="{% url "plan_list" %}" >Cancel</a>
         </form>
         
 
