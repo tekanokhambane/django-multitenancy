@@ -1,15 +1,15 @@
-{% load static %}{#% load tenants_portal_tags %#}
+{% load static %}{% load multitenancy_tags %}
 {% load thumbnail %}
 {% load avatar_tags %}
-{#% get_company_details as details %#}
+{% get_company_details as details %}
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar elevation-4 sidebar-light-navy">
     <!-- Brand Logo -->
     <a href="{% url "dashboard" %}" class="brand-link navbar-white">
-        <img src="{{details.logo.url}}" alt="{{details.name}} Logo"
+        <img src="{{details.logo.logo.url}}" alt="{{details.info.company_name}} Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
-        <span class="brand-text font-weight-light">{{details.name}}</span>
+        <span class="brand-text font-weight-light">{{details.info.company_name}}</span>
     </a>
 
     <!-- Sidebar -->
@@ -35,7 +35,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "dashboard" %}" class="nav-link {% if nbar == 'admin' %}active{% endif %}">
+                    <a href="{% url "dashboard" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home

@@ -24,7 +24,11 @@ urlpatterns = [
     path("settings/plans/<int:pk>/update/", adminViews.CreatePlanView.as_view(), name="update_plan"),
     path("settings/plans/<int:pk>/delete/", adminViews.DeletePlanView.as_view(), name="delete_plan"),
     path("settings/usersubscriptions/", adminViews.UserSubcriptionsListView.as_view(), name="usersubscription_list"),
-    path("settings/general/", adminViews.GeneralSettingsIndexView.as_view(), name="generalsettings_index"),
+    path("settings/general/", adminViews.SettingsView.as_view(), name="generalsettings_index"),
+    path("settings/general/<int:pk>/logo/", adminViews.UpdateLogoView.as_view(), name="update_logo"),
+    path("settings/general/<int:pk>/info/", adminViews.GeneralInfoView.as_view(), name="update_info"),
+    path("settings/general/<int:pk>/address/", adminViews.AddressView.as_view(), name="update_address"),
+    path("settings/general/<int:pk>/adminsettings/", adminViews.AdminSettingsView.as_view(), name="update_adminsettings"),
     path("acounts/login/", authViews.LoginView.as_view(), name="accounts_login"),
 
 ]

@@ -1,0 +1,41 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_title %}Update Logo{% endblock page_title %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'generalsettings_index' %}">General Settings</a></li>
+
+<li class="breadcrumb-item active">Update Logo</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container text-dark">
+        <img class="img-thumbnail" src="{{object.logo.url}}" style="width:100px" alt="Company Logo"/>
+        
+        
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- Security token -->
+            {% csrf_token %}
+        
+            
+            {% bootstrap_field form.logo %}
+            
+            <input type="submit" class="btn btn-info" value="Submit">
+            <a class="btn btn-danger text-light" href="{% url "generalsettings_index" %}" >Cancel</a>
+        </form>
+        
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+
+{%endblock%}

@@ -23,7 +23,7 @@
             <div class="inner bg-white">
               <h3>{{users.count}}</h3>
 
-              <p>Total Users</p>
+              <p>Total Registration</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
@@ -53,12 +53,12 @@
             <div class="inner bg-white">
               <h3>{{staff.count}}</h3>
 
-              <p>Total Employees</p>
+              <p>Staff Profiles</p>
             </div>
             <div class="icon">
               <i class="ion ion-person"></i>
             </div>
-            <a href="{#% url "manage_staff" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{% url "profiles_list" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->

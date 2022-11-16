@@ -1,0 +1,53 @@
+{% extends "multitenancy/admin/adminUser/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_title %}Update Address{% endblock page_title %}
+
+{% block custom_css%}
+<style>
+    .small{display: inline-flex; gap: 5; align-items: center;}
+</style>
+{% endblock %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'generalsettings_index' %}">General Settings</a></li>
+
+<li class="breadcrumb-item active">Update Address</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container text-dark">
+        
+        
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- Security token -->
+            {% csrf_token %}
+        
+            
+            {% bootstrap_field form.address_line_1 %}
+            {% bootstrap_field form.address_line_2 %}
+            {% bootstrap_field form.city %}
+            {% bootstrap_field form.state %}
+            <div class="col-md-6 flex-row">
+                {% bootstrap_field form.country field_class="small" %}
+            </div>
+            {% bootstrap_field form.postal_code  %}
+            
+            <input type="submit" class="btn btn-info" value="Submit">
+            <a class="btn btn-danger text-light" href="{% url "generalsettings_index" %}" >Cancel</a>
+        </form>
+        
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+
+{%endblock%}

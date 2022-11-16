@@ -17,46 +17,39 @@
     <div class="row">
         <div class="col-md-6">
           <div class="list-group">
-            <a href="{% url 'pinax_teams:team_list' %}" class="list-group-item">
-              <h4 class="list-group-item-heading">Logo</h4>
+            
+            <a href="{% url 'update_logo'  logo.pk %}" class="list-group-item inline-block">
+              <img class="img-thumbnail" src="{{logo.logo.url}}" style="width:100px" alt="Company Logo"/>
+              <h4 class="list-group-item-heading">{{logo}}</h4>
               <p class="list-group-item-text">
-                Upload Company Logo
+                {{logo.help_text}}
               </p>
             </a>
-            <a href="{% url 'generalsettings_index' %}" class="list-group-item">
-              <h4 class="list-group-item-heading">General Company Details</h4>
+            
+            <a href="{% url 'update_info' info.pk %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{{info}}</h4>
               <p class="list-group-item-text">
-                Update the name, phone number, etc of the company
+                {{info.help_text}}
               </p>
             </a>
-            <a href="{% url 'plan_list' %}" class="list-group-item">
-                <h4 class="list-group-item-heading">Address</h4>
+            <a href="{% url 'update_address' address.pk %}" class="list-group-item">
+                <h4 class="list-group-item-heading">{{address}}</h4>
                 <p class="list-group-item-text">
-                  Update company address
+                  {{address.help_text}}
                 </p>
               </a>
           </div>
         </div>
         <div class="col-md-6">
           <div class="list-group">
-            <a href="{% url 'template_list' %}" class="list-group-item">
-              <h4 class="list-group-item-heading">Time zone and currency</h4>
+            <a href="{% url 'update_adminsettings' admin_settings.pk %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{{admin_settings}}</h4>
               <p class="list-group-item-text">
-                Update company timezone, currency and other related details.
+                {{admin_settings.help_text}}
               </p>
             </a>
-            <a href="{#% url 'groups_manager:group_entity_list' %#}" class="list-group-item">
-              <h4 class="list-group-item-heading">Groups</h4>
-              <p class="list-group-item-text">
-                Manage Group Settings and User roles
-              </p>
-            </a>
-            <a href="{% url 'usersubscription_list' %}" class="list-group-item">
-              <h4 class="list-group-item-heading">Subscriptions</h4>
-              <p class="list-group-item-text">
-                View and Manage User Subscriptions
-              </p>
-            </a>
+            
+            
           </div>
         </div>
       </div>

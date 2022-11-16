@@ -1,46 +1,55 @@
 from django.db import models
+from django.conf import settings
+from account.languages import DEFAULT_LANGUAGE
+from account.fields import TimeZoneField
+from django.utils.translation import gettext_lazy as _
+from multitenancy.core.models import BaseSetting
+from django_countries.fields import CountryField
+from phonenumber_field.modelfields import PhoneNumberField
 
-# Create your models here.
+class SettingsPage:
+    def __init__(self, hook_name) -> None:
+        pass
+    settings_items = []
 
-class BaseSetting(models.Model):
-    company_name = models.CharField(max_length=250, null=False, blank=False)
+
+class Logo(BaseSetting):
     logo = models.ImageField()
+    name = 'slug'
+    help_text = 'Upload Company Logo'
+    class Meta:
+        verbose_name = 'Logo'
+
+class GeneralInfo(BaseSetting):
+    help_text = 'Update the name, phone number, etc of the company'
+    company_name = models.CharField(max_length=255, blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True)
+    website = models.URLField(null=True, blank=True,)
+    email = models.EmailField(null=True, blank=True)
 
     class Meta:
-        abstract = True
-    
-    def __str__(self) -> str:
-        return self.company_name
-    # Override to fetch ForeignKey values in the same query when
-    # retrieving settings (e.g. via `for_request()`)
-    select_related = None
+        verbose_name = 'General Details'
 
+class Address(BaseSetting):
+    help_text = 'Update Company Address'
+    address_line_1 = models.CharField( max_length=200, null=True, blank=True,)
+    address_line_2 = models.CharField( max_length=200, null=True, blank=True)
+    city = models.CharField( max_length=200, null=True, blank=True)
+    state = models.CharField( max_length=200, null=True, blank=True, verbose_name="State/Province")
+    country = CountryField(null=True, blank=True)
+    postal_code = models.CharField(max_length=64, null=True, blank=True, verbose_name="Post/Zip-code")
 
-    @classmethod
-    def base_queryset(cls):
-        """
-        Returns a queryset of objects of this type to use as a base.
-        You can use the `select_related` attribute on your class to
-        specify a list of foreign key field names, which the method
-        will attempt to select additional related-object data for
-        when the query is executed.
-        If your needs are more complex than this, you can override
-        this method on your custom class.
-        """
-        queryset = cls.objects.all()
-        if cls.select_related is not None:
-            queryset = queryset.select_related(*cls.select_related)
-        return queryset
+    class Meta:
+        verbose_name = 'Address'
 
-    @classmethod
-    def _get_or_create(cls):
-        """
-        Internal convenience method to get or create the first instance.
-        We cannot hardcode `pk=1`, for example, as not all database backends
-        use sequential IDs (e.g. Postgres).
-        """
+class AdminSettings(BaseSetting):
+    help_text = 'Update company timezone, currency and other related details.'
+    timezone = TimeZoneField(_("timezone"))
+    language = models.CharField(_("language"),
+        max_length=10,
+        choices=settings.ACCOUNT_LANGUAGES,
+        default=DEFAULT_LANGUAGE,
+    )
 
-        first_obj = cls.base_queryset().first()
-        if first_obj is None:
-            return cls.objects.create()
-        return first_obj
+    class Meta:
+        verbose_name = 'Time zone and currency'

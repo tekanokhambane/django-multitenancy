@@ -7,6 +7,7 @@ import sweetify
 import os
 from django.views.decorators.csrf import csrf_exempt
 #import environ
+from django.core.exceptions import ImproperlyConfigured
 from django.db import connection, transaction
 from django.core.exceptions import PermissionDenied
 from django.http import response
@@ -25,6 +26,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from tenant_users.tenants.utils import (get_tenant_model, get_public_schema_name,
                                  get_tenant_domain_model)
+from multitenancy.profiles.models import Profile
 from django_tenants.utils import schema_context
 from tenant_users.tenants.models import InactiveError, ExistsError, UserProfile
 # from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, CompanyAddressForm, CompanyDetailForm, DepartmentCreateForm, EditCustomerForm, EditTenantForm, EditstaffForm, QuickAddCustomerForm, QuickAddStaffForm, TLDForm, PackageForm, ProductForm
@@ -33,7 +35,8 @@ from django.contrib.auth.decorators import login_required
 import json
 from account.mixins import LoginRequiredMixin
 from multitenancy.admin.filters import CustomerFilter, PlanFilter, PlanFilter, TenantFilter
-from multitenancy.admin.forms import CustomerForm, PlanForm, TenantForm
+from multitenancy.admin.forms import AddressForm, AdminSettingsForm, CustomerForm, GeneralInfoForm, LogoForm, PlanForm, TenantForm
+from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
 from multitenancy.subscriptions.models import Plan, UserSubcriptions
 from pinax.teams.models import SimpleTeam, Team
 from tenant_users.permissions.models import UserTenantPermissions
@@ -46,11 +49,14 @@ from multitenancy.apps.models import Package, Tenant, TenantType
 
 #env = environ.Env()
 
+
+
+
 class AdminIndexView(View, LoginRequiredMixin):
     def get(self, request, *args, **kwargs):
         tenants = get_tenant_model().objects.all().exclude(schema_name='public').exclude(is_template=True)
         users = TenantUser.objects.all()
-        staff = Staff.objects.filter()
+        staff = Profile.objects.filter()
         customers = Customer.objects.filter()
         user=request.user
         if user.type == "Admin":                  
@@ -254,5 +260,60 @@ class UserSubcriptionsListView(ListView, LoginRequiredMixin):
     model = UserSubcriptions
     template_name = 'multitenancy/admin/adminUser/usersubscriptions_list.html'  
 
-class GeneralSettingsIndexView(TemplateView, LoginRequiredMixin):
+class SettingsView(TemplateView):
     template_name = 'multitenancy/admin/adminUser/generalsettings_index.html'
+    model = None
+    settings_list = []
+
+    # def get_model(self):
+    #     """
+    #     Return a list of template names to be used for the request. Must return
+    #     a list. May not be called if render_to_response() is overridden.
+    #     """
+    #     if self.model is None:
+    #         raise ImproperlyConfigured(
+    #             "TemplateResponseMixin requires either a definition of "
+    #             "'template_name' or an implementation of 'get_template_names()'")
+    #     else:
+    #         return [self.model]
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        # item = self.model
+        # if item not in self.settings_list:
+        #     self.settings_list.append(item)
+
+        context['logo'] = Logo.load()
+        context['address'] = Address.load()
+        context['admin_settings'] = AdminSettings.load()
+        context['info'] = GeneralInfo.load()
+        return context
+
+    
+
+class UpdateLogoView(UpdateView, LoginRequiredMixin):
+    
+    model = Logo
+    form_class = LogoForm
+    success_url = reverse_lazy('generalsettings_index')
+    template_name = 'multitenancy/admin/adminUser/update_logo.html'
+
+class GeneralInfoView(UpdateView, LoginRequiredMixin):
+    
+    model = GeneralInfo
+    form_class = GeneralInfoForm
+    success_url = reverse_lazy('generalsettings_index')
+    template_name = 'multitenancy/admin/adminUser/update_info.html'
+
+class AddressView(UpdateView, LoginRequiredMixin):
+    
+    model = Address
+    form_class = AddressForm
+    success_url = reverse_lazy('generalsettings_index')
+    template_name = 'multitenancy/admin/adminUser/update_address.html'
+
+class AdminSettingsView(UpdateView, LoginRequiredMixin):
+    
+    model = AdminSettings
+    form_class = AdminSettingsForm
+    success_url = reverse_lazy('generalsettings_index')
+    template_name = 'multitenancy/admin/adminUser/update_adminsettings.html'
