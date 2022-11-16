@@ -3,7 +3,8 @@
 {% load account_tags %}
 {% load i18n %}
 {% load bootstrap4 %}
-
+{% load multitenancy_tags %}
+{% get_company_details as details %}
 {% block head_title %}{% trans "Log in" %}{% endblock %}
 
 {% block content %}
@@ -12,10 +13,11 @@
             <div class="login-box login m-0">
                 <div class="login-card">
                     <div class="image"> 
-                        <img src="{% static "dist/img/logo.png" %}" href="https://bubbledigital.co.za/" height="70px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
+                        <img src="{{details.logo.logo.url}}" href="https://bubbledigital.co.za/" height="70px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
                     </div> 
                     <form method="POST" action="{% url "accounts_login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
                         <legend class="">{% trans "Log in to an existing account" %}</legend>
+                        {{details.info.company_name}}
                         {% csrf_token %}
                         {% bootstrap_form form %}
                         {% if redirect_field_value %}
