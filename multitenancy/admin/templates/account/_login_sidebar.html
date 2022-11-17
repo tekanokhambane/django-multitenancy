@@ -1,4 +1,4 @@
-{# provide log in sidebar here #}
+{% load static %}
 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
       <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -6,11 +6,11 @@
       <li data-target="#carouselExampleIndicators" data-slide-to="2" class=""></li>
     </ol>
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="d-block w-100" src="https://placehold.it/900x500/39CCCC/ffffff&amp;text=I+Love+Bootstrap" alt="First slide">
+      <div class="carousel-item active" style="height:100vh; top:0; left:0;bottom:0; margin:0">
+        <img class="d-block w-100 h-100" style="margin:0" src="{% static 'account/img/slide1.jpg' %}" alt="First slide">
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" src="https://placehold.it/900x500/3c8dbc/ffffff&amp;text=I+Love+Bootstrap" alt="Second slide">
+        <img class="d-block w-100" src="{% static 'account/img/slide2.jpg' %}" alt="Second slide">
       </div>
       <div class="carousel-item">
         <img class="d-block w-100" src="https://placehold.it/900x500/f39c12/ffffff&amp;text=I+Love+Bootstrap" alt="Third slide">

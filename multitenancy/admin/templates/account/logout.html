@@ -5,6 +5,29 @@
 {% block head_title %}{% trans "Log out" %}{% endblock %}
 
 {% block content %}
+<div class="row">
+    <div class="col m-0">
+        <div class="login-box login m-0">
+            <div class="logout-card">
+                <div class="image"> 
+                    <img src="{{details.logo.logo.url}}" href="{{details.info.website.url}}" height="150px"  class="" alt="">
+                </div> 
+                <form method="POST" action="{% url "account_logout" %}">
+                    <legend>{% trans "Log out" %}</legend>
+                    <fieldset>
+                        {% csrf_token %}
+                        <p>{% trans "Are you sure you want to log out?" %}</p>
+                        <button type="submit" class="btn btn-light">{% trans "Log out" %}</button>
+                    </fieldset>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-md-6 bg-dark">
+        {#% include "account/_login_sidebar.html" %#}
+    </div> -->
+</div>
     <div class="row">
         <div class="col-md-5">
             <form method="POST" action="{% url "account_logout" %}">

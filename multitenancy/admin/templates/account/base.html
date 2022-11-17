@@ -1,4 +1,4 @@
-{% load static %}
+{% load static %}{% load multitenancy_tags %}
 <!DOCTYPE html>
 <html>
 
@@ -27,6 +27,8 @@
             
             <!-- /.login-logo -->
             <div class="login-container">
+                {% get_company_details as details %}
+                
           {% block content %}
           {% endblock content %}
                 <!-- /.login-card-body -->
