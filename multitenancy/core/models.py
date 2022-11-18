@@ -1,6 +1,5 @@
 from django.db import models
-from django.utils.functional import cached_property
-from django.utils.translation import gettext as _
+
 
 class AbstractSetting(models.Model):
     """
@@ -44,12 +43,6 @@ class AbstractSetting(models.Model):
         # Per-instance page URL cache
         self._page_url_cache = {}
 
-    @cached_property
-    def page_url(self):
-        # Allows get_page_url() to be invoked using
-        # `obj.page_url.foreign_key_name` syntax
-        return InvokeViaAttributeShortcut(self, "get_page_url")
-
     def get_page_url(self, attribute_name, request=None):
         """
         Returns the URL of a page referenced by a foreign key
@@ -87,16 +80,16 @@ class AbstractSetting(models.Model):
         state.pop("page_url", None)
         return state
 
+
 class BaseSetting(AbstractSetting):
     """
     Generic settings are singleton models - only one instance of each model
     can be created.
     """
     # slug = models.SlugField(null=True)
-        
-        
     help_text = ''
     name = ''
+
     class Meta:
         abstract = True
 

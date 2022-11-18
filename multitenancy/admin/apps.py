@@ -7,4 +7,3 @@ class MultiTenancyAdminConfig(AppConfig):
     verbose_name = 'multitenancy_admin'
     default = True
     app_label = 'multitenancy_admin'
-    

@@ -1,11 +1,8 @@
-from email.policy import default
 import os
 import uuid
-
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
-
 
 
 def avatar_upload(instance, filename):
@@ -19,6 +16,7 @@ class Skills(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
 
 class Profile(models.Model):
 

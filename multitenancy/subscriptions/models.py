@@ -4,15 +4,15 @@ from django_tenants.utils import get_tenant_type_choices
 # Create your models here.
 
 
-
 class Plan(models.Model):
     name = models.CharField(max_length=250, blank=False, null=False, choices=get_tenant_type_choices())
     description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(default=75, #type: ignore
-        max_digits=12, verbose_name="Price", decimal_places=2)
-    
+    price = models.DecimalField(default=75,  # type: ignore
+                                max_digits=12, verbose_name="Price", decimal_places=2)
+
     def __str__(self):
         return self.name
+
 
 class Subscription(models.Model):
     status = models.IntegerField()

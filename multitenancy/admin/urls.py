@@ -2,7 +2,6 @@ from django.urls import path
 
 from multitenancy.admin.views import (
     adminViews,
-    teamViews,
     authViews
 )
 

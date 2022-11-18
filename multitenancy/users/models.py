@@ -1,9 +1,7 @@
-from typing_extensions import Self
 from django.db import models
 from tenant_users.tenants.models import UserProfile
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
-    Permission, Group
+from django.contrib.auth.models import Group
 from tenant_users.permissions.models import UserTenantPermissions
 from multitenancy.profiles.models import Profile
 
@@ -14,17 +12,12 @@ class TenantUser(UserProfile):
         ADMIN = "Admin", "Admin"
         STAFF = "Staff", "Staff"
         CUSTOMER = "Customer", "Customer"
-
     type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=Types.ADMIN)
-    
-    # user_type_data = (('1', 'HOD'), ('2', 'Staff'), ('3', 'Customer'), ('4', 'AppUser'))
-    # user_type = models.CharField(
-    #     default=3, choices=user_type_data, max_length=10) #type: ignore
     first_name = models.CharField(max_length=300, blank=True, null=True)
     last_name = models.CharField(max_length=300, blank=True, null=True)
     username = models.CharField(max_length=250, blank=True, null=True)
     groups = models.ManyToManyField(Group, blank=True)
-    #note = models.CharField(max_length=300, blank=True, null=True)
+    # note = models.CharField(max_length=300, blank=True, null=True)
     signup_confirmation = models.BooleanField(default=False)
 
     def __str__(self) -> str:
@@ -57,23 +50,23 @@ class CustomerManager(models.Manager):
 
 class Admin(TenantUser):
     objects = AdminManager()
-    
+
     @property
     def get_profile(self):
         profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
         return profile
-    
+
     @property
     def create_public_superuser(self, *args, **kwargs):
         UserTenantPermissions.objects.create(profile_id=self.id, is_staff=True, is_superuser=True)  # type: ignore
-    
+
     class Meta:
         proxy = True
 
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = TenantUser.Types.ADMIN
-        
+
         return super().save(*args, **kwargs)
 
 
@@ -87,7 +80,7 @@ class Staff(TenantUser):
     @property
     def account(self):
         return self.account
-    
+
     @property
     def get_profile(self):
         profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
@@ -95,7 +88,7 @@ class Staff(TenantUser):
 
     class Meta:
         proxy = True
-    
+
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = TenantUser.Types.STAFF
