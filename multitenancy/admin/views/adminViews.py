@@ -1,148 +1,175 @@
-from django.core.files.storage import FileSystemStorage
-from django.forms.models import inlineformset_factory
 from django.urls.base import reverse, reverse_lazy
-from django.views.generic.base import View
-from django.views.generic.edit import CreateView, UpdateView
 import sweetify
-import os
-from django.views.decorators.csrf import csrf_exempt
-#import environ
-from django.core.exceptions import ImproperlyConfigured
-from django.db import connection, transaction
-from django.core.exceptions import PermissionDenied
-from django.http import response
-from django.shortcuts import get_object_or_404, redirect, render
-from django.http import HttpResponse, HttpResponseRedirect
-from requests.api import request
-# from .models.user_models import AdminUser, Employee
-from django.core.checks import messages
-from django.contrib import messages
-from django.contrib.contenttypes.models import ContentType
-from django.forms import fields
-import requests
-# from ..customers.models import RegisteredDomain, Domain, Client, DomainTld, Packages
-import time
+# import environ
+from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect, Http404
+from django.utils.translation import gettext as _
+# import time
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from tenant_users.tenants.utils import (get_tenant_model, get_public_schema_name,
-                                 get_tenant_domain_model)
+from tenant_users.tenants.utils import (get_tenant_model,
+                                        get_tenant_domain_model)
+from multitenancy.admin.decorators import allowed_users
 from multitenancy.profiles.models import Profile
-from django_tenants.utils import schema_context
-from tenant_users.tenants.models import InactiveError, ExistsError, UserProfile
-# from .forms import AddCustomerForm, AddStaffForm, AddTenantForm, CompanyAddressForm, CompanyDetailForm, DepartmentCreateForm, EditCustomerForm, EditTenantForm, EditstaffForm, QuickAddCustomerForm, QuickAddStaffForm, TLDForm, PackageForm, ProductForm
-from django.views.generic import TemplateView, ListView, DetailView, DeleteView, View
-from django.contrib.auth.decorators import login_required
-import json
+from tenant_users.tenants.models import InactiveError, ExistsError
+from django.views.generic import TemplateView, ListView, DeleteView, View, CreateView, UpdateView
 from account.mixins import LoginRequiredMixin
-from multitenancy.admin.filters import CustomerFilter, PlanFilter, PlanFilter, TenantFilter
-from multitenancy.admin.forms import AddressForm, AdminSettingsForm, CustomerForm, GeneralInfoForm, LogoForm, PlanForm, TenantForm
+from multitenancy.admin.filters import CustomerFilter, PlanFilter, TenantFilter
+from multitenancy.admin.forms import (
+    AddressForm,
+    AdminSettingsForm,
+    CustomerForm,
+    GeneralInfoForm,
+    LogoForm,
+    PlanForm,
+    TenantForm)
 from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
 from multitenancy.subscriptions.models import Plan, UserSubcriptions
 from pinax.teams.models import SimpleTeam, Team
-from tenant_users.permissions.models import UserTenantPermissions
-# from django_tenants_portal.portal.models.admin_models import Address, CompanyDetails, Department
-from multitenancy.users.models import Customer, Staff, TenantUser
-from multitenancy.apps.models import Package, Tenant, TenantType
-# from django_tenants_portal.product.models import Product
-#from groups_manager.models import Group, Member
-# from ..accounts.models import Account
+from multitenancy.users.models import Customer, TenantUser
+from multitenancy.apps.models import Tenant, TenantType
 
-#env = environ.Env()
+# env = environ.Env()
 
 
+class BaseCreateView(CreateView):
+    @allowed_users(allowed_types=["Admin"])
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        return super().get(request, *args, **kwargs)
+
+
+class BaseUpdateView(UpdateView):
+    @allowed_users(allowed_types=["Admin"])
+    def get(self, request, *args, **kwargs):
+        self.object = None
+        return super().get(request, *args, **kwargs)
+
+
+class BaseDeleteView(DeleteView):
+    @allowed_users(allowed_types=["Admin"])
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+
+class BaseListView(ListView):
+        def get(self, request, *args, **kwargs):
+            self.object_list = self.get_queryset()
+            allow_empty = self.get_allow_empty()
+
+            if not allow_empty:
+                # When pagination is enabled and object_list is a queryset,
+                # it's better to do a cheap query than to load the unpaginated
+                # queryset in memory.
+                if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
+                    is_empty = not self.object_list.exists()
+                else:
+                    is_empty = not self.object_list
+                if is_empty:
+                    raise Http404(_('Empty list and “%(class_name)s.allow_empty” is False.') % {
+                        'class_name': self.__class__.__name__,
+                    })
+            context = self.get_context_data()
+            return self.render_to_response(context)
+
+class BaseTemplateView(TemplateView):
+    @allowed_users(allowed_types=["Admin"])
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
 
 
 class AdminIndexView(View, LoginRequiredMixin):
+    @allowed_users(allowed_types=["Admin"])
     def get(self, request, *args, **kwargs):
         tenants = get_tenant_model().objects.all().exclude(schema_name='public').exclude(is_template=True)
         users = TenantUser.objects.all()
         staff = Profile.objects.filter()
         customers = Customer.objects.filter()
-        user=request.user
-        if user.type == "Admin":                  
-            return render(request, 'multitenancy/admin/adminUser/index.html',
-                        {
-                        'nbar': 'admin',
-                        'title': 'Dashboard!',
-                        'tenants': tenants,
-                        'customers': customers,
-                        'staff': staff,
-                            'users':users
-                        }
-                        )
+        return render(request, 'multitenancy/admin/adminUser/index.html',
+                      {
+                          'nbar': 'admin',
+                          'title': 'Dashboard!',
+                          'tenants': tenants,
+                          'customers': customers,
+                          'staff': staff,
+                          'users': users
+                      }
+                      )
 
-class CreateCustomerView(CreateView, LoginRequiredMixin):
+
+class CreateCustomerView(BaseCreateView, LoginRequiredMixin):
     model = Customer
     form_class = CustomerForm
     success_url = reverse_lazy('customer_list')
     template_name = 'multitenancy/admin/adminUser/create_customer.html'
 
 
-class UpdateCustomerView(UpdateView, LoginRequiredMixin):
+class UpdateCustomerView(BaseUpdateView, LoginRequiredMixin):
     model = Customer
     form_class = CustomerForm
     success_url = reverse_lazy('customer_list')
     template_name = 'multitenancy/admin/adminUser/update_customer.html'
 
 
-class DeleteCustomerView(LoginRequiredMixin, DeleteView):
+class DeleteCustomerView(LoginRequiredMixin, BaseDeleteView):
     model = Customer
     template_name = "multitenancy/admin/adminUser/delete_customer.html"
     success_url = reverse_lazy("customer_list")
 
-    
     def delete(self, request, *args, **kwargs):
         customer_id = self.kwargs['pk']
-        
 
         user = Customer.objects.filter(id=customer_id)
         user.delete()
         return HttpResponseRedirect(reverse('customer_list'))
 
 
-
-class TeamsIndexView(TemplateView, LoginRequiredMixin):
+class TeamsIndexView(BaseTemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/teamIndex.html"
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        
+
         context['simple_teams'] = SimpleTeam.objects.all()
         context['teams'] = Team.objects.all()
         return context
 
 
-class TemplateListView(TemplateView, LoginRequiredMixin):
+class TemplateListView(BaseTemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/template_list.html"
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        queryset =  TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
+        queryset = TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
 
         context['filter'] = queryset
         return context
 
-class CreateTemplateView(CreateView, LoginRequiredMixin):
+
+class CreateTemplateView(BaseCreateView, LoginRequiredMixin):
     model = Tenant
     form_class = TenantForm
     success_url = reverse_lazy('tenant_list')
     template_name = 'multitenancy/admin/adminUser/create_template.html'
 
-    def post(self, request,is_staff=True, *args, **kwargs):
-        form=self.get_form()
+    def post(self, request, is_staff=True, *args, **kwargs):
+        form = self.get_form()
         if form.is_valid():
             name = form.cleaned_data["name"]
             tenant_slug = form.cleaned_data["slug"]
             type = form.cleaned_data['type']
             user = request.user
-            TenantModel = get_tenant_model
 
             if not user.is_active:
-               raise InactiveError("Inactive user passed to provision tenant")
+                raise InactiveError("Inactive user passed to provision tenant")
             tenant_domain = '{}.{}'.format(
                 tenant_slug,  settings.TENANT_USERS_DOMAIN)
             DomainModel = get_tenant_domain_model()
             if DomainModel.objects.filter(domain=tenant_domain).exists():
                 raise ExistsError('Tenant URL already exists.')
-            time_string = str(int(time.time()))
+            # time_string = str(int(time.time()))
             # Must be valid postgres schema characters see:
             # https://www.postgresql.org/docs/9.2/static/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
             # We generate unique schema names each time so we can keep tenants around without
@@ -151,116 +178,127 @@ class CreateTemplateView(CreateView, LoginRequiredMixin):
             domain = None
             tenant = None
             try:
-                
+
                 tenant = Tenant.objects.create(name=name,
-                                            slug=tenant_slug,
-                                            schema_name=schema_name,
-                                            owner=user,
-                                            is_template=True,
-                                            type=type)
+                                               slug=tenant_slug,
+                                               schema_name=schema_name,
+                                               owner=user,
+                                               is_template=True,
+                                               type=type)
                 domain = get_tenant_domain_model().objects.create(domain=tenant_domain,
-                                                                tenant=tenant,
-                                                                is_primary=True)
+                                                                  tenant=tenant,
+                                                                  is_primary=True)
                 tenant.add_user(user, is_superuser=True, is_staff=is_staff)
                 tenant.auto_create_schema = False
                 tenant.save()
                 # Create cursor
-                sweetify.success(request, "Successfully Created Tenant!", icon='success', timer=5000)                          
-                #messages.success(request, "Successfully Added Tenant!")
+                sweetify.success(request, "Successfully Created Tenant!", icon='success', timer=5000)
+                # messages.success(request, "Successfully Added Tenant!")
                 return redirect("template_list")
-            except:
-                if domain is not None: 
-                    domain.delete() 
-                if tenant is not None: 
+            except Exception:
+                if domain is not None:
+                    domain.delete()
+                if tenant is not None:
                     # Flag is set to auto-drop the schema for the tenant
-                    tenant.delete(True) 
+                    tenant.delete(True)
                 raise
                 return tenant_domain
-        #return super().post(request, *args, **kwargs)
+        # return super().post(request, *args, **kwargs)
 
-class UpdateTemplateView(UpdateView, LoginRequiredMixin):
-    model= Tenant
+
+class UpdateTemplateView(BaseUpdateView, LoginRequiredMixin):
+    model = Tenant
     form_class = TenantForm
     success_url = reverse_lazy('template_list')
     template_name = 'multitenancy/admin/adminUser/update_template.html'
 
 
-class DeleteTenantView(LoginRequiredMixin, DeleteView):
+class DeleteTenantView(LoginRequiredMixin, BaseDeleteView):
     model = Tenant
     template_name = "multitenancy/admin/adminUser/delete_tenant.html"
     success_url = reverse_lazy("template_list")
 
-    
     def delete(self, request, *args, **kwargs):
         tenant_id = self.kwargs['pk']
-        
 
         tenant = Tenant.objects.filter(id=tenant_id)
         tenant.delete()
         return HttpResponseRedirect(reverse('tenant_list'))
 
-class TenantTypes(ListView, LoginRequiredMixin):
+
+class TenantTypes(BaseListView, LoginRequiredMixin):
     template_name = 'multitenancy/admin/adminUser/tenant_types.html'
     model = TenantType
 
-class CreateType(CreateView, LoginRequiredMixin):
-    model= TenantType
+
+class CreateType(BaseCreateView, LoginRequiredMixin):
+    model = TenantType
     fields = ['name']
     success_url = reverse_lazy('tenant_types')
     template_name = 'multitenancy/admin/adminUser/create_tenant_type.html'
 
 
-class TenantList(TemplateView, LoginRequiredMixin):
+class TenantList(BaseTemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/tenant_list.html"
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         f = TenantFilter(self.request.GET, queryset=Tenant.objects.all())
         context['filter'] = f
         return context
 
-class CustomerList(TemplateView, LoginRequiredMixin):
+
+class CustomerList(BaseTemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/customer_list.html"
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         f = CustomerFilter(self.request.GET, queryset=Customer.objects.all())
         context['filter'] = f
         return context
 
-class SettingsIndexView(TemplateView, LoginRequiredMixin):
+
+class SettingsIndexView(BaseTemplateView, LoginRequiredMixin):
     template_name = "multitenancy/admin/adminUser/settings_list.html"
 
 
-class PlanListView(ListView, LoginRequiredMixin):
+class PlanListView(BaseListView, LoginRequiredMixin):
     model = Plan
-    template_name= 'multitenancy/admin/adminUser/plan_list.html'
+    template_name = 'multitenancy/admin/adminUser/plan_list.html'
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         f = PlanFilter(self.request.GET, queryset=Plan.objects.all())
         context['filter'] = f
         return context
 
-class CreatePlanView(CreateView, LoginRequiredMixin):
+
+class CreatePlanView(BaseCreateView, LoginRequiredMixin):
     model = Plan
     form_class = PlanForm
     success_url = reverse_lazy('plan_list')
     template_name = 'multitenancy/admin/adminUser/create_plan.html'
 
-class UpdatePlanView(UpdateView, LoginRequiredMixin):
+
+class UpdatePlanView(BaseUpdateView, LoginRequiredMixin):
     model = Plan
     form_class = PlanForm
     success_url = reverse_lazy('plan_list')
     template_name = 'multitenancy/admin/adminUser/update_plan.html'
 
-class DeletePlanView(LoginRequiredMixin, DeleteView):
+
+class DeletePlanView(LoginRequiredMixin, BaseDeleteView):
     model = Plan
     template_name = "multitenancy/admin/adminUser/delete_plan.html"
     success_url = reverse_lazy("plan_list")
 
-class UserSubcriptionsListView(ListView, LoginRequiredMixin):
-    model = UserSubcriptions
-    template_name = 'multitenancy/admin/adminUser/usersubscriptions_list.html'  
 
-class SettingsView(TemplateView):
+class UserSubcriptionsListView(BaseListView, LoginRequiredMixin):
+    model = UserSubcriptions
+    template_name = 'multitenancy/admin/adminUser/usersubscriptions_list.html'
+
+
+class SettingsView(BaseTemplateView, LoginRequiredMixin):
     template_name = 'multitenancy/admin/adminUser/generalsettings_index.html'
     model = None
     settings_list = []
@@ -276,7 +314,7 @@ class SettingsView(TemplateView):
     #             "'template_name' or an implementation of 'get_template_names()'")
     #     else:
     #         return [self.model]
-    def get_context_data(self,*args, **kwargs):
+    def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         # item = self.model
         # if item not in self.settings_list:
@@ -288,31 +326,33 @@ class SettingsView(TemplateView):
         context['info'] = GeneralInfo.load()
         return context
 
-    
 
-class UpdateLogoView(UpdateView, LoginRequiredMixin):
-    
+class UpdateLogoView(BaseUpdateView, LoginRequiredMixin):
+
     model = Logo
     form_class = LogoForm
     success_url = reverse_lazy('generalsettings_index')
     template_name = 'multitenancy/admin/adminUser/update_logo.html'
 
-class GeneralInfoView(UpdateView, LoginRequiredMixin):
-    
+
+class GeneralInfoView(BaseUpdateView, LoginRequiredMixin):
+
     model = GeneralInfo
     form_class = GeneralInfoForm
     success_url = reverse_lazy('generalsettings_index')
     template_name = 'multitenancy/admin/adminUser/update_info.html'
 
-class AddressView(UpdateView, LoginRequiredMixin):
-    
+
+class AddressView(BaseUpdateView, LoginRequiredMixin):
+
     model = Address
     form_class = AddressForm
     success_url = reverse_lazy('generalsettings_index')
     template_name = 'multitenancy/admin/adminUser/update_address.html'
 
-class AdminSettingsView(UpdateView, LoginRequiredMixin):
-    
+
+class AdminSettingsView(BaseUpdateView, LoginRequiredMixin):
+
     model = AdminSettings
     form_class = AdminSettingsForm
     success_url = reverse_lazy('generalsettings_index')

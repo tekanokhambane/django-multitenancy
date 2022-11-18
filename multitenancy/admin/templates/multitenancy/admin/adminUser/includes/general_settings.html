@@ -13,23 +13,23 @@
                 <i class="fas fa-envelope mr-2"></i> Teams
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{#% url 'view_addresses'%#}" class="dropdown-item">
-                <i class="fas fa-map-marker mr-2"></i> Address List
+            <a href="{% url 'update_address' 1 %}" class="dropdown-item">
+                <i class="fas fa-map-marker mr-2"></i> Address
                 
             </a>
             <div class="dropdown-divider"></div>
-            <a href="{#% url 'company_details'%#}" class="dropdown-item">
+            <a href="{% url 'update_info' 1 %}" class="dropdown-item">
                 <i class="fas fa-file mr-2"></i> Company Details
             </a>
-            <div class="dropdown-divider"></div>
+            <!-- <div class="dropdown-divider"></div>
             <a href="{#% url 'manage_tlds'%#}" class="dropdown-item">
                 <i class="fas fa-globe mr-2"></i>View TLD's
-            </a>
+            </a> -->
             <div class="dropdown-divider"></div>
-            <a href="{#% url 'manage_packages'%#}" class="dropdown-item">
-                <i class="fas fa-list-ol mr-2"></i>View Packages
+            <a href="{% url 'plan_list'%}" class="dropdown-item">
+                <i class="fas fa-list-ol mr-2"></i>View Plans
             </a>
-            <div class="dropdown-divider"></div>
+            <!-- <div class="dropdown-divider"></div>
             <a href="{#% url 'product_list'%#}" class="dropdown-item">
                 <i class="fas fa-gift mr-2"></i>View Products
             </a>
@@ -37,7 +37,7 @@
             <div class="dropdown-divider"></div>
             <a href="{#% url 'accounts_manager' %#}" class="dropdown-item">
                 <i class="fas fa-users mr-2"></i> Accounts Manager
-            </a>
+            </a> -->
             <div class="dropdown-divider"></div>
             <a href="{% url 'settings_index'%}" class="dropdown-item dropdown-footer">All Settings</a>
         </div>
