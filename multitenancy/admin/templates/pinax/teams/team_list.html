@@ -1,4 +1,4 @@
-{% extends 'multitenancy/admin/adminUser/base.html' %}
+{% extends 'multitenancy/admin/base.html' %}
 {#% load thumbnail %#}
 {% block page_title %}Teams{% endblock %}
 {%block breadcrumbs%}
@@ -10,9 +10,11 @@
         <div class="col-md-6 text-dark">
             <h1>Teams </h1>
         </div>
+        {%if user.type == 'Admin' %}
         <div class="col-md-6 text-dark">
             <a class="btn btn-success text-white shadow" href="{% url 'pinax_teams:team_create' %}"><i class="fa fa-plus"></i> Create Team</a>
         </div>
+        {%endif%}
     </div>
     <div class="row">
         {% for team in teams %}

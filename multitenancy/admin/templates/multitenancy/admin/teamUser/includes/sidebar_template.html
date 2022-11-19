@@ -19,7 +19,10 @@
             <div class="image">
                 
                 {% avatar user.email class="img-circle elevation-2" %}
-                
+                {% comment %} <img src="{{ avatar.user}}" class="img-circle elevation-2" alt="User Image"> {% endcomment %}
+                {% comment %}
+                <img src="{% static "admin/img/avatar.jpg" %}" class="img-circle elevation-2" alt="User Image">
+                {% endcomment %}
             </div>
             <div class="info">
                 <a href="{% url 'profiles_detail' username=user.username %}" class="d-block">Hi, {{user.profile.display_name}}!</a>
@@ -32,7 +35,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "dashboard" %}" class="nav-link {% if request.path == request.get_full_path %}active{% endif %}">
+                    <a href="{% url "team_dashboard" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -40,81 +43,28 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{% url "pinax_teams:team_list" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Teams
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url "profiles_list" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Profiles
+
+                        </p>
+                    </a>
+                </li>
                 {% comment "" %}
                 Tenants
                 {% endcomment %}
-                <li class="nav-item has-treeview ">
-                    <a href="#" script="alert('hi')"
-                        class="nav-link {% if request.path ==   'dashboard'%}active{% endif %}">
-                        <i class="nav-icon fas fa-clone"></i>
-                        <p>
-                            Template
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url "create_template" %}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
-                                <i class="nav-icon fas fa-paste"></i>
-                                <p>
-                                    Create Template
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url "template_list" %}"
-                                class="nav-link {% if url ==  'tenant_list' %}active{% endif %}">
-                                <i class="nav-icon fa-solid fa-folder-open"></i>
-                                <p>
-                                    Manage Templates
-                                </p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                
-                {% comment "" %}
-                users
-                {% endcomment %}
-                <li class="nav-item has-treeview ">
-                    <a href="#"
-                        class="nav-link {% if nbar == 'add_staff' or  nbar == 'manage_staff'%}active{% endif %}">
-                        <i class="nav-icon fas fa-users-cog"></i>
-                        <p>
-                            Manage Users
-                            <i class="fas fa-angle-left right"></i>
-                        </p>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{% url "profiles_list" %}" class="nav-link {% if nbar == 'add_staff'  %}active{% endif %}">
-                                <i class="nav-icon fas fa-users-cog"></i>
-                                <p>
-                                    Manage Staff
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url "customer_list" %}" class="nav-link {% if nbar ==  'manage_staff' %}active{% endif %}">
-                                <i class="nav-icon fas fa-user-tag"></i>
-                                <p>
-                                    Manage Customers
-                                </p>
-                            </a>
-                        </li>
-
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url "settings_index" %}" class="nav-link {% if nbar == 'settings' %}active{% endif %}">
-                        <i class="nav-icon fas fa-cogs"></i>
-                        <p>
-                            Settings
-
-                        </p>
-                    </a>
-                </li>
+               
                 {%comment%}
                 <li class="nav-item has-treeview ">
                     <a href="#"

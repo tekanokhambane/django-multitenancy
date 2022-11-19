@@ -1,6 +1,6 @@
-{% extends "multitenancy/admin/adminUser/base.html" %}
+{% extends "multitenancy/admin/base.html" %}
 {% load static %}
-
+{% load avatar_tags %}
 {% block head_title %}{{ profile.display_name }}{% endblock %}
 
 {% load thumbnail %}
@@ -13,10 +13,8 @@
     <div class="row text-dark">
         <div class="col-md-4">
             <div class="profile-widget">
-                {% if profile.avatar %}
-                    <img class="img-polaroid avatar hidden-phone" src="{% thumbnail profile.avatar 160x160 crop %}" alt="{{ profile.name }}">
-                {% endif %}
-
+                
+                {% avatar profile.user class="img-polaroid avatar hidden-phone" %}
                 <h2>{{ profile.display_name }}</h2>
 
                 <div class="profile">
@@ -103,9 +101,8 @@
             <div class="card card-info card-outline">
               <div class="card-body box-profile">
                 <div class="text-center">
-                    {% if profile.avatar %}
-                    <img class="profile-user-img img-fluid img-circle" src="{% thumbnail profile.avatar 160x160 crop %}" alt="{{ profile.name }}">
-                    {% endif %}
+                  {% avatar profile.user class="profile-user-img img-fluid img-circle" %}
+                    
                 </div>
 
                 <h3 class="profile-username text-center text-dark">{{ profile.display_name }}</h3>

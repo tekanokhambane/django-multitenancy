@@ -57,8 +57,9 @@
                 </form>
                 {#% include "multitenancy/admin/adminUser/includes/notifications.html" %#}
                 <!-- Right navbar links -->
+                
                 {% include "multitenancy/admin/adminUser/includes/general_settings.html" %}
-
+                
 
                
             </nav>
@@ -66,7 +67,7 @@
             {% if user.type == 'Admin' %}
                 {% include "multitenancy/admin/adminUser/includes/sidebar_template.html" with user=user id=id%}
             {% elif user.type == 'Staff' %}
-                {% include "multitenancy/admin/adminUser/includes/sidebar_template.html" with user=user id=id%}
+                {% include "multitenancy/admin/teamUser/includes/sidebar_template.html" with user=user id=id%}
             {% else %}
                 {% include "multitenancy/admin/adminUser/includes/sidebar_template.html" with user=user id=id%}
             {%endif%}
@@ -77,11 +78,17 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1 class="text-dark"> {% block page_title %}jjjj{% endblock page_title %} </h1>
+                                <h1 class="text-dark"> {% block page_title %}{% endblock page_title %} </h1>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
+                                    {% if user.type == 'Admin' %}
                                     <li class="breadcrumb-item"> <a href="{% url "dashboard" %}">Home</a></li>
+                                    {% elif user.type == 'Staff' %}
+                                    <li class="breadcrumb-item"> <a href="{% url "team_dashboard" %}">Home</a></li>
+                                    {% else %}
+                                    <li class="breadcrumb-item"> <a href="{% url "customer_dashboard" %}">Home</a></li>
+                                    {%endif%}
                                     {%block breadcrumbs %} {%endblock%}
                                     
                                 </ol>
@@ -98,7 +105,7 @@
 
             </div>
             <!-- /.content-wrapper -->
-            {% include "multitenancy/admin/adminUser/includes/footer.html" %}
+            {% include "multitenancy/admin/footer.html" %}
 
             <!-- Control Sidebar -->
             <aside class="control-sidebar control-sidebar-dark">
