@@ -4,11 +4,12 @@
     <!-- Messages Dropdown Menu -->
     
     <!-- Notifications Dropdown Menu -->
+    {%if user.type == "Admin"%}
     <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
             <i class="fas fa-cogs"></i>
         </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
             <a href="{% url 'pinax_teams:team_list'%} " class="dropdown-item">
                 <i class="fas fa-envelope mr-2"></i> Teams
             </a>
@@ -42,19 +43,56 @@
             <a href="{% url 'settings_index'%}" class="dropdown-item dropdown-footer">All Settings</a>
         </div>
     </li>
-
-    <li class="nav-item ">
-
-        <a href="{% url 'profiles_detail' username=user.username %}" class="nav-link"><i class="fas fa-user-cog"></i> </a>
+    {%endif%}
+    <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-globe"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <a href="{% url 'pinax_teams:team_list'%} " class="dropdown-item">
+                 English
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'update_address' 1 %}" class="dropdown-item">
+            Swahili
+                
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'update_info' 1 %}" class="dropdown-item">
+             Spanish
+            </a>
+         
+            
+        </div>
     </li>
+
+    
 </ul>   
 
     
     
 
 <ul class="navbar-nav ml-auto">
-
-    <li class="nav-item ">
-        <a href="{% url "account_logout" %}" class="nav-link">Logout</a>
+    <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="fas fa-user-cog"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+            <a href="{% url 'profiles_detail' username=user.username %}" class="dropdown-item">
+                <i class="fas fa-user mr-2"></i> Profile
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="{% url 'account_settings'  %}" class="dropdown-item">
+                <i class="fas fas fa-user-edit mr-2"></i> Account
+                
+            </a>
+          
+            <div class="dropdown-divider"></div>
+            <a href="{% url "account_logout" %}" class="dropdown-item dropdown-footer">
+                <i class="fas fas fa-sign-out mr-2"></i>Logout</a>
+        </div>
     </li>
+
+    
+    
 </ul>
