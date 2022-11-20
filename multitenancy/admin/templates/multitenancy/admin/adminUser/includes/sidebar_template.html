@@ -28,11 +28,12 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
+            {% with request.resolver_match.url_name as url_name %}
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "dashboard" %}" class="nav-link {% if request.path == request.get_full_path %}active{% endif %}">
+                    <a href="{% url "dashboard" %}" class="nav-link {% if url_name == 'dashboard' %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -44,8 +45,8 @@
                 Tenants
                 {% endcomment %}
                 <li class="nav-item has-treeview ">
-                    <a href="#" script="alert('hi')"
-                        class="nav-link {% if request.path ==   'dashboard'%}active{% endif %}">
+                    <a href="#" 
+                        class="nav-link {% if url_name ==   'create_template' or url_name == 'template_list'%}active{% endif %}">
                         <i class="nav-icon fas fa-clone"></i>
                         <p>
                             Template
@@ -54,7 +55,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "create_template" %}" class="nav-link {% if nbar == 'add_tenant'  %}active{% endif %}">
+                            <a href="{% url "create_template" %}" class="nav-link {% if url_name  == 'create_template'  %}active{% endif %}">
                                 <i class="nav-icon fas fa-paste"></i>
                                 <p>
                                     Create Template
@@ -63,7 +64,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{% url "template_list" %}"
-                                class="nav-link {% if url ==  'tenant_list' %}active{% endif %}">
+                                class="nav-link {% if url_name ==  'template_list' %}active{% endif %}">
                                 <i class="nav-icon fa-solid fa-folder-open"></i>
                                 <p>
                                     Manage Templates
@@ -79,7 +80,7 @@
                 {% endcomment %}
                 <li class="nav-item has-treeview ">
                     <a href="#"
-                        class="nav-link {% if nbar == 'add_staff' or  nbar == 'manage_staff'%}active{% endif %}">
+                        class="nav-link {% if url_name == 'profiles_list' or url_name ==  'customer_list'%}active{% endif %}">
                         <i class="nav-icon fas fa-users-cog"></i>
                         <p>
                             Manage Users
@@ -88,7 +89,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "profiles_list" %}" class="nav-link {% if nbar == 'add_staff'  %}active{% endif %}">
+                            <a href="{% url "profiles_list" %}" class="nav-link {% if url_name == 'profiles_list'  %}active{% endif %}">
                                 <i class="nav-icon fas fa-users-cog"></i>
                                 <p>
                                     Manage Staff
@@ -96,7 +97,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "customer_list" %}" class="nav-link {% if nbar ==  'manage_staff' %}active{% endif %}">
+                            <a href="{% url "customer_list" %}" class="nav-link {% if url_name ==  'customer_list' %}active{% endif %}">
                                 <i class="nav-icon fas fa-user-tag"></i>
                                 <p>
                                     Manage Customers
@@ -107,7 +108,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url "settings_index" %}" class="nav-link {% if nbar == 'settings' %}active{% endif %}">
+                    <a href="{% url "settings_index" %}" class="nav-link {% if url_name == 'settings_index' %}active{% endif %}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             Settings
@@ -205,7 +206,7 @@
                         </li>
                     {%endcomment%}
                     </ul>
-
+                    {% endwith %} 
                 </li>
                 
                 </li>

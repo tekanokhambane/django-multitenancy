@@ -31,11 +31,12 @@
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
+            {% with request.resolver_match.url_name as url_name %}
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "team_dashboard" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
+                    <a href="{% url "team_dashboard" %}" class="nav-link {% if url_name == "team_dashboard" %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -44,7 +45,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url "pinax_teams:team_list" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
+                    <a href="{% url "pinax_teams:team_list" %}" class="nav-link {% if url_name == "team_list" %}active{% endif %}">
                         <i class="nav-icon fas fa-users"></i>
                         <p>
                             Teams
@@ -53,7 +54,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{% url "profiles_list" %}" class="nav-link {% if request.path == "/admin/" %}active{% endif %}">
+                    <a href="{% url "profiles_list" %}" class="nav-link {% if url_name == "profiles_list" %}active{% endif %}">
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             Profiles
@@ -155,7 +156,7 @@
                         </li>
                     {%endcomment%}
                     </ul>
-
+                    {% endwith %} 
                 </li>
                 
                 </li>
