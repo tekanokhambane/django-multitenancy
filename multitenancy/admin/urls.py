@@ -5,8 +5,10 @@ from multitenancy.admin.views import (
     authViews
 )
 
+
+
 urlpatterns = [
-    path("", adminViews.AdminIndexView.as_view(), name="dashboard"),
+    path(r"", adminViews.AdminIndexView.as_view(), name="dashboard"),
 
     path("templates/", adminViews.TemplateListView.as_view(), name="template_list"),
     path("templates/create/", adminViews.CreateTemplateView.as_view(), name="create_template"),
@@ -20,7 +22,7 @@ urlpatterns = [
     path("settings/", adminViews.SettingsIndexView.as_view(), name="settings_index"),
     path("settings/plans/", adminViews.PlanListView.as_view(), name="plan_list"),
     path("settings/plans/create/", adminViews.CreatePlanView.as_view(), name="create_plan"),
-    path("settings/plans/<int:pk>/update/", adminViews.CreatePlanView.as_view(), name="update_plan"),
+    path("settings/plans/<int:pk>/update/", adminViews.UpdatePlanView.as_view(), name="update_plan"),
     path("settings/plans/<int:pk>/delete/", adminViews.DeletePlanView.as_view(), name="delete_plan"),
     path("settings/usersubscriptions/", adminViews.UserSubcriptionsListView.as_view(), name="usersubscription_list"),
     path("settings/general/", adminViews.SettingsView.as_view(), name="generalsettings_index"),
