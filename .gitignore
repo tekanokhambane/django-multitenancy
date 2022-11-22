@@ -14,7 +14,6 @@ dist/
 downloads/
 /tenantscrm
 /pinax
-/helpdesk
 manage.py
 /account
 eggs/
