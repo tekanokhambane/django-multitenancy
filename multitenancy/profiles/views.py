@@ -1,5 +1,6 @@
 from django.urls.base import reverse
-from django.views.generic import UpdateView, DetailView, ListView
+from django.views.generic import DetailView
+from multitenancy.admin.views.baseViews import TeamUpdateView, TeamListView
 
 from django.contrib import messages
 
@@ -9,7 +10,7 @@ from .forms import ProfileForm
 from .models import Profile
 
 
-class ProfileEditView(LoginRequiredMixin, UpdateView):
+class ProfileEditView(LoginRequiredMixin, TeamUpdateView):
 
     form_class = ProfileForm
     model = Profile
@@ -34,7 +35,7 @@ class ProfileDetailView(DetailView):
     context_object_name = "profile"
 
 
-class ProfileListView(ListView):
+class ProfileListView(TeamListView):
 
     model = Profile
     context_object_name = "profiles"
