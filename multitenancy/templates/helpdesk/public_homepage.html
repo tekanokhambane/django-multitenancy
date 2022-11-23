@@ -1,0 +1,84 @@
+{% extends "helpdesk/public_base.html" %}
+{% load i18n bootstrap4form %}
+
+{% block helpdesk_title %}{% trans "Welcome to Helpdesk" %}{% endblock %}
+
+{% block helpdesk_breadcrumb %}
+    <li class="breadcrumb-item">
+        <a href="#">Public</a>
+    </li>
+    <li class="breadcrumb-item active">Homepage</li>
+{% endblock %}
+
+{% block helpdesk_body %}
+    <div class="container-fluid">
+        <div class="row">
+            {% if kb_categories %}
+                <div class="col-sm">
+                    <h2>{% trans "Knowledgebase Articles" %}</h2>
+                    {% for category in kb_categories %}
+                        <div class="card" style="margin-top: 15px">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ category.title }}</h5>
+                                <p class="card-text">{{ category.description }}</p>
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <a href='{{ category.get_absolute_url }}'>
+                                            {% trans 'View articles' %} <i class="fa fa-arrow-right"></i>
+                                        </a>
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="col-sm">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h2>{% trans "Submit a Ticket" %}</h2>
+                        {% include 'helpdesk/public_create_ticket_base.html' %}
+                    </div>
+                </div>
+            </div>
+
+            {% if not helpdesk_settings.HELPDESK_VIEW_A_TICKET_PUBLIC and not helpdesk_settings.HELPDESK_SUBMIT_A_TICKET_PUBLIC %}
+                <h2>{% trans "Please use button at upper right to login first." %}</h2>
+            {% endif %}
+
+            {% if helpdesk_settings.HELPDESK_VIEW_A_TICKET_PUBLIC %}
+                <div class="col-sm">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h2>{% trans "View a Ticket" %}</h2>
+                            <form method='get' action="{% url 'helpdesk:public_view' %}">
+                                <fieldset>
+                                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                                        <label for='id_ticket'>{% trans "Ticket" %}</label>
+                                        <div class="input-group">
+                                            <input type='text' name='ticket' class='form-control'/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+                                        <label for='id_email'>{% trans "Your E-mail Address" %}</label>
+                                        <div class="input-group">
+                                            <input type='text' name='email' class='form-control'/>
+                                        </div>
+                                    </div>
+                                    <div class='buttons form-group'>
+                                        <input type='submit' class="btn btn-primary" value='{% trans "View Ticket" %}'/>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block helpdesk_js %}
+    {{ form.media.js }}
+{% endblock %}
