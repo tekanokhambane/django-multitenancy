@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.urls import reverse
 from django.utils.html import escape
 from django.utils.translation import gettext as _
-from helpdesk.serializers import DatatablesTicketSerializer
+from multitenancy.helpdesk.serializers import DatatablesTicketSerializer
 import json
 from model_utils import Choices
 

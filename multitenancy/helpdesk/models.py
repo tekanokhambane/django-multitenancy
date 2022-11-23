@@ -21,7 +21,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext, gettext_lazy as _
-from helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk import settings as helpdesk_settings
 from io import StringIO
 from markdown import markdown
 from markdown.extensions import Extension

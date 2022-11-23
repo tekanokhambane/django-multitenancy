@@ -18,13 +18,13 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import FormView
-from helpdesk import settings as helpdesk_settings
-from helpdesk.decorators import is_helpdesk_staff, protect_view
-from helpdesk.lib import text_is_spam
-from helpdesk.models import Queue, Ticket, UserSettings
-from helpdesk.user import huser_from_request
-import helpdesk.views.abstract_views as abstract_views
-import helpdesk.views.staff as staff
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.decorators import is_helpdesk_staff, protect_view
+from multitenancy.helpdesk.lib import text_is_spam
+from multitenancy.helpdesk.models import Queue, Ticket, UserSettings
+from multitenancy.helpdesk.user import huser_from_request
+import multitenancy.helpdesk.views.abstract_views as abstract_views
+import multitenancy.helpdesk.views.staff as staff
 from importlib import import_module
 import logging
 from urllib.parse import quote

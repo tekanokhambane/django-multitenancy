@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
-from helpdesk.models import FollowUp, FollowUpAttachment, Ticket
-from helpdesk.serializers import FollowUpAttachmentSerializer, FollowUpSerializer, TicketSerializer, UserSerializer
+from multitenancy.helpdesk.models import FollowUp, FollowUpAttachment, Ticket
+from multitenancy.helpdesk.serializers import FollowUpAttachmentSerializer, FollowUpSerializer, TicketSerializer, UserSerializer
 from rest_framework import viewsets
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import IsAdminUser

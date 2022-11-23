@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import helpdesk.models
+import multitenancy.helpdesk.models
 
 
 class Migration(migrations.Migration):
@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='KBIAttachment',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(max_length=1000, upload_to=helpdesk.models.attachment_path, verbose_name='File')),
+                ('file', models.FileField(max_length=1000, upload_to=multitenancy.helpdesk.models.attachment_path, verbose_name='File')),
                 ('filename', models.CharField(max_length=1000, verbose_name='Filename')),
                 ('mime_type', models.CharField(max_length=255, verbose_name='MIME Type')),
                 ('size', models.IntegerField(help_text='Size of this file in bytes', verbose_name='Size')),

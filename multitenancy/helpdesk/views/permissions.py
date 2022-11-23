@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from helpdesk.decorators import is_helpdesk_staff
+from multitenancy.helpdesk.decorators import is_helpdesk_staff
 
 
 class MustBeStaffMixin(LoginRequiredMixin, UserPassesTestMixin):

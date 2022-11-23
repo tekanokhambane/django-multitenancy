@@ -1,8 +1,8 @@
 
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from helpdesk import settings as helpdesk_settings
-from helpdesk.models import (
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.models import (
     CustomField,
     EmailTemplate,
     EscalationExclusion,
@@ -18,7 +18,7 @@ from helpdesk.models import (
 
 
 if helpdesk_settings.HELPDESK_KB_ENABLED:
-    from helpdesk.models import KBCategory, KBItem
+    from multitenancy.helpdesk.models import KBCategory, KBItem
 
 
 @admin.register(Queue)

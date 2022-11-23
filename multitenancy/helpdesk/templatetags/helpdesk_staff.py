@@ -6,7 +6,7 @@ templatetags/helpdesk_staff.py
 """
 
 from django.template import Library
-from helpdesk.decorators import is_helpdesk_staff
+from multitenancy.helpdesk.decorators import is_helpdesk_staff
 import logging
 
 

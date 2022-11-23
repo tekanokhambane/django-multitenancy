@@ -1,4 +1,4 @@
-{% extends "helpdesk/base.html" %}{% load i18n %}
+{% extends "multitenancy/admin/base.html" %}{% load i18n %}
 
 {% block helpdesk_title %}{% trans "Helpdesk Dashboard" %}{% endblock %}
 
@@ -9,7 +9,7 @@
 <li class="breadcrumb-item active">{% trans "Overview" %}</li>
 {% endblock %}
 
-{% block helpdesk_body %}
+{% block main_content %}
 
 <div class="row">
     <div class="col-sm-8">

@@ -11,8 +11,8 @@ views/kb.py - Public-facing knowledgebase views. The knowledgebase is a
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.clickjacking import xframe_options_exempt
-from helpdesk import settings as helpdesk_settings, user
-from helpdesk.models import KBCategory, KBItem
+from multitenancy.helpdesk import settings as helpdesk_settings, user
+from multitenancy.helpdesk.models import KBCategory, KBItem
 
 
 def index(request):

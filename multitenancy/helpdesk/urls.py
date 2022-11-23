@@ -11,15 +11,15 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path, re_path
 from django.views.generic import TemplateView
-from helpdesk import settings as helpdesk_settings
-from helpdesk.decorators import helpdesk_staff_member_required, protect_view
-from helpdesk.views import feeds, login, public, staff
-from helpdesk.views.api import CreateUserView, FollowUpAttachmentViewSet, FollowUpViewSet, TicketViewSet
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.decorators import helpdesk_staff_member_required, protect_view
+from multitenancy.helpdesk.views import feeds, login, public, staff
+from multitenancy.helpdesk.views.api import CreateUserView, FollowUpAttachmentViewSet, FollowUpViewSet, TicketViewSet
 from rest_framework.routers import DefaultRouter
 
 
 if helpdesk_settings.HELPDESK_KB_ENABLED:
-    from helpdesk.views import kb
+    from multitenancy.helpdesk.views import kb
 
 try:
     # TODO: why is it imported? due to some side-effect or by mistake?

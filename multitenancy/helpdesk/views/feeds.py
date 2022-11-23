@@ -13,7 +13,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from helpdesk.models import FollowUp, Queue, Ticket
+from multitenancy.helpdesk.models import FollowUp, Queue, Ticket
 
 
 User = get_user_model()

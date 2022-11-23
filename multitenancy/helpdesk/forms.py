@@ -15,9 +15,9 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from helpdesk import settings as helpdesk_settings
-from helpdesk.lib import convert_value, process_attachments, safe_template_context
-from helpdesk.models import (
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.lib import convert_value, process_attachments, safe_template_context
+from multitenancy.helpdesk.models import (
     CustomField,
     FollowUp,
     IgnoreEmail,
@@ -28,18 +28,18 @@ from helpdesk.models import (
     TicketDependency,
     UserSettings
 )
-from helpdesk.settings import (
+from multitenancy.helpdesk.settings import (
     CUSTOMFIELD_DATE_FORMAT,
     CUSTOMFIELD_DATETIME_FORMAT,
     CUSTOMFIELD_TIME_FORMAT,
     CUSTOMFIELD_TO_FIELD_DICT
 )
-from helpdesk.validators import validate_file_extension
+from multitenancy.helpdesk.validators import validate_file_extension
 import logging
 
 
 if helpdesk_settings.HELPDESK_KB_ENABLED:
-    from helpdesk.models import KBItem
+    from multitenancy.helpdesk.models import KBItem
 
 logger = logging.getLogger(__name__)
 User = get_user_model()

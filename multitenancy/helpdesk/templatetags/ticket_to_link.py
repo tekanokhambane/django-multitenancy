@@ -14,7 +14,7 @@ templatetags/ticket_to_link.py - Used in ticket comments to allow wiki-style
 from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from helpdesk.models import Ticket
+from multitenancy.helpdesk.models import Ticket
 import re
 
 

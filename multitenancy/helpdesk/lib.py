@@ -11,7 +11,7 @@ from datetime import date, datetime, time
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.encoding import smart_str
-from helpdesk.settings import CUSTOMFIELD_DATE_FORMAT, CUSTOMFIELD_DATETIME_FORMAT, CUSTOMFIELD_TIME_FORMAT
+from multitenancy.helpdesk.settings import CUSTOMFIELD_DATE_FORMAT, CUSTOMFIELD_DATETIME_FORMAT, CUSTOMFIELD_TIME_FORMAT
 import logging
 import mimetypes
 

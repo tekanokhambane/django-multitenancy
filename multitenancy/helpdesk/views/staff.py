@@ -27,14 +27,14 @@ from django.utils.html import escape
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import requires_csrf_token
 from django.views.generic.edit import FormView, UpdateView
-from helpdesk import settings as helpdesk_settings
-from helpdesk.decorators import (
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.decorators import (
     helpdesk_staff_member_required,
     helpdesk_superuser_required,
     is_helpdesk_staff,
     superuser_required
 )
-from helpdesk.forms import (
+from multitenancy.helpdesk.forms import (
     CUSTOMFIELD_DATE_FORMAT,
     EditFollowUpForm,
     EditTicketForm,
@@ -47,8 +47,8 @@ from helpdesk.forms import (
     TicketForm,
     UserSettingsForm
 )
-from helpdesk.lib import process_attachments, queue_template_context, safe_template_context
-from helpdesk.models import (
+from multitenancy.helpdesk.lib import process_attachments, queue_template_context, safe_template_context
+from multitenancy.helpdesk.models import (
     CustomField,
     FollowUp,
     FollowUpAttachment,
@@ -63,10 +63,10 @@ from helpdesk.models import (
     TicketDependency,
     UserSettings
 )
-from helpdesk.query import get_query_class, query_from_base64, query_to_base64
-from helpdesk.user import HelpdeskUser
-import helpdesk.views.abstract_views as abstract_views
-from helpdesk.views.permissions import MustBeStaffMixin
+from multitenancy.helpdesk.query import get_query_class, query_from_base64, query_to_base64
+from multitenancy.helpdesk.user import HelpdeskUser
+import multitenancy.helpdesk.views.abstract_views as abstract_views
+from multitenancy.helpdesk.views.permissions import MustBeStaffMixin
 import json
 import re
 from rest_framework import status
@@ -75,7 +75,7 @@ import typing
 
 
 if helpdesk_settings.HELPDESK_KB_ENABLED:
-    from helpdesk.models import KBItem
+    from multitenancy.helpdesk.models import KBItem
 
 DATE_RE: re.Pattern = re.compile(
     r'(?P<month>\d{1,2})/(?P<day>\d{1,2})/(?P<year>\d{4})$'

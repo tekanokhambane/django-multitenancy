@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class HelpdeskConfig(AppConfig):
-    name = 'helpdesk'
+    name = 'multitenancy.helpdesk'
     verbose_name = "Helpdesk"
     # for Django 3.2 support:
     # see:

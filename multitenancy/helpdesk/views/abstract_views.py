@@ -1,4 +1,4 @@
-from helpdesk.models import CustomField, KBItem, Queue
+from multitenancy.helpdesk.models import CustomField, KBItem, Queue
 
 
 class AbstractCreateTicketMixin():

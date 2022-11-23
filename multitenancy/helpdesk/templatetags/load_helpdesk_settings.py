@@ -5,7 +5,7 @@ templatetags/load_helpdesk_settings.py - returns the settings as defined in
                                     django-helpdesk/helpdesk/settings.py
 """
 from django.template import Library
-from helpdesk import settings as helpdesk_settings_config
+from multitenancy.helpdesk import settings as helpdesk_settings_config
 
 
 def load_helpdesk_settings(request):

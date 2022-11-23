@@ -21,10 +21,10 @@ import email
 from email.message import Message
 from email.utils import getaddresses
 from email_reply_parser import EmailReplyParser
-from helpdesk import settings
-from helpdesk.exceptions import DeleteIgnoredTicketException, IgnoreTicketException
-from helpdesk.lib import process_attachments, safe_template_context
-from helpdesk.models import FollowUp, IgnoreEmail, Queue, Ticket
+from multitenancy.helpdesk import settings
+from multitenancy.helpdesk.exceptions import DeleteIgnoredTicketException, IgnoreTicketException
+from multitenancy.helpdesk.lib import process_attachments, safe_template_context
+from multitenancy.helpdesk.models import FollowUp, IgnoreEmail, Queue, Ticket
 import imaplib
 import logging
 import mimetypes

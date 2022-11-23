@@ -3,7 +3,7 @@ from django.db import models, migrations
 import django.utils.timezone
 from django.conf import settings
 
-import helpdesk.models
+import multitenancy.helpdesk.models
 
 
 class Migration(migrations.Migration):
@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='Attachment',
             fields=[
                 ('id', models.AutoField(auto_created=True, verbose_name='ID', primary_key=True, serialize=False)),
-                ('file', models.FileField(upload_to=helpdesk.models.attachment_path, verbose_name='File', max_length=1000)),
+                ('file', models.FileField(upload_to=multitenancy.helpdesk.models.attachment_path, verbose_name='File', max_length=1000)),
                 ('filename', models.CharField(verbose_name='Filename', max_length=1000)),
                 ('mime_type', models.CharField(verbose_name='MIME Type', max_length=255)),
                 ('size', models.IntegerField(verbose_name='Size', help_text='Size of this file in bytes')),
