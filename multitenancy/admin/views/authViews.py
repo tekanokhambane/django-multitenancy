@@ -11,7 +11,7 @@ class LoginView(account.views.LoginView):
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             if self.request.user.type == "Admin":  # type: ignore
-                return HttpResponseRedirect(reverse("dashboard"))
+                return HttpResponseRedirect(reverse("admin_dashboard"))
             elif self.request.user.type == "Staff":  # type: ignore
                 return HttpResponseRedirect(reverse("team_dashboard"))
             else:
@@ -24,7 +24,7 @@ class LoginView(account.views.LoginView):
         self.after_login(form)
         if self.request.user.is_authenticated:
             if self.request.user.type == "Admin":  # type: ignore
-                return HttpResponseRedirect(reverse("dashboard"))
+                return HttpResponseRedirect(reverse("admin_dashboard"))
             elif self.request.user.type == "Staff":  # type: ignore
                 return HttpResponseRedirect(reverse("team_dashboard"))
             else:

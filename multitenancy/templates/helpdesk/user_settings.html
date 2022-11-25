@@ -12,18 +12,22 @@
 {% endblock %}
 
 {% block helpdesk_body %}
-<h2>{% trans "User Settings" %}</h2>
+<section class="content" style="margin-left:100px">
+    <div class="container-fluid text-dark">
+        <h2>{% trans "User Settings" %}</h2>
 
-<p>{% blocktrans %}Use the following options to change the way your helpdesk system works for you. These settings do not impact any other user.{% endblocktrans %}</p>
+        <p>{% blocktrans %}Use the following options to change the way your helpdesk system works for you. These
+            settings do not impact any other user.{% endblocktrans %}</p>
 
-{% block form_content %}
-<form role="form" method='post' action='./'>
-    {% csrf_token %}
-    {{ form|bootstrap4form }}
-    <div class="form-group">
-      <input type="submit" value="Submit"/>
+        {% block form_content %}
+        <form role="form" method='post' action='./'>
+            {% csrf_token %}
+            {{ form|bootstrap4form }}
+            <div class="form-group">
+                <input type="submit" value="Submit" />
+            </div>
+        </form>
+        {% endblock %}
     </div>
-</form>
-{% endblock %}
-
+</section>
 {% endblock %}

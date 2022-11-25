@@ -18,7 +18,7 @@
 {% endblock %}
 
 
-{% block helpdesk_breadcrumb %}
+{% block breadcrumbs %}
     <li class="breadcrumb-item">
         <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
     </li>
@@ -32,6 +32,9 @@
 
 
 {% block helpdesk_body %}
+<section class="content" style="margin-left:100px">
+    
+    <div class="container-fluid text-dark" >
     <div class="card">
         {% if helpdesk_settings.HELPDESK_TICKETS_TIMELINE_ENABLED %}
         <div class="card-header">
@@ -318,7 +321,8 @@
         <!-- end card-body -->
     </div>
     <!-- end top card -->
-
+    </div>
+</section>
 {% endblock %}
 
 

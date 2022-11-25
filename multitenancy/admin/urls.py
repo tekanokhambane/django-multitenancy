@@ -8,7 +8,7 @@ from multitenancy.admin.views import (
 
 
 urlpatterns = [
-    path(r"", adminViews.AdminIndexView.as_view(), name="dashboard"),
+    path(r"", adminViews.AdminIndexView.as_view(), name="admin_dashboard"),
 
     path("templates/", adminViews.TemplateListView.as_view(), name="template_list"),
     path("templates/create/", adminViews.CreateTemplateView.as_view(), name="create_template"),

@@ -13,15 +13,22 @@
 {% endblock %}
 
 {% block helpdesk_body %}
-<h2>{% trans "Delete Ticket" %}</h2>
+<section class="content" style="margin-left:100px">
 
-<p>{% blocktrans with ticket.title as ticket_title %}Are you sure you want to delete this ticket (<em>{{ ticket_title }}</em>)? All traces of the ticket, including followups, attachments, and updates will be irreversibly removed.{% endblocktrans %}</p>
+    <div class="container-fluid text-dark">
+        <h2>{% trans "Delete Ticket" %}</h2>
 
-<p><a href='../'><button class="btn btn-primary btn-lg">{% trans "No, Don't Delete It" %}</button></a></p>
+        <p>{% blocktrans with ticket.title as ticket_title %}Are you sure you want to delete this ticket
+            (<em>{{ ticket_title }}</em>)? All traces of the ticket, including followups, attachments, and updates will
+            be irreversibly removed.{% endblocktrans %}</p>
 
-<form method='post' action='./'>
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ next }}">
-    <button class="btn btn-danger" type='submit'>{% trans "Yes I Understand - Delete It Anyway" %}</button>
-</form>
+        <p><a href='../'><button class="btn btn-primary btn-lg">{% trans "No, Don't Delete It" %}</button></a></p>
+
+        <form method='post' action='./'>
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}">
+            <button class="btn btn-danger" type='submit'>{% trans "Yes I Understand - Delete It Anyway" %}</button>
+        </form>
+    </div>
+</section>
 {% endblock %}

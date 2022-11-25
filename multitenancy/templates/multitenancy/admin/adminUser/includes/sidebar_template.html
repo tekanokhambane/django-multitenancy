@@ -7,7 +7,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar elevation-4 sidebar-light-navy">
     <!-- Brand Logo -->
-    <a href="{% url "dashboard" %}" class="brand-link navbar-white">
+    <a href="{% url "admin_dashboard" %}" class="brand-link navbar-white">
         <img src="{{details.logo.logo.url}}" alt="{{details.info.company_name}} Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">{{details.info.company_name}}</span>
@@ -34,7 +34,7 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "dashboard" %}" class="nav-link {% if url_name == 'dashboard' %}active{% endif %}">
+                    <a href="{% url "admin_dashboard" %}" class="nav-link {% if url_name == 'admin_dashboard' %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -113,7 +113,7 @@
                 {% endcomment %}
                 <li class="nav-item has-treeview ">
                     <a href="#"
-                        class="nav-link {% if url_name == 'profiles_list' or url_name ==  'customer_list'%}active{% endif %}">
+                        class="nav-link {% if url_name == 'dashboard' or url_name == 'list' or url_name == 'submit' or url_name == 'report_index'%}active{% endif %}">
                         <i class="nav-icon fas fa-headset"></i>
                         <p>
                             Helpdesk
@@ -122,7 +122,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "helpdesk:dashboard" %}" class="nav-link {% if url_name == 'profiles_list'  %}active{% endif %}">
+                            <a href="{% url "helpdesk:dashboard" %}" class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
                                 <i class="nav-icon fa-regular fa-envelope-open"></i>
                                 <p>
                                     Support Home
@@ -130,7 +130,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "helpdesk:list" %}" class="nav-link {% if url_name ==  'customer_list' %}active{% endif %}">
+                            <a href="{% url "helpdesk:list" %}" class="nav-link {% if url_name ==  'list' %}active{% endif %}">
                                 <i class="nav-icon fa-solid fa-ticket-simple"></i>
                                 <p>
                                     All Tickets
@@ -156,20 +156,20 @@
                               {% endif %}
                             </div>
                           </li>
-                          <li class="nav-item{% if 'submit' in request.path %} active{% endif %}">
+                          <li class="nav-item{% if url_name ==  'submit' %} active{% endif %}">
                             <a class="nav-link" href="{% url 'helpdesk:submit' %}">
                               <i class="fas fa-fw fa-plus-circle"></i>
                               <span>{% trans "New Ticket" %}</span>
                             </a>
                           </li>
-                          <li class="nav-item{% if 'reports' in request.path %} active{% endif %}">
+                          <li class="nav-item{% if url_name ==  'report_index' %} active{% endif %}">
                             <a class="nav-link" href="{% url 'helpdesk:report_index' %}">
                               <i class="fas fa-fw fa-chart-area"></i>
                               <span>{% trans "Reports" %}</span>
                             </a>
                           </li>
                           {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
-                          <li class="nav-item{% if 'kb' in request.path %} active{% endif %}">
+                          <li class="nav-item{% if 'kb_index' in request.path %} active{% endif %}">
                             <a class="nav-link" href="{% url 'helpdesk:kb_index' %}">
                               <i class="fas fa-fw fa-database"></i>
                               <span>{% trans "Knowledgebase" %}</span>

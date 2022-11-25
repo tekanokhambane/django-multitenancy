@@ -1,30 +1,78 @@
 {% extends "helpdesk/base.html" %}{% load i18n %}{% load user_admin_url %}
 
-{% block helpdesk_title %}{% trans "Change System Settings" %}{% endblock %}
+{% block helpdesk_title %}{% trans "Change Helpdesk Settings" %}{% endblock %}
 
-{% block helpdesk_breadcrumb %}
+{% block breadcrumbs %}
 <li class="breadcrumb-item">
     <a href="{% url 'helpdesk:user_settings' %}">{% trans "Settings" %}</a>
 </li>
 <li class="breadcrumb-item active">
-    System Settings
+    Helpdesk Settings
 </li>
 {% endblock %}
 
 {% block helpdesk_body %}
-<h2>{% trans "System Settings" %}</h2>
+<section class="content" style="margin-left:100px">
+    <div class="container-fluid text-dark" >
+<h2>{% trans "Helpdesk Settings" %}</h2>
 
 <p>{% blocktrans %}The following items can be maintained by you or other superusers:{% endblocktrans %}</p>
-
+<div class="row">
+        <div class="col-md-6">
+          <div class="list-group">
+            <a href="{% url 'helpdesk:email_ignore' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{% trans "E-Mail Ignore list" %}</h4>
+              <p class="list-group-item-text">
+                Manage E-mails to ignore
+              </p>
+            </a>
+            <a href="{% url 'admin:helpdesk_queue_changelist' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{% trans "Maintain Queues" %}</h4>
+              <p class="list-group-item-text">
+                Manage Queues(Departments)
+              </p>
+            </a>
+            <a href="{% url 'admin:helpdesk_presetreply_changelist' %}" class="list-group-item">
+                <h4 class="list-group-item-heading">{% trans "Maintain Pre-Set Replies" %}</h4>
+                <p class="list-group-item-text">
+                  Manage auto replies
+                </p>
+              </a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="list-group">
+            {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
+            <a href="{% url 'admin:helpdesk_kbcategory_changelist' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{% trans "Maintain Knowledgebase Categories" %}</h4>
+              <p class="list-group-item-text">
+                Manage Knowledgebase Categories
+              </p>
+            </a>
+            
+            <a href="{% url 'admin:helpdesk_kbitem_changelist' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{% trans "Maintain Knowledgebase Items" %}</h4>
+              <p class="list-group-item-text">
+                View and Manage Knowledgebase Items
+              </p>
+            </a>
+            {% endif %}
+            <a href="{% url 'admin:helpdesk_emailtemplate_changelist' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">{% trans "Maintain E-Mail Templates" %}</h4>
+              <p class="list-group-item-text">
+                Create and manage Email Templates
+              </p>
+            </a> 
+          </div>
+        </div>
+      </div>
 <ul>
-    <li><a href='{% url 'helpdesk:email_ignore' %}'>{% trans "E-Mail Ignore list" %}</a></li>
-    <li><a href='{% url 'admin:helpdesk_queue_changelist' %}'>{% trans "Maintain Queues" %}</a></li>
-    <li><a href='{% url 'admin:helpdesk_presetreply_changelist' %}'>{% trans "Maintain Pre-Set Replies" %}</a></li>
-    {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
-    <li><a href='{% url 'admin:helpdesk_kbcategory_changelist' %}'>{% trans "Maintain Knowledgebase Categories" %}</a></li>
-    <li><a href='{% url 'admin:helpdesk_kbitem_changelist' %}'>{% trans "Maintain Knowledgebase Items" %}</a></li>
-    {% endif %}
-    <li><a href='{% url 'admin:helpdesk_emailtemplate_changelist' %}'>{% trans "Maintain E-Mail Templates" %}</a></li>
-    <li><a href='{#% url 'changelist'|user_admin_url %#}'>{% trans "Maintain Users" %}</a></li>
+
+
+    
+    
+    <!-- <li><a href='{#% url 'changelist'|user_admin_url %#}'>{% trans "Maintain Users" %}</a></li> -->
 </ul>
+</div>
+</section>
 {% endblock %}

@@ -15,15 +15,10 @@
 
 
 <!-- Bootstrap Core CSS -->
-{% if helpdesk_settings.HELPDESK_USE_CDN %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-{% else %}
-<link href="{% static 'helpdesk/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-{% endif %}
 
 <!-- Font Awesome -->
-<link href="{% static 'helpdesk/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
-
+<link rel="stylesheet" href="{% static "plugins/fontawesome/css/all.min.css" %}">
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 <!-- DataTables CSS-->
 <link href="{% static 'helpdesk/vendor/datatables/css/dataTables.bootstrap4.css' %}" rel="stylesheet">
 <link href="{% static 'helpdesk/vendor/datatables/css/buttons.dataTables.css' %}" rel="stylesheet">
@@ -39,12 +34,13 @@
 {% endif %}
 
 <!-- Custom CSS -->
-<link href="{% static 'helpdesk/css/sb-admin.css' %}" rel="stylesheet">
+<!-- <link href="{% static 'helpdesk/css/sb-admin.css' %}" rel="stylesheet"> -->
+<link rel="stylesheet" href="{% static "dist/css/adminlte.min.css" %}">
 <link rel='stylesheet' href='{% static "helpdesk/helpdesk-extend.css" %}' type='text/css'  media="screen" >
 
 {% if user.id %}
 <!-- RSS -->
-<link rel='alternate' href='{#% url 'helpdesk:rss_user' user.get_username %#}' type='application/rss+xml' title='{% trans "My Open Tickets" %}' />
+<link rel='alternate' href='{% url 'helpdesk:rss_user' user.get_username %}' type='application/rss+xml' title='{% trans "My Open Tickets" %}' />
 <link rel='alternate' href='{% url 'helpdesk:rss_activity' %}' type='application/rss+xml' title='{% trans "All Recent Activity" %}' />
 <link rel='alternate' href='{% url 'helpdesk:rss_unassigned' %}' type='application/rss+xml' title='{% trans "Unassigned Tickets" %}' />
 
@@ -56,20 +52,7 @@
 .goog-tooltip {display: none !important; }
 </style>
 
-<style type="text/css">
-/* header */
-#dropdown li.headerlink { width: auto; float: left; text-align: center; }
 
-/* query list */
-#dropdown li.headerlink ul {    display: none;
-                                text-align: left;
-                                position: absolute;
-                                padding: 5px;
-                                z-index: 2; }
-/* query entries */
-#dropdown li.headerlink:hover ul { display: block; width: auto; }
-#dropdown li.headerlink:hover ul li { padding: 5px; margin: 1px; float: none; display: block; }
-</style>
 {% endif %}
 {% endwith %}
 {% endwith %}

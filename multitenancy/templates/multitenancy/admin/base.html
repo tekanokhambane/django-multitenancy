@@ -1,4 +1,10 @@
 {% load static  %} {% load multitenancy_tags %}
+{% load i18n %}
+{% load saved_queries %}
+{% load load_helpdesk_settings %}
+
+{% with request|load_helpdesk_settings as helpdesk_settings %}
+{% with user|saved_queries as user_saved_queries_ %}
 <!DOCTYPE html>
 <html>
 
@@ -17,9 +23,13 @@
         <!-- Theme style -->
         <link rel="stylesheet" href="{% static "dist/css/adminlte.min.css" %}">
         
-        
+        {#% include 'helpdesk/base-head.html' %#}
+
+
         {%block custom_css%}
         {%endblock%}
+        {% block helpdesk_head %}
+        {% endblock %}
         <!-- Google Font: Source Sans Pro -->
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     </head>
@@ -83,7 +93,7 @@
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     {% if user.type == 'Admin' %}
-                                    <li class="breadcrumb-item"> <a href="{% url "dashboard" %}">Home</a></li>
+                                    <li class="breadcrumb-item"> <a href="{% url "admin_dashboard" %}">Home</a></li>
                                     {% elif user.type == 'Staff' %}
                                     <li class="breadcrumb-item"> <a href="{% url "team_dashboard" %}">Home</a></li>
                                     {% else %}
@@ -131,3 +141,5 @@
     </body>
 
 </html>
+{% endwith %}
+{% endwith %}

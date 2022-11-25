@@ -8,7 +8,7 @@ def allowed_users(allowed_types=[]):
                 if self.request.user.type in allowed_types:
                     return view_func(self, *args, **kwargs)
                 elif self.request.user.type == "Admin":
-                    return redirect('dashboard')
+                    return redirect('admin_dashboard')
                 elif self.request.user.type == "Staff":
                     return redirect('team_dashboard')
                 elif self.request.user.type == "Customer":

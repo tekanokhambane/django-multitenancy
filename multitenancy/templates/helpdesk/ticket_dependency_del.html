@@ -12,15 +12,22 @@
 <li class="breadcrumb-item active">{% trans "Delete Ticket Dependency" %}</li>
 {% endblock %}
 
-{% block helpdesk_body %}{% blocktrans %}
-<h2>Delete Ticket Dependency</h2>
+{% block helpdesk_body %}
+<section class="content" style="margin-left:100px">
+    <div class="container-fluid text-dark">
+        {% blocktrans %}
+        <h2>Delete Ticket Dependency</h2>
 
-<p>Are you sure you wish to remove the dependency on this ticket?</p>
-{% endblocktrans %}
+        <p>Are you sure you wish to remove the dependency on this ticket?</p>
+        {% endblocktrans %}
 
-<p><a href='{{ dependency.ticket.get_absolute_url }}'><button class="btn btn-primary btn-lg">{% trans "Don't Delete" %}</button></a></p>
+        <p><a href='{{ dependency.ticket.get_absolute_url }}'><button
+                    class="btn btn-primary btn-lg">{% trans "Don't Delete" %}</button></a></p>
 
-<form method='post' action='./'>
-    <button class="btn btn-danger" type='submit'>{% trans "Yes, I Understand - Delete" %}</button>
-{% csrf_token %}</form>
+        <form method='post' action='./'>
+            <button class="btn btn-danger" type='submit'>{% trans "Yes, I Understand - Delete" %}</button>
+            {% csrf_token %}
+        </form>
+    </div>
+</section>
 {% endblock %}
