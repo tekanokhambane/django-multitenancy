@@ -4,7 +4,7 @@
 
 {% block breadcrumbs %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:user_settings' %}">{% trans "Settings" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:user_settings' %}">{% trans "Settings" %}</a>
 </li>
 <li class="breadcrumb-item active">
     Helpdesk Settings
@@ -20,7 +20,7 @@
 <div class="row">
         <div class="col-md-6">
           <div class="list-group">
-            <a href="{% url 'helpdesk:email_ignore' %}" class="list-group-item">
+            <a href="{% url 'multitenancy.helpdesk:email_ignore' %}" class="list-group-item">
               <h4 class="list-group-item-heading">{% trans "E-Mail Ignore list" %}</h4>
               <p class="list-group-item-text">
                 Manage E-mails to ignore

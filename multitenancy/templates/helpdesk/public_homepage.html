@@ -52,7 +52,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <h2>{% trans "View a Ticket" %}</h2>
-                            <form method='get' action="{% url 'helpdesk:public_view' %}">
+                            <form method='get' action="{% url 'multitenancy.helpdesk:public_view' %}">
                                 <fieldset>
                                     <div class="form-group {% if field.errors %}has-error{% endif %}">
                                         <label for='id_ticket'>{% trans "Ticket" %}</label>

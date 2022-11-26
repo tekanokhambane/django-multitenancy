@@ -13,7 +13,7 @@
 
 {% block breadcrumbs %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}">{% trans "Tickets" %}</a>
 </li>
 {% if from_saved_query and saved_query.user == user %}
 <li class="breadcrumb-item">{% trans "Saved Query" %}</li>
@@ -56,7 +56,7 @@
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="datatabletabcontents" role="tabpanel"
                         aria-labelledby="datatabletabcontents-tab">
-                        <form method='post' action='{% url 'helpdesk:mass_update' %}' id="ticket_mass_update">
+                        <form method='post' action='{% url 'multitenancy.helpdesk:mass_update' %}' id="ticket_mass_update">
                             {% csrf_token %}
                             <table class="table table-sm table-striped table-bordered table-hover" id="ticketTable"
                                 data-page-length='{{ default_tickets_per_page }}'>
@@ -239,7 +239,7 @@
                                     <li class="list-group-item">
                                         {% blocktrans with saved_query.title as query_name %}You are currently viewing
                                         saved query <strong>"{{ query_name }}"</strong>.{% endblocktrans %}
-                                        <a href='{% url 'helpdesk:delete_query' saved_query.id %}'>
+                                        <a href='{% url 'multitenancy.helpdesk:delete_query' saved_query.id %}'>
                                             {% trans "Delete Saved Query" %}
                                         </a>
                                     </li>
@@ -269,7 +269,7 @@
                         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo"
                             data-parent="#queryAccordion">
                             <div class="card-body">
-                                <form method='post' action='{% url 'helpdesk:savequery' %}'>
+                                <form method='post' action='{% url 'multitenancy.helpdesk:savequery' %}'>
                                     {% csrf_token %}
                                     <input type='hidden' name='query_encoded' value='{{ urlsafe_query }}' />
                                     <dl>
@@ -310,7 +310,7 @@
                         <div id="collapseThree" class="collapse" aria-labelledby="headingThree"
                             data-parent="#queryAccordion">
                             <div class="card-body">
-                                <form action='{% url 'helpdesk:list' %}'>
+                                <form action='{% url 'multitenancy.helpdesk:list' %}'>
                                     <p>
                                         <label for='id_query_selector'>{% trans "Query" %}</label>
                                         <select name='saved_query' id='id_query_selector'>
@@ -350,7 +350,7 @@
 {% endif %}
 <script>
     function get_url(row) {
-        return "{% url 'helpdesk:view' 1234 %}".replace(/1234/, row.id.toString());
+        return "{% url 'multitenancy.helpdesk:view' 1234 %}".replace(/1234/, row.id.toString());
     }
 
     function htmlEntities(str) {
@@ -366,7 +366,7 @@
             processing: true,
             serverSide: true,
             ajax: {
-                "url": "{% url 'helpdesk:datatables_ticket_list' urlsafe_query %}",
+                "url": "{% url 'multitenancy.helpdesk:datatables_ticket_list' urlsafe_query %}",
                 "type": "GET",
             },
             createdRow: function(row, data, dataIndex) {
@@ -452,7 +452,7 @@
         if (!timeline_loaded) {
             new TL.Timeline(
                 'timeline-embed',
-                '{% url 'helpdesk: timeline_ticket_list' urlsafe_query %}'
+                '{% url 'multitenancy.helpdesk: timeline_ticket_list' urlsafe_query %}'
             );
             timeline_loaded = true;
         }

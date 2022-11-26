@@ -5,10 +5,10 @@ from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
 from django.utils import timezone
-from helpdesk import settings as helpdesk_settings
-from helpdesk.models import CustomField, Queue, Ticket
-from helpdesk.templatetags.ticket_to_link import num_to_link
-from helpdesk.user import HelpdeskUser
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.models import CustomField, Queue, Ticket
+from multitenancy.helpdesk.templatetags.ticket_to_link import num_to_link
+from multitenancy.helpdesk.user import HelpdeskUser
 
 
 try:  # python 3
@@ -77,12 +77,12 @@ class TicketActionsTestCase(TestCase):
         ticket = Ticket.objects.create(**ticket_data)
         ticket_id = ticket.id
 
-        response = self.client.get(reverse('helpdesk:delete', kwargs={
+        response = self.client.get(reverse('multitenancy.helpdesk:delete', kwargs={
                                    'ticket_id': ticket_id}), follow=True)
         self.assertContains(
             response, 'Are you sure you want to delete this ticket')
 
-        response = self.client.post(reverse('helpdesk:delete', kwargs={
+        response = self.client.post(reverse('multitenancy.helpdesk:delete', kwargs={
                                     'ticket_id': ticket_id}), follow=True)
         first_redirect = response.redirect_chain[0]
         first_redirect_url = first_redirect[0]
@@ -91,7 +91,7 @@ class TicketActionsTestCase(TestCase):
         # Django 1.9 compatible way of testing this
         # https://docs.djangoproject.com/en/1.9/releases/1.9/#http-redirects-no-longer-forced-to-absolute-uris
         urlparts = urlparse(first_redirect_url)
-        self.assertEqual(urlparts.path, reverse('helpdesk:home'))
+        self.assertEqual(urlparts.path, reverse('multitenancy.helpdesk:home'))
 
         # test ticket deleted
         with self.assertRaises(Ticket.DoesNotExist):
@@ -125,7 +125,7 @@ class TicketActionsTestCase(TestCase):
         post_data = {
             'owner': self.user2.id,
         }
-        response = self.client.post(reverse('helpdesk:update', kwargs={
+        response = self.client.post(reverse('multitenancy.helpdesk:update', kwargs={
                                     'ticket_id': ticket_id}), post_data, follow=True)
         self.assertContains(response, 'Changed Owner from User_1 to User_2')
 
@@ -145,7 +145,7 @@ class TicketActionsTestCase(TestCase):
 
         # do this also to a newly assigned user (different from logged in one)
         ticket.assigned_to = self.user
-        response = self.client.post(reverse('helpdesk:update', kwargs={
+        response = self.client.post(reverse('multitenancy.helpdesk:update', kwargs={
                                     'ticket_id': ticket_id}), post_data, follow=True)
         self.assertContains(response, 'Changed Status from Open to Closed')
         post_data = {
@@ -153,7 +153,7 @@ class TicketActionsTestCase(TestCase):
             'owner': self.user2.id,
             'public': True
         }
-        response = self.client.post(reverse('helpdesk:update', kwargs={
+        response = self.client.post(reverse('multitenancy.helpdesk:update', kwargs={
                                     'ticket_id': ticket_id}), post_data, follow=True)
         self.assertContains(response, 'Changed Status from Open to Closed')
 
@@ -214,7 +214,7 @@ class TicketActionsTestCase(TestCase):
 
     def test_create_ticket_getform(self):
         self.loginUser()
-        response = self.client.get(reverse('helpdesk:submit'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:submit'), follow=True)
         self.assertEqual(response.status_code, 200)
 
         # TODO this needs to be checked further
@@ -271,7 +271,7 @@ class TicketActionsTestCase(TestCase):
 
         # Check that it correctly redirects to the intermediate page
         response = self.client.post(
-            reverse('helpdesk:mass_update'),
+            reverse('multitenancy.helpdesk:mass_update'),
             data={
                 'ticket_id': [str(ticket_1.id), str(ticket_2.id)],
                 'action': 'merge'
@@ -279,7 +279,7 @@ class TicketActionsTestCase(TestCase):
             follow=True
         )
         redirect_url = '%s?tickets=%s&tickets=%s' % (
-            reverse('helpdesk:merge_tickets'), ticket_1.id, ticket_2.id)
+            reverse('multitenancy.helpdesk:merge_tickets'), ticket_1.id, ticket_2.id)
         self.assertRedirects(response, redirect_url)
         self.assertContains(response, ticket_1.description)
         self.assertContains(response, ticket_1.resolution)

@@ -22,7 +22,7 @@ def login(request):
         if 'next' in request.GET:
             return_to = request.GET['next']
         else:
-            return_to = resolve_url('helpdesk:home')
+            return_to = resolve_url('multitenancy.helpdesk:home')
         return redirect_to_login(return_to, login_url)
     else:
         return default_login_view(request)

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls import reverse
-from helpdesk.models import Queue, Ticket
+from multitenancy.helpdesk.models import Queue, Ticket
 
 
 User = get_user_model()
@@ -33,7 +33,7 @@ class TestTicketLookupPublicEnabled(TestCase):
         # we will exercise 'reverse' to lookup/build the URL
         # from the ticket info we have
         # http://example.com/helpdesk/view/?ticket=q1-1&email=None
-        response = self.client.get(reverse('helpdesk:public_view'),
+        response = self.client.get(reverse('multitenancy.helpdesk:public_view'),
                                    {'ticket': self.ticket.ticket_for_url,
                                     'email': self.ticket.submitter_email})
         self.assertEqual(response.status_code, 200)
@@ -44,7 +44,7 @@ class TestTicketLookupPublicEnabled(TestCase):
         q2 = Queue(title='Q2', slug='q2')
         q2.save()
         # grab the URL / params which would have been emailed out to submitter.
-        url = reverse('helpdesk:public_view')
+        url = reverse('multitenancy.helpdesk:public_view')
         params = {'ticket': self.ticket.ticket_for_url,
                   'email': self.ticket.submitter_email}
         # Pickup the ticket created in setup() and change its queue

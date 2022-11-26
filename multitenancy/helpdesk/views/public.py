@@ -64,11 +64,11 @@ class BaseCreateTicketView(abstract_views.AbstractCreateTicketMixin, FormView):
                  helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE):
             try:
                 if request.user.usersettings_helpdesk.login_view_ticketlist:
-                    return HttpResponseRedirect(reverse('helpdesk:list'))
+                    return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
                 else:
-                    return HttpResponseRedirect(reverse('helpdesk:dashboard'))
+                    return HttpResponseRedirect(reverse('multitenancy.helpdesk:dashboard'))
             except UserSettings.DoesNotExist:
-                return HttpResponseRedirect(reverse('helpdesk:dashboard'))
+                return HttpResponseRedirect(reverse('multitenancy.helpdesk:dashboard'))
         return super().dispatch(*args, **kwargs)
 
     def get_initial(self):
@@ -114,14 +114,14 @@ class BaseCreateTicketView(abstract_views.AbstractCreateTicketMixin, FormView):
                 user=self.request.user if self.request.user.is_authenticated else None)
             try:
                 return HttpResponseRedirect('%s?ticket=%s&email=%s&key=%s' % (
-                    reverse('helpdesk:public_view'),
+                    reverse('multitenancy.helpdesk:public_view'),
                     ticket.ticket_for_url,
                     quote(ticket.submitter_email),
                     ticket.secret_key)
                 )
             except ValueError:
                 # if someone enters a non-int string for the ticket
-                return HttpResponseRedirect(reverse('helpdesk:home'))
+                return HttpResponseRedirect(reverse('multitenancy.helpdesk:home'))
 
 
 class CreateTicketIframeView(BaseCreateTicketView):
@@ -134,7 +134,7 @@ class CreateTicketIframeView(BaseCreateTicketView):
 
     def form_valid(self, form):
         if super().form_valid(form).status_code == 302:
-            return HttpResponseRedirect(reverse('helpdesk:success_iframe'))
+            return HttpResponseRedirect(reverse('multitenancy.helpdesk:success_iframe'))
 
 
 class SuccessIframeView(TemplateView):
@@ -204,7 +204,7 @@ def view_ticket(request):
         return search_for_ticket(request, _('Invalid ticket ID or e-mail address. Please try again.'))
 
     if is_helpdesk_staff(request.user):
-        redirect_url = reverse('helpdesk:view', args=[ticket_id])
+        redirect_url = reverse('multitenancy.helpdesk:view', args=[ticket_id])
         if 'close' in request.GET:
             redirect_url += '?close'
         return HttpResponseRedirect(redirect_url)
@@ -229,7 +229,7 @@ def view_ticket(request):
     # redirect user back to this ticket if possible.
     redirect_url = ''
     if helpdesk_settings.HELPDESK_NAVIGATION_ENABLED:
-        redirect_url = reverse('helpdesk:view', args=[ticket_id])
+        redirect_url = reverse('multitenancy.helpdesk:view', args=[ticket_id])
 
     return render(request, 'helpdesk/public_view_ticket.html', {
         'key': key,

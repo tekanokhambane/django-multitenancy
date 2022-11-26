@@ -247,9 +247,9 @@ def delete_ticket(request, ticket_id):
         })
     else:
         ticket.delete()
-        redirect_to = 'helpdesk:home'
+        redirect_to = 'multitenancy.helpdesk:home'
         if request.POST.get('next') == 'dashboard':
-            redirect_to = 'helpdesk:dashboard'
+            redirect_to = 'multitenancy.helpdesk:dashboard'
         return HttpResponseRedirect(reverse(redirect_to))
 
 
@@ -308,7 +308,7 @@ def followup_edit(request, ticket_id, followup_id):
                 attachment.save()
             # delete old followup
             followup.delete()
-        return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket.id]))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket.id]))
 
 
 followup_edit = staff_member_required(followup_edit)
@@ -320,11 +320,11 @@ def followup_delete(request, ticket_id, followup_id):
 
     ticket = get_object_or_404(Ticket, id=ticket_id)
     if not request.user.is_superuser:
-        return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket.id]))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket.id]))
 
     followup = get_object_or_404(FollowUp, id=followup_id)
     followup.delete()
-    return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket.id]))
+    return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket.id]))
 
 
 followup_delete = staff_member_required(followup_delete)
@@ -357,7 +357,7 @@ def view_ticket(request, ticket_id):
 
         if show_subscribe:
             subscribe_staff_member_to_ticket(ticket, request.user)
-            return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket.id]))
+            return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket.id]))
 
     if 'close' in request.GET and ticket.status == Ticket.RESOLVED_STATUS:
         if not ticket.assigned_to:
@@ -520,7 +520,7 @@ def get_ticket_from_request_with_authorisation(
 
         if not ticket:
             return HttpResponseRedirect(
-                '%s?next=%s' % (reverse('helpdesk:login'), request.path)
+                '%s?next=%s' % (reverse('multitenancy.helpdesk:login'), request.path)
             )
 
     return get_object_or_404(Ticket, id=ticket_id)
@@ -876,7 +876,7 @@ def mass_update(request):
     tickets = request.POST.getlist('ticket_id')
     action = request.POST.get('action', None)
     if not (tickets and action):
-        return HttpResponseRedirect(reverse('helpdesk:list'))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
 
     if action.startswith('assign_'):
         parts = action.split('_')
@@ -896,7 +896,7 @@ def mass_update(request):
         # Redirect to the Merge View with selected tickets id in the GET
         # request
         return redirect(
-            reverse('helpdesk:merge_tickets') + '?' +
+            reverse('multitenancy.helpdesk:merge_tickets') + '?' +
             '&'.join(['tickets=%s' % ticket_id for ticket_id in tickets])
         )
 
@@ -981,7 +981,7 @@ def mass_update(request):
         elif action == 'delete':
             t.delete()
 
-    return HttpResponseRedirect(reverse('helpdesk:list'))
+    return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
 
 
 mass_update = staff_member_required(mass_update)
@@ -1239,7 +1239,7 @@ def ticket_list(request):
     try:
         saved_query, query_params = load_saved_query(request, query_params)
     except QueryLoadError:
-        return HttpResponseRedirect(reverse('helpdesk:list'))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
 
     if saved_query:
         pass
@@ -1427,7 +1427,7 @@ class CreateTicketView(MustBeStaffMixin, abstract_views.AbstractCreateTicketMixi
         if HelpdeskUser(request.user).can_access_queue(self.ticket.queue):
             return self.ticket.get_absolute_url()
         else:
-            return reverse('helpdesk:dashboard')
+            return reverse('multitenancy.helpdesk:dashboard')
 
 
 @helpdesk_staff_member_required
@@ -1550,7 +1550,7 @@ def get_report_queryset_or_redirect(request, report):
         "userqueue",
         "daysuntilticketclosedbymonth"
     ):
-        return None, None, HttpResponseRedirect(reverse("helpdesk:report_index"))
+        return None, None, HttpResponseRedirect(reverse("multitenancy.helpdesk:report_index"))
 
     report_queryset = Ticket.objects.all().select_related().filter(
         queue__in=HelpdeskUser(request.user).get_queues()
@@ -1559,7 +1559,7 @@ def get_report_queryset_or_redirect(request, report):
     try:
         saved_query, query_params = load_saved_query(request)
     except QueryLoadError:
-        return None, HttpResponseRedirect(reverse('helpdesk:report_index'))
+        return None, HttpResponseRedirect(reverse('multitenancy.helpdesk:report_index'))
     return report_queryset, query_params, saved_query, None
 
 
@@ -1765,13 +1765,13 @@ def save_query(request):
     query_encoded = request.POST.get('query_encoded', None)
 
     if not title or not query_encoded:
-        return HttpResponseRedirect(reverse('helpdesk:list'))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
 
     query = SavedSearch(title=title, shared=shared,
                         query=query_encoded, user=request.user)
     query.save()
 
-    return HttpResponseRedirect('%s?saved_query=%s' % (reverse('helpdesk:list'), query.id))
+    return HttpResponseRedirect('%s?saved_query=%s' % (reverse('multitenancy.helpdesk:list'), query.id))
 
 
 save_query = staff_member_required(save_query)
@@ -1783,7 +1783,7 @@ def delete_saved_query(request, pk):
 
     if request.method == 'POST':
         query.delete()
-        return HttpResponseRedirect(reverse('helpdesk:list'))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:list'))
     else:
         return render(request, 'helpdesk/confirm_delete_saved_query.html', {'query': query})
 
@@ -1795,7 +1795,7 @@ class EditUserSettingsView(MustBeStaffMixin, UpdateView):
     template_name = 'helpdesk/user_settings.html'
     form_class = UserSettingsForm
     model = UserSettings
-    success_url = reverse_lazy('helpdesk:dashboard')
+    success_url = reverse_lazy('multitenancy.helpdesk:dashboard')
 
     def get_object(self):
         return UserSettings.objects.get_or_create(user=self.request.user)[0]
@@ -1817,7 +1817,7 @@ def email_ignore_add(request):
         form = EmailIgnoreForm(request.POST)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse('helpdesk:email_ignore'))
+            return HttpResponseRedirect(reverse('multitenancy.helpdesk:email_ignore'))
     else:
         form = EmailIgnoreForm(request.GET)
 
@@ -1832,7 +1832,7 @@ def email_ignore_del(request, pk):
     ignore = get_object_or_404(IgnoreEmail, id=pk)
     if request.method == 'POST':
         ignore.delete()
-        return HttpResponseRedirect(reverse('helpdesk:email_ignore'))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:email_ignore'))
     else:
         return render(request, 'helpdesk/email_ignore_del.html', {'ignore': ignore})
 
@@ -1876,7 +1876,7 @@ def ticket_cc_add(request, ticket_id):
                 ticketcc = form.save(commit=False)
                 ticketcc.ticket = ticket
                 ticketcc.save()
-                return HttpResponseRedirect(reverse('helpdesk:ticket_cc', kwargs={'ticket_id': ticket.id}))
+                return HttpResponseRedirect(reverse('multitenancy.helpdesk:ticket_cc', kwargs={'ticket_id': ticket.id}))
 
     return render(request, 'helpdesk/ticket_cc_add.html', {
         'ticket': ticket,
@@ -1896,7 +1896,7 @@ def ticket_cc_del(request, ticket_id, cc_id):
 
     if request.method == 'POST':
         cc.delete()
-        return HttpResponseRedirect(reverse('helpdesk:ticket_cc', kwargs={'ticket_id': cc.ticket.id}))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:ticket_cc', kwargs={'ticket_id': cc.ticket.id}))
 
     return render(request, 'helpdesk/ticket_cc_del.html', {'ticket': ticket, 'cc': cc})
 
@@ -1915,7 +1915,7 @@ def ticket_dependency_add(request, ticket_id):
             ticketdependency.ticket = ticket
             if ticketdependency.ticket != ticketdependency.depends_on:
                 ticketdependency.save()
-            return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket.id]))
+            return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket.id]))
     else:
         form = TicketDependencyForm()
     return render(request, 'helpdesk/ticket_dependency_add.html', {
@@ -1933,7 +1933,7 @@ def ticket_dependency_del(request, ticket_id, dependency_id):
         TicketDependency, ticket__id=ticket_id, id=dependency_id)
     if request.method == 'POST':
         dependency.delete()
-        return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket_id]))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket_id]))
     return render(request, 'helpdesk/ticket_dependency_del.html', {'dependency': dependency})
 
 
@@ -1948,7 +1948,7 @@ def attachment_del(request, ticket_id, attachment_id):
     attachment = get_object_or_404(FollowUpAttachment, id=attachment_id)
     if request.method == 'POST':
         attachment.delete()
-        return HttpResponseRedirect(reverse('helpdesk:view', args=[ticket_id]))
+        return HttpResponseRedirect(reverse('multitenancy.helpdesk:view', args=[ticket_id]))
     return render(request, 'helpdesk/ticket_attachment_del.html', {
         'attachment': attachment,
         'filename': attachment.filename,

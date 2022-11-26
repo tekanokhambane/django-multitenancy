@@ -6,4 +6,4 @@ import unittest
 
 
 def suite():
-    return unittest.TestLoader().discover("helpdesk.tests", pattern="test_*.py")
+    return unittest.TestLoader().discover("multitenancy.helpdesk.tests", pattern="test_*.py")

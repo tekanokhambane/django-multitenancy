@@ -4,7 +4,7 @@ import multitenancy.helpdesk.models
 
 
 def clear_secret_keys(apps, schema_editor):
-    Ticket = apps.get_model("multitenancy.helpdesk", "Ticket")
+    Ticket = apps.get_model("helpdesk", "Ticket")
     db_alias = schema_editor.connection.alias
 
     for ticket in Ticket.objects.using(db_alias).all():

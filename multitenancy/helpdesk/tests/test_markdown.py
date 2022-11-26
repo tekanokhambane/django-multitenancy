@@ -1,6 +1,6 @@
 
 from django.test import SimpleTestCase
-from helpdesk.models import get_markdown
+from multitenancy.helpdesk.models import get_markdown
 
 
 class MarkDown(SimpleTestCase):

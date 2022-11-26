@@ -3,7 +3,7 @@ from django.core import mail
 from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
-from helpdesk.models import CustomField, Queue, Ticket
+from multitenancy.helpdesk.models import CustomField, Queue, Ticket
 
 
 try:  # python 3
@@ -28,5 +28,5 @@ class TicketActionsTestCase(TestCase):
     def test_get_user_settings(self):
 
         response = self.client.get(
-            reverse('helpdesk:user_settings'), follow=True)
+            reverse('multitenancy.helpdesk:user_settings'), follow=True)
         self.assertContains(response, "Use the following options")

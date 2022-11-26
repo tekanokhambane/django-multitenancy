@@ -13,8 +13,8 @@
                     <tr class=''><th colspan='4'><h3>{{ ticket.queue.slug }}-{{ ticket.id }}. {{ ticket.title }} [{{ ticket.get_status }}]</h3>
                             {% blocktrans with ticket.queue as queue %}Queue: {{ queue }}{% endblocktrans %}
                             <span class='ticket_toolbar float-right'>
-                        <a href="{% url 'helpdesk:edit' ticket.id %}" class="ticket-edit"><button class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> {% trans "Edit" %}</button></a>
-                    | <a href="{% url 'helpdesk:delete' ticket.id %}" class="ticket-delete"><button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> {% trans "Delete" %}</button></a>
+                        <a href="{% url 'multitenancy.helpdesk:edit' ticket.id %}" class="ticket-edit"><button class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> {% trans "Edit" %}</button></a>
+                    | <a href="{% url 'multitenancy.helpdesk:delete' ticket.id %}" class="ticket-delete"><button class="btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i> {% trans "Delete" %}</button></a>
                     |
                     {% if ticket.on_hold %}
                     <form class="form-inline ticket-hold" method='post' action='unhold/'>
@@ -56,9 +56,9 @@
                         <th class="table-active">{% trans "Submitter E-Mail" %}</th>
                         <td> {{ ticket.submitter_email }}
                                                          {% if user.is_superuser %} {% if submitter_userprofile_url %}<strong><a data-toggle="tooltip" href='{{submitter_userprofile_url}}' title='{% trans "Edit " %}{{ ticket.submitter_email }}{% trans " user profile" %}'><button type="button" class="btn btn-primary btn-sm"><i class="fas fa-address-book"></i></button></a></strong>{% endif %}
-                            <strong><a data-toggle="tooltip" href ="{% url 'helpdesk:list'%}?q={{ticket.submitter_email}}" title='{% trans "Display tickets filtered for " %}{{ ticket.submitter_email }}{% trans " as a keyword" %}'>
+                            <strong><a data-toggle="tooltip" href ="{% url 'multitenancy.helpdesk:list'%}?q={{ticket.submitter_email}}" title='{% trans "Display tickets filtered for " %}{{ ticket.submitter_email }}{% trans " as a keyword" %}'>
                                 <button type="button" class="btn btn-primary btn-sm"><i class="fas fa-search"></i></button></a></strong>
-                        <strong><a data-toggle="tooltip" href='{% url 'helpdesk:email_ignore_add' %}?email={{ ticket.submitter_email }}' title='{% trans "Add email address for the ticket system to ignore." %}'>
+                        <strong><a data-toggle="tooltip" href='{% url 'multitenancy.helpdesk:email_ignore_add' %}?email={{ ticket.submitter_email }}' title='{% trans "Add email address for the ticket system to ignore." %}'>
                                 <button type="button" class="btn btn-warning btn-sm float-right"><i class="fas fa-eye-slash"></i></button></a></strong>{% endif %}
                         </td>
                     </tr>
@@ -67,7 +67,7 @@
                         <td class="{% if ticket.priority < 3 %}table-warning{% endif %}">{{ ticket.get_priority_display }}
                         </td>
                         <th class="table-active">{% trans "Copies To" %}</th>
-                        <td>{{ ticketcc_string }} <a data-toggle='tooltip' href='{% url 'helpdesk:ticket_cc' ticket.id %}' title='{% trans "Click here to add / remove people who should receive an e-mail whenever this ticket is updated." %}'><strong><button type="button" class="btn btn-warning btn-sm float-right"><i class="fa fa-share"></i></button></strong></a>{% if SHOW_SUBSCRIBE %} <strong><a data-toggle='tooltip' href='?subscribe' title='{% trans "Click here to subscribe yourself to this ticket, if you want to receive an e-mail whenever this ticket is updated." %}'><button type="button" class="btn btn-warning btn-sm float-right"><i class="fas fa-rss-square"></i></button></a></strong>{% endif %}</td>
+                        <td>{{ ticketcc_string }} <a data-toggle='tooltip' href='{% url 'multitenancy.helpdesk:ticket_cc' ticket.id %}' title='{% trans "Click here to add / remove people who should receive an e-mail whenever this ticket is updated." %}'><strong><button type="button" class="btn btn-warning btn-sm float-right"><i class="fa fa-share"></i></button></strong></a>{% if SHOW_SUBSCRIBE %} <strong><a data-toggle='tooltip' href='?subscribe' title='{% trans "Click here to subscribe yourself to this ticket, if you want to receive an e-mail whenever this ticket is updated." %}'><button type="button" class="btn btn-warning btn-sm float-right"><i class="fas fa-rss-square"></i></button></a></strong>{% endif %}</td>
                     </tr>
 
                     {% if helpdesk_settings.HELPDESK_ENABLE_DEPENDENCIES_ON_TICKET != False and helpdesk_settings.HELPDESK_ENABLE_TIME_SPENT_ON_TICKET != False %}
@@ -75,10 +75,10 @@
                     {% if helpdesk_settings.HELPDESK_ENABLE_DEPENDENCIES_ON_TICKET %}
                         <th class="table-active">{% trans "Dependencies" %}</th>
                         <td>
-                            <a data-toggle='tooltip' href='{% url 'helpdesk:ticket_dependency_add' ticket.id %}' title="{% trans "Click on 'Add Dependency', if you want to make this ticket dependent on another ticket. A ticket may not be closed until all tickets it depends on are closed." %}"><button type="button" class="btn btn-primary btn-sm float-right"><i class="fas fa-link"></i></button></a>
+                            <a data-toggle='tooltip' href='{% url 'multitenancy.helpdesk:ticket_dependency_add' ticket.id %}' title="{% trans "Click on 'Add Dependency', if you want to make this ticket dependent on another ticket. A ticket may not be closed until all tickets it depends on are closed." %}"><button type="button" class="btn btn-primary btn-sm float-right"><i class="fas fa-link"></i></button></a>
                             {% for dep in ticket.ticketdependency.all %}
                             {% if forloop.first %}<p>{% trans "This ticket cannot be resolved until the following ticket(s) are resolved" %}</p><ul>{% endif %}
-                                <li><a href='{{ dep.depends_on.get_absolute_url }}'>{{ dep.depends_on.ticket }} {{ dep.depends_on.title }}</a> ({{ dep.depends_on.get_status_display }}) <a href='{% url 'helpdesk:ticket_dependency_del' ticket.id dep.id %}'><button type="button" class="btn btn-warning btn-sm"><i class="fas fa-trash"></i></button></a></li>
+                                <li><a href='{{ dep.depends_on.get_absolute_url }}'>{{ dep.depends_on.ticket }} {{ dep.depends_on.title }}</a> ({{ dep.depends_on.get_status_display }}) <a href='{% url 'multitenancy.helpdesk:ticket_dependency_del' ticket.id dep.id %}'><button type="button" class="btn btn-warning btn-sm"><i class="fas fa-trash"></i></button></a></li>
                                 {% if forloop.last %}</ul>{% endif %}
                             {% empty %}
                             {% trans "This ticket has no dependencies." %}
@@ -111,7 +111,7 @@
                             {% for attachment in followup.followupattachment_set.all %}
                             <li><a href='{{ attachment.file.url }}'>{{ attachment.filename }}</a> ({{ attachment.mime_type }}, {{ attachment.size|filesizeformat }})
                             {% if followup.user and request.user == followup.user %}
-                            <a href='{% url 'helpdesk:attachment_del' ticket.id attachment.id %}'><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></a>
+                            <a href='{% url 'multitenancy.helpdesk:attachment_del' ticket.id attachment.id %}'><button class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button></a>
                             {% endif %}
                             </li>
                             {% endfor %}

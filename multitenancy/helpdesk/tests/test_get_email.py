@@ -8,12 +8,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.management import call_command
 from django.shortcuts import get_object_or_404
 from django.test import override_settings, TestCase
-import helpdesk.email
-from helpdesk.email import extract_part_data, object_from_message
-from helpdesk.exceptions import DeleteIgnoredTicketException, IgnoreTicketException
-from helpdesk.management.commands.get_email import Command
-from helpdesk.models import FollowUp, FollowUpAttachment, IgnoreEmail, Queue, Ticket, TicketCC
-from helpdesk.tests import utils
+import multitenancy.helpdesk.email
+from multitenancy.helpdesk.email import extract_part_data, object_from_message
+from multitenancy.helpdesk.exceptions import DeleteIgnoredTicketException, IgnoreTicketException
+from multitenancy.helpdesk.management.commands.get_email import Command
+from multitenancy.helpdesk.models import FollowUp, FollowUpAttachment, IgnoreEmail, Queue, Ticket, TicketCC
+from multitenancy.helpdesk.tests import utils
 import itertools
 import logging
 import os
@@ -59,7 +59,7 @@ class GetEmailCommonTests(TestCase):
         """
         with open(os.path.join(THIS_DIR, "test_files/blank-body-with-attachment.eml")) as fd:
             test_email = fd.read()
-            ticket = helpdesk.email.object_from_message(
+            ticket = multitenancy.helpdesk.email.object_from_message(
                 test_email, self.queue_public, self.logger)
 
         # title got truncated because of max_lengh of the model.title field
@@ -76,7 +76,7 @@ class GetEmailCommonTests(TestCase):
         """
         with open(os.path.join(THIS_DIR, "test_files/quoted_printable.eml")) as fd:
             test_email = fd.read()
-            ticket = helpdesk.email.object_from_message(
+            ticket = multitenancy.helpdesk.email.object_from_message(
                 test_email, self.queue_public, self.logger)
         self.assertEqual(ticket.title, "Český test")
         self.assertEqual(ticket.description,
@@ -97,7 +97,7 @@ class GetEmailCommonTests(TestCase):
         """
         with open(os.path.join(THIS_DIR, "test_files/all-special-chars.eml")) as fd:
             test_email = fd.read()
-            ticket = helpdesk.email.object_from_message(
+            ticket = multitenancy.helpdesk.email.object_from_message(
                 test_email, self.queue_public, self.logger)
         self.assertEqual(ticket.title, "Testovácí email")
         self.assertEqual(ticket.description, "íářčšáíéřášč")
@@ -110,7 +110,7 @@ class GetEmailCommonTests(TestCase):
         """
         with open(os.path.join(THIS_DIR, "test_files/utf-nondecodable.eml")) as fd:
             test_email = fd.read()
-        ticket = helpdesk.email.object_from_message(
+        ticket = multitenancy.helpdesk.email.object_from_message(
             test_email, self.queue_public, self.logger)
         self.assertEqual(
             ticket.title, "Fwd: Cyklozaměstnavatel - změna vyhodnocení")
@@ -129,7 +129,7 @@ class GetEmailCommonTests(TestCase):
         """
         with open(os.path.join(THIS_DIR, "test_files/forwarded-message.eml")) as fd:
             test_email = fd.read()
-        ticket = helpdesk.email.object_from_message(
+        ticket = multitenancy.helpdesk.email.object_from_message(
             test_email, self.queue_public, self.logger)
         self.assertEqual(
             ticket.title, "Test with original message from GitHub")
@@ -186,7 +186,7 @@ class GetEmailCommonTests(TestCase):
             object_from_message(message.as_string(), self.queue_public, self.logger)
 
             self.assertIn(
-                "ERROR:helpdesk:['Unsupported file extension: .jpg']",
+                "ERROR:multitenancy.helpdesk:['Unsupported file extension: .jpg']",
                 cm.output
             )
 
@@ -223,7 +223,7 @@ class GetEmailCommonTests(TestCase):
             object_from_message(message.as_string(), self.queue_public, self.logger)
 
             self.assertIn(
-                "ERROR:helpdesk:['Unsupported file extension: .jpg']",
+                "ERROR:multitenancy.helpdesk:['Unsupported file extension: .jpg']",
                 cm.output
             )
 

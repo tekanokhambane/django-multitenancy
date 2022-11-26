@@ -42,7 +42,7 @@ class DirectTemplateView(TemplateView):
         return context
 
 
-app_name = "helpdesk"
+app_name = "multitenancy.helpdesk"
 
 base64_pattern = r"(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$"
 

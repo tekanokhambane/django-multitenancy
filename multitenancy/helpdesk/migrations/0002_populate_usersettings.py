@@ -2,7 +2,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models, migrations
 
-from helpdesk.settings import DEFAULT_USER_SETTINGS
+from multitenancy.helpdesk.settings import DEFAULT_USER_SETTINGS
 
 
 def pickle_settings(data):
@@ -11,7 +11,7 @@ def pickle_settings(data):
         import pickle
     except ImportError:
         import cPickle as pickle
-    from helpdesk.query import b64encode
+    from multitenancy.helpdesk.query import b64encode
     return b64encode(pickle.dumps(data))
 
 

@@ -46,7 +46,7 @@ def protect_view(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated and helpdesk_settings.HELPDESK_REDIRECT_TO_LOGIN_BY_DEFAULT:
-            return redirect('helpdesk:login')
+            return redirect('multitenancy.helpdesk:login')
         elif not request.user.is_authenticated and helpdesk_settings.HELPDESK_ANON_ACCESS_RAISES_404:
             raise Http404
         return view_func(request, *args, **kwargs)
@@ -62,7 +62,7 @@ def staff_member_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated and not request.user.is_active:
-            return redirect('helpdesk:login')
+            return redirect('multitenancy.helpdesk:login')
         if not helpdesk_settings.HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE and not request.user.is_staff:
             raise PermissionDenied()
         return view_func(request, *args, **kwargs)
@@ -78,7 +78,7 @@ def superuser_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         if not request.user.is_authenticated and not request.user.is_active:
-            return redirect('helpdesk:login')
+            return redirect('multitenancy.helpdesk:login')
         if not request.user.is_superuser:
             raise PermissionDenied()
         return view_func(request, *args, **kwargs)

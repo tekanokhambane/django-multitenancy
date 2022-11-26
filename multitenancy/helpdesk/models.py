@@ -735,7 +735,7 @@ class Ticket(models.Model):
         return u"%s://%s%s?ticket=%s&email=%s&key=%s" % (
             protocol,
             site.domain,
-            reverse('helpdesk:public_view'),
+            reverse('multitenancy.helpdesk:public_view'),
             self.ticket_for_url,
             self.submitter_email,
             self.secret_key
@@ -761,7 +761,7 @@ class Ticket(models.Model):
         return u"%s://%s%s" % (
             protocol,
             site.domain,
-            reverse('helpdesk:view',
+            reverse('multitenancy.helpdesk:view',
                     args=[self.id])
         )
     staff_url = property(_get_staff_url)
@@ -795,7 +795,7 @@ class Ticket(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('helpdesk:view', args=(self.id,))
+        return reverse('multitenancy.helpdesk:view', args=(self.id,))
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -1353,7 +1353,7 @@ class KBCategory(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return reverse('helpdesk:kb_category', kwargs={'slug': self.slug})
+        return reverse('multitenancy.helpdesk:kb_category', kwargs={'slug': self.slug})
 
 
 class KBItem(models.Model):
@@ -1452,11 +1452,11 @@ class KBItem(models.Model):
 
     def get_absolute_url(self):
         from django.urls import reverse
-        return str(reverse('helpdesk:kb_category', args=(self.category.slug,))) + "?kbitem=" + str(self.pk)
+        return str(reverse('multitenancy.helpdesk:kb_category', args=(self.category.slug,))) + "?kbitem=" + str(self.pk)
 
     def query_url(self):
         from django.urls import reverse
-        return str(reverse('helpdesk:list')) + "?kbitem=" + str(self.pk)
+        return str(reverse('multitenancy.helpdesk:list')) + "?kbitem=" + str(self.pk)
 
     def num_open_tickets(self):
         return Ticket.objects.filter(kbitem=self, status__in=(1, 2)).count()

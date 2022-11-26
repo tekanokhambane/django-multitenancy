@@ -4,9 +4,9 @@
 from django.test import TestCase
 from django.test.utils import override_settings
 from django.urls import reverse
-from helpdesk import settings as helpdesk_settings
-from helpdesk.models import Queue
-from helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.models import Queue
+from multitenancy.helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
 from importlib import reload
 import sys
 
@@ -29,11 +29,11 @@ class KBDisabledTestCase(TestCase):
 
         self.client.login(username=get_staff_user(
         ).get_username(), password='password')
-        self.assertRaises(NoReverseMatch, reverse, 'helpdesk:kb_index')
+        self.assertRaises(NoReverseMatch, reverse, 'multitenancy.helpdesk:kb_index')
         try:
-            response = self.client.get(reverse('helpdesk:dashboard'))
+            response = self.client.get(reverse('multitenancy.helpdesk:dashboard'))
         except NoReverseMatch as e:
-            if 'helpdesk:kb_index' in e.message:
+            if 'multitenancy.helpdesk:kb_index' in e.message:
                 self.fail(
                     "Please verify any unchecked references to helpdesk_kb_index (start with navigation.html)")
             else:
@@ -64,7 +64,7 @@ class StaffUserTestCaseMixin(object):
 
     def test_anonymous_user(self):
         """Access to the dashboard always requires a login"""
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/registration/login.html')
 
 
@@ -84,7 +84,7 @@ class NonStaffUsersAllowedTestCase(StaffUserTestCaseMixin, TestCase):
         self.assertTrue(is_helpdesk_staff(user))
 
         self.client.login(username=user.username, password='gouda')
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/dashboard.html')
 
 
@@ -113,7 +113,7 @@ class StaffUsersOnlyTestCase(StaffUserTestCaseMixin, TestCase):
 
         user = get_staff_user()
         self.client.login(username=user.username, password='password')
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/dashboard.html')
 
     def test_non_staff_cannot_access_dashboard(self):
@@ -125,7 +125,7 @@ class StaffUsersOnlyTestCase(StaffUserTestCaseMixin, TestCase):
         user = self.non_staff_user
         self.client.login(username=user.username,
                           password=self.non_staff_user_password)
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/registration/login.html')
 
     def test_staff_rss(self):
@@ -135,7 +135,7 @@ class StaffUsersOnlyTestCase(StaffUserTestCaseMixin, TestCase):
         user = get_staff_user()
         self.client.login(username=user.username, password="password")
         response = self.client.get(
-            reverse('helpdesk:rss_unassigned'), follow=True)
+            reverse('multitenancy.helpdesk:rss_unassigned'), follow=True)
         self.assertContains(response, 'Unassigned Open and Reopened tickets')
 
     @override_settings(HELPDESK_ALLOW_NON_STAFF_TICKET_UPDATE=False)
@@ -151,12 +151,12 @@ class StaffUsersOnlyTestCase(StaffUserTestCaseMixin, TestCase):
             slug="test_queue",
         )
         rss_urls = [
-            reverse('helpdesk:rss_user', args=[user.username]),
-            reverse('helpdesk:rss_user_queue', args=[
+            reverse('multitenancy.helpdesk:rss_user', args=[user.username]),
+            reverse('multitenancy.helpdesk:rss_user_queue', args=[
                     user.username, 'test_queue']),
-            reverse('helpdesk:rss_queue', args=['test_queue']),
-            reverse('helpdesk:rss_unassigned'),
-            reverse('helpdesk:rss_activity'),
+            reverse('multitenancy.helpdesk:rss_queue', args=['test_queue']),
+            reverse('multitenancy.helpdesk:rss_unassigned'),
+            reverse('multitenancy.helpdesk:rss_activity'),
         ]
         for rss_url in rss_urls:
             response = self.client.get(rss_url, follow=True)
@@ -184,7 +184,7 @@ class CustomStaffUserTestCase(StaffUserTestCaseMixin, TestCase):
         self.assertTrue(is_helpdesk_staff(user))
 
         self.client.login(username=user.username, password='gouda')
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/dashboard.html')
 
     def test_custom_staff_fail(self):
@@ -196,7 +196,7 @@ class CustomStaffUserTestCase(StaffUserTestCaseMixin, TestCase):
         self.assertFalse(is_helpdesk_staff(user))
 
         self.client.login(username=user.username, password='frog')
-        response = self.client.get(reverse('helpdesk:dashboard'), follow=True)
+        response = self.client.get(reverse('multitenancy.helpdesk:dashboard'), follow=True)
         self.assertTemplateUsed(response, 'helpdesk/registration/login.html')
 
 
@@ -209,14 +209,14 @@ class HomePageAnonymousUserTestCase(TestCase):
 
     def test_homepage(self):
         helpdesk_settings.HELPDESK_REDIRECT_TO_LOGIN_BY_DEFAULT = True
-        response = self.client.get(reverse('helpdesk:home'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
         self.assertTemplateUsed('helpdesk/public_homepage.html')
 
     def test_redirect_to_login(self):
         """Unauthenticated users are redirected to the login page if HELPDESK_REDIRECT_TO_LOGIN_BY_DEFAULT is True"""
         helpdesk_settings.HELPDESK_REDIRECT_TO_LOGIN_BY_DEFAULT = True
-        response = self.client.get(reverse('helpdesk:home'))
-        self.assertRedirects(response, reverse('helpdesk:login'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
+        self.assertRedirects(response, reverse('multitenancy.helpdesk:login'))
 
 
 class HomePageTestCase(TestCase):
@@ -234,7 +234,7 @@ class HomePageTestCase(TestCase):
 
     def assertUserRedirectedToView(self, user, view_name):
         self.client.login(username=user.username, password='password')
-        response = self.client.get(reverse('helpdesk:home'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
         self.assertRedirects(response, reverse(view_name))
         self.client.logout()
 
@@ -245,7 +245,7 @@ class HomePageTestCase(TestCase):
         # login_view_ticketlist is False...
         user.usersettings_helpdesk.login_view_ticketlist = False
         user.usersettings_helpdesk.save()
-        self.assertUserRedirectedToView(user, 'helpdesk:dashboard')
+        self.assertUserRedirectedToView(user, 'multitenancy.helpdesk:dashboard')
 
     def test_no_user_settings_redirect_to_dashboard(self):
         """Authenticated users are redirected to the dashboard if user settings are missing"""
@@ -253,7 +253,7 @@ class HomePageTestCase(TestCase):
         user = get_staff_user()
 
         UserSettings.objects.filter(user=user).delete()
-        self.assertUserRedirectedToView(user, 'helpdesk:dashboard')
+        self.assertUserRedirectedToView(user, 'multitenancy.helpdesk:dashboard')
 
     def test_redirect_to_ticket_list(self):
         """Authenticated users are redirected to the ticket list based on their user settings"""
@@ -261,7 +261,7 @@ class HomePageTestCase(TestCase):
         user.usersettings_helpdesk.login_view_ticketlist = True
         user.usersettings_helpdesk.save()
 
-        self.assertUserRedirectedToView(user, 'helpdesk:list')
+        self.assertUserRedirectedToView(user, 'multitenancy.helpdesk:list')
 
 
 class ReturnToTicketTestCase(TestCase):

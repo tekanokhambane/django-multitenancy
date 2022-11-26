@@ -6,10 +6,10 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}">{% trans "Tickets" %}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}{{ ticket.id }}/">{{ ticket.queue.slug }}-{{ ticket.id }}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}{{ ticket.id }}/">{{ ticket.queue.slug }}-{{ ticket.id }}</a>
 </li>
 <li class="breadcrumb-item active">{% trans "CC Settings" %}</li>
 {% endblock %}
@@ -65,7 +65,7 @@
                                             {% endif %}
                                         </td>
                                         <td class="text-center">
-                                            <a href='{% url 'helpdesk:ticket_cc_del' ticket.id person.id %}'>
+                                            <a href='{% url 'multitenancy.helpdesk:ticket_cc_del' ticket.id person.id %}'>
                                                 <button class="btn btn-danger btn-xs">
                                                     {% trans "Delete" %}
                                                 </button>
@@ -87,7 +87,7 @@
         <!-- /.row -->
 
         <p>
-            <a href='{% url 'helpdesk:view' ticket.id %}'>
+            <a href='{% url 'multitenancy.helpdesk:view' ticket.id %}'>
                 <button class="btn btn-primary btn-lg">
                     {% blocktrans with ticket.title as ticket_title %}Return to
                     <em>{{ ticket_title }}</em>{% endblocktrans %}

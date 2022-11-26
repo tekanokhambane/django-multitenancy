@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.urls import reverse
-from helpdesk.models import Queue
-from helpdesk.tests.helpers import get_user
+from multitenancy.helpdesk.models import Queue
+from multitenancy.helpdesk.tests.helpers import get_user
 
 
 class TestSavingSharedQuery(TestCase):
@@ -13,7 +13,7 @@ class TestSavingSharedQuery(TestCase):
 
     def test_cansavequery(self):
         """Can a query be saved"""
-        url = reverse('helpdesk:savequery')
+        url = reverse('multitenancy.helpdesk:savequery')
         self.client.login(username=get_user(is_staff=True).get_username(),
                           password='password')
         response = self.client.post(

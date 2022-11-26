@@ -196,7 +196,7 @@ class __Query__:
                             +
                             '<br/> <a href="%s" class="btn" role="button">%s</a>'
                             %
-                            (reverse('helpdesk:view', kwargs={
+                            (reverse('multitenancy.helpdesk:view', kwargs={
                              'ticket_id': ticket.pk}), _("View ticket"))
                         ),
                     },

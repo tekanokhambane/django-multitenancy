@@ -9,7 +9,7 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:report_index' %}">{% trans "Reports &amp; Statistics" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:report_index' %}">{% trans "Reports &amp; Statistics" %}</a>
 </li>
 <li class="breadcrumb-item active">{{ title }}</li>
 {% endblock %}

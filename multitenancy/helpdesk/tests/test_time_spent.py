@@ -8,9 +8,9 @@ from django.core import mail
 from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
-from helpdesk import settings as helpdesk_settings
-from helpdesk.models import FollowUp, Queue, Ticket
-from helpdesk.templatetags.ticket_to_link import num_to_link
+from multitenancy.helpdesk import settings as helpdesk_settings
+from multitenancy.helpdesk.models import FollowUp, Queue, Ticket
+from multitenancy.helpdesk.templatetags.ticket_to_link import num_to_link
 import uuid
 
 

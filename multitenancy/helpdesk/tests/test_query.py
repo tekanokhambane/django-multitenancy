@@ -1,9 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
-from helpdesk.models import KBCategory, KBItem, Queue, Ticket
-from helpdesk.query import query_to_base64
-from helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
+from multitenancy.helpdesk.models import KBCategory, KBItem, Queue, Ticket
+from multitenancy.helpdesk.query import query_to_base64
+from multitenancy.helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
 
 
 class QueryTests(TestCase):
@@ -57,7 +57,7 @@ class QueryTests(TestCase):
         self.loginUser()
         query = query_to_base64({})
         response = self.client.get(
-            reverse('helpdesk:datatables_ticket_list', args=[query]))
+            reverse('multitenancy.helpdesk:datatables_ticket_list', args=[query]))
         self.assertEqual(
             response.json(),
             {
@@ -76,7 +76,7 @@ class QueryTests(TestCase):
             {'filtering': {'kbitem__in': [self.kbitem1.pk]}}
         )
         response = self.client.get(
-            reverse('helpdesk:datatables_ticket_list', args=[query]))
+            reverse('multitenancy.helpdesk:datatables_ticket_list', args=[query]))
         self.assertEqual(
             response.json(),
             {
@@ -95,7 +95,7 @@ class QueryTests(TestCase):
             {'filtering_or': {'kbitem__in': [self.kbitem1.pk]}}
         )
         response = self.client.get(
-            reverse('helpdesk:datatables_ticket_list', args=[query]))
+            reverse('multitenancy.helpdesk:datatables_ticket_list', args=[query]))
         self.assertEqual(
             response.json(),
             {

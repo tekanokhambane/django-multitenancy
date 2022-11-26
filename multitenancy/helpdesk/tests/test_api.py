@@ -5,7 +5,7 @@ from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from freezegun import freeze_time
-from helpdesk.models import CustomField, Queue, Ticket
+from multitenancy.helpdesk.models import CustomField, Queue, Ticket
 from rest_framework import HTTP_HEADER_ENCODING
 from rest_framework.exceptions import ErrorDetail
 from rest_framework.status import (

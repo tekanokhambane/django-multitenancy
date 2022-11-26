@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.contrib.auth import get_user_model
-from helpdesk.models import Queue, Ticket, UserSettings
+from multitenancy.helpdesk.models import Queue, Ticket, UserSettings
 import sys
 
 
@@ -65,7 +65,7 @@ def create_ticket(**kwargs):
     return Ticket.objects.create(**data)
 
 
-HELPDESK_URLCONF = 'helpdesk.urls'
+HELPDESK_URLCONF = 'multitenancy.helpdesk.urls'
 
 
 def print_response(response, stdout=False):

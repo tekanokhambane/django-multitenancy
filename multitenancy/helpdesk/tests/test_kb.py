@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from django.test import TestCase
 from django.urls import reverse
-from helpdesk.models import KBCategory, KBItem, Queue, Ticket
-from helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
+from multitenancy.helpdesk.models import KBCategory, KBItem, Queue, Ticket
+from multitenancy.helpdesk.tests.helpers import create_ticket, get_staff_user, print_response, reload_urlconf, User
 
 
 class KBTests(TestCase):
@@ -37,12 +37,12 @@ class KBTests(TestCase):
         self.user = get_staff_user()
 
     def test_kb_index(self):
-        response = self.client.get(reverse('helpdesk:kb_index'))
+        response = self.client.get(reverse('multitenancy.helpdesk:kb_index'))
         self.assertContains(response, 'This is a test category')
 
     def test_kb_category(self):
         response = self.client.get(
-            reverse('helpdesk:kb_category', args=("test_cat", )))
+            reverse('multitenancy.helpdesk:kb_category', args=("test_cat", )))
         self.assertContains(response, 'This is a test category')
         self.assertContains(response, 'KBItem 1')
         self.assertContains(response, 'KBItem 2')
@@ -50,7 +50,7 @@ class KBTests(TestCase):
         self.client.login(username=self.user.get_username(),
                           password='password')
         response = self.client.get(
-            reverse('helpdesk:kb_category', args=("test_cat", )))
+            reverse('multitenancy.helpdesk:kb_category', args=("test_cat", )))
         self.assertContains(response, '<i class="fa fa-thumbs-up fa-lg"></i>')
         self.assertContains(response, '0 open tickets')
         ticket = Ticket.objects.create(
@@ -60,27 +60,27 @@ class KBTests(TestCase):
         )
         ticket.save()
         response = self.client.get(
-            reverse('helpdesk:kb_category', args=("test_cat",)))
+            reverse('multitenancy.helpdesk:kb_category', args=("test_cat",)))
         self.assertContains(response, '1 open tickets')
 
     def test_kb_vote(self):
         self.client.login(username=self.user.get_username(),
                           password='password')
         response = self.client.get(
-            reverse('helpdesk:kb_vote', args=(self.kbitem1.pk,)) + "?vote=up")
-        cat_url = reverse('helpdesk:kb_category',
+            reverse('multitenancy.helpdesk:kb_vote', args=(self.kbitem1.pk,)) + "?vote=up")
+        cat_url = reverse('multitenancy.helpdesk:kb_category',
                           args=("test_cat",)) + "?kbitem=1"
         self.assertRedirects(response, cat_url)
         response = self.client.get(cat_url)
         self.assertContains(response, '1 people found this answer useful of 1')
         response = self.client.get(
-            reverse('helpdesk:kb_vote', args=(self.kbitem1.pk,)) + "?vote=down")
+            reverse('multitenancy.helpdesk:kb_vote', args=(self.kbitem1.pk,)) + "?vote=down")
         self.assertRedirects(response, cat_url)
         response = self.client.get(cat_url)
         self.assertContains(response, '0 people found this answer useful of 1')
 
     def test_kb_category_iframe(self):
-        cat_url = reverse('helpdesk:kb_category', args=(
+        cat_url = reverse('multitenancy.helpdesk:kb_category', args=(
             "test_cat",)) + "?kbitem=1&submitter_email=foo@bar.cz&title=lol&"
         response = self.client.get(cat_url)
         # Assert that query params are passed on to ticket submit form

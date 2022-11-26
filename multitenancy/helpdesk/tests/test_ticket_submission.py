@@ -8,9 +8,9 @@ from django.test import TestCase
 from django.test.client import Client
 from django.urls import reverse
 import email
-from helpdesk.email import create_ticket_cc, object_from_message
-from helpdesk.models import CustomField, FollowUp, KBCategory, KBItem, Queue, Ticket, TicketCC
-from helpdesk.tests.helpers import print_response
+from multitenancy.helpdesk.email import create_ticket_cc, object_from_message
+from multitenancy.helpdesk.models import CustomField, FollowUp, KBCategory, KBItem, Queue, Ticket, TicketCC
+from multitenancy.helpdesk.tests.helpers import print_response
 import logging
 from urllib.parse import urlparse
 import uuid
@@ -61,7 +61,7 @@ class TicketBasicsTestCase(TestCase):
     def test_create_ticket_public(self):
         email_count = len(mail.outbox)
 
-        response = self.client.get(reverse('helpdesk:home'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
         self.assertEqual(response.status_code, 200)
 
         post_data = {
@@ -73,7 +73,7 @@ class TicketBasicsTestCase(TestCase):
         }
 
         response = self.client.post(
-            reverse('helpdesk:home'), post_data, follow=True)
+            reverse('multitenancy.helpdesk:home'), post_data, follow=True)
         last_redirect = response.redirect_chain[-1]
         last_redirect_url = last_redirect[0]
         # last_redirect_status = last_redirect[1]
@@ -82,7 +82,7 @@ class TicketBasicsTestCase(TestCase):
         # Django 1.9 compatible way of testing this
         # https://docs.djangoproject.com/en/1.9/releases/1.9/#http-redirects-no-longer-forced-to-absolute-uris
         urlparts = urlparse(last_redirect_url)
-        self.assertEqual(urlparts.path, reverse('helpdesk:public_view'))
+        self.assertEqual(urlparts.path, reverse('multitenancy.helpdesk:public_view'))
 
         # Ensure submitter, new-queue + update-queue were all emailed.
         self.assertEqual(email_count + 3, len(mail.outbox))
@@ -95,7 +95,7 @@ class TicketBasicsTestCase(TestCase):
     def test_create_ticket_public_with_hidden_fields(self):
         email_count = len(mail.outbox)
 
-        response = self.client.get(reverse('helpdesk:home'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
         self.assertEqual(response.status_code, 200)
 
         post_data = {
@@ -107,7 +107,7 @@ class TicketBasicsTestCase(TestCase):
         }
 
         response = self.client.post(
-            reverse('helpdesk:home') + "?_hide_fields_=priority", post_data, follow=True)
+            reverse('multitenancy.helpdesk:home') + "?_hide_fields_=priority", post_data, follow=True)
         ticket = Ticket.objects.last()
         self.assertEqual(ticket.priority, 4)
 
@@ -115,7 +115,7 @@ class TicketBasicsTestCase(TestCase):
         email_count = len(mail.outbox)
         self.client.force_login(self.user)
 
-        response = self.client.get(reverse('helpdesk:home'))
+        response = self.client.get(reverse('multitenancy.helpdesk:home'))
         self.assertEqual(response.status_code, 200)
 
         post_data = {
@@ -127,7 +127,7 @@ class TicketBasicsTestCase(TestCase):
         }
 
         response = self.client.post(
-            reverse('helpdesk:home'), post_data, follow=True)
+            reverse('multitenancy.helpdesk:home'), post_data, follow=True)
         last_redirect = response.redirect_chain[-1]
         last_redirect_url = last_redirect[0]
         # last_redirect_status = last_redirect[1]
@@ -136,7 +136,7 @@ class TicketBasicsTestCase(TestCase):
         # Django 1.9 compatible way of testing this
         # https://docs.djangoproject.com/en/1.9/releases/1.9/#http-redirects-no-longer-forced-to-absolute-uris
         urlparts = urlparse(last_redirect_url)
-        self.assertEqual(urlparts.path, reverse('helpdesk:public_view'))
+        self.assertEqual(urlparts.path, reverse('multitenancy.helpdesk:public_view'))
 
         # Ensure submitter, new-queue + update-queue were all emailed.
         self.assertEqual(email_count + 3, len(mail.outbox))
@@ -156,7 +156,7 @@ class TicketBasicsTestCase(TestCase):
             'priority': 3,
         }
 
-        response = self.client.post(reverse('helpdesk:home'), post_data)
+        response = self.client.post(reverse('multitenancy.helpdesk:home'), post_data)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(email_count, len(mail.outbox))
         self.assertContains(response, 'Select a valid choice.')
@@ -186,7 +186,7 @@ class TicketBasicsTestCase(TestCase):
         }
 
         response = self.client.post(
-            reverse('helpdesk:home'), post_data, follow=True)
+            reverse('multitenancy.helpdesk:home'), post_data, follow=True)
 
         custom_field_1.delete()
         last_redirect = response.redirect_chain[-1]
@@ -197,7 +197,7 @@ class TicketBasicsTestCase(TestCase):
         # Django 1.9 compatible way of testing this
         # https://docs.djangoproject.com/en/1.9/releases/1.9/#http-redirects-no-longer-forced-to-absolute-uris
         urlparts = urlparse(last_redirect_url)
-        self.assertEqual(urlparts.path, reverse('helpdesk:public_view'))
+        self.assertEqual(urlparts.path, reverse('multitenancy.helpdesk:public_view'))
 
         # Ensure only two e-mails were sent - submitter & updated.
         self.assertEqual(email_count + 2, len(mail.outbox))
@@ -220,7 +220,7 @@ class TicketBasicsTestCase(TestCase):
         }
 
         response = self.client.post(
-            reverse('helpdesk:home'), post_data, follow=True)
+            reverse('multitenancy.helpdesk:home'), post_data, follow=True)
         last_redirect = response.redirect_chain[-1]
         last_redirect_url = last_redirect[0]
         # last_redirect_status = last_redirect[1]
@@ -229,7 +229,7 @@ class TicketBasicsTestCase(TestCase):
         # Django 1.9 compatible way of testing this
         # https://docs.djangoproject.com/en/1.9/releases/1.9/#http-redirects-no-longer-forced-to-absolute-uris
         urlparts = urlparse(last_redirect_url)
-        self.assertEqual(urlparts.path, reverse('helpdesk:public_view'))
+        self.assertEqual(urlparts.path, reverse('multitenancy.helpdesk:public_view'))
 
         # Ensure submitter, new-queue + update-queue were all emailed.
         self.assertEqual(email_count + 2, len(mail.outbox))
@@ -1099,7 +1099,7 @@ class EmailInteractionsTestCase(TestCase):
             answer="A KB Item",
         )
         self.kbitem1.save()
-        cat_url = reverse('helpdesk:submit') + \
+        cat_url = reverse('multitenancy.helpdesk:submit') + \
             "?kbitem=1&submitter_email=foo@bar.cz&title=lol"
         response = self.client.get(cat_url)
         self.assertContains(

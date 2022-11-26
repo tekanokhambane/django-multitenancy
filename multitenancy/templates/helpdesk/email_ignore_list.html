@@ -42,7 +42,7 @@
                                         <td>{% for queue in ignore.queues.all %}{{ queue.slug }}{% if not forloop.last %},
                                             {% endif %}{% empty %}{% trans "All" %}{% endfor %}</td>
                                         <td>{% if ignore.keep_in_mailbox %}{% trans "Keep" %}{% endif %}</td>
-                                        <td><a href='{% url 'helpdesk:email_ignore_del' ignore.id %}'><button
+                                        <td><a href='{% url 'multitenancy.multitenancy.helpdesk:email_ignore_del' ignore.id %}'><button
                                                     class="btn btn-danger btn-xs">{% trans "Delete" %}</button></a></td>
                                     </tr>
                                     {% endfor %}

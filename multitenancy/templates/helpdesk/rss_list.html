@@ -5,7 +5,7 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}">{% trans "Tickets" %}</a>
 </li>
 <li class="breadcrumb-item active">
     RSS Feeds
@@ -21,17 +21,17 @@
         </p>
 
         <dl>
-            <dt><a href='{% url 'helpdesk:rss_user' user.get_username %}'><i
+            <dt><a href='{% url 'multitenancy.helpdesk:rss_user' user.get_username %}'><i
                         class="fa fa-rss-square fa-fw"></i>{% trans "My Open Tickets" %}</a></dt>
             <dd>{% trans "A summary of your open tickets - useful for getting alerted to new tickets opened for you" %}
             </dd>
 
-            <dt><a href='{% url 'helpdesk:rss_activity' %}'><i
+            <dt><a href='{% url 'multitenancy.helpdesk:rss_activity' %}'><i
                         class="fa fa-rss-square fa-fw"></i>{% trans "Latest Activity" %}</a></dt>
             <dd>{% trans "A summary of all helpdesk activity - including comments, emails, attachments, and more" %}
             </dd>
 
-            <dt><a href='{% url 'helpdesk:rss_unassigned' %}'><i
+            <dt><a href='{% url 'multitenancy.helpdesk:rss_unassigned' %}'><i
                         class="fa fa-rss-square fa-fw"></i>{% trans "Unassigned Tickets" %}</a></dt>
             <dd>{% trans "All unassigned tickets - useful for being alerted to new tickets opened by the public via the web or via e-mail" %}
             </dd>
@@ -61,10 +61,10 @@
                                     {% for queue in queues %}
                                     <tr>
                                         <td>{{ queue.title }}</td>
-                                        <td align='center'><a href='{% url 'helpdesk:rss_queue' queue.slug %}'><i
+                                        <td align='center'><a href='{% url 'multitenancy.helpdesk:rss_queue' queue.slug %}'><i
                                                     class="fa fa-rss-square fa-fw"></i></a></td>
                                         <td align='center'><a
-                                                href='{% url 'helpdesk:rss_user_queue' user.get_username queue.slug %}'><i
+                                                href='{% url 'multitenancy.helpdesk:rss_user_queue' user.get_username queue.slug %}'><i
                                                     class="fa fa-rss-square fa-fw"></i></a></td>
                                     </tr>
                                     {% endfor %}

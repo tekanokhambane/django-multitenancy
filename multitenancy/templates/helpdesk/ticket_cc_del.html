@@ -4,13 +4,13 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}">{% trans "Tickets" %}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}{{ ticket.id }}/">{{ ticket.queue.slug }}-{{ ticket.id }}</a>
+    <a href="{% url 'multitenancy.helpdesk:list' %}{{ ticket.id }}/">{{ ticket.queue.slug }}-{{ ticket.id }}</a>
 </li>
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:ticket_cc' ticket.id %}">{% trans "CC Settings" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:ticket_cc' ticket.id %}">{% trans "CC Settings" %}</a>
 </li>
 <li class="breadcrumb-item active">{% trans "Delete CC" %}</li>
 {% endblock %}

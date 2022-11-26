@@ -11,7 +11,7 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:list' %}">{% trans "Tickets" %}</a>
+    <a href="{% url 'multitenancy.multitenancy.helpdesk:list' %}">{% trans "Tickets" %}</a>
 </li>
 <li class="breadcrumb-item">
     <a href="{{ ticket.get_absolute_url }}">{{ ticket.queue.slug }}-{{ ticket.id }}</a>

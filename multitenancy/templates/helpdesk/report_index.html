@@ -4,7 +4,7 @@
 
 {% block helpdesk_breadcrumb %}
 <li class="breadcrumb-item">
-    <a href="{% url 'helpdesk:report_index' %}">{% trans "Reports &amp; Statistics" %}</a>
+    <a href="{% url 'multitenancy.helpdesk:report_index' %}">{% trans "Reports &amp; Statistics" %}</a>
 </li>
 <li class="breadcrumb-item active">Overview</li>
 {% endblock %}
@@ -39,7 +39,7 @@
                                 <td><strong
                                         style="color: red;">{{ basic_ticket_stats.average_nbr_days_until_ticket_closed_last_60_days }}</strong>.
                                     {% trans "Click" %} <strong><a
-                                            href="{% url 'helpdesk:report_index' %}daysuntilticketclosedbymonth">here</a></strong>
+                                            href="{% url 'multitenancy.helpdesk:report_index' %}daysuntilticketclosedbymonth">here</a></strong>
                                     {% trans "for detailed average by month." %} </td>
                             </tr>
                         </tbody>
@@ -60,7 +60,7 @@
                         </thead>
                         <tbody>
                             {% for queue in dash_tickets %}
-                            <tr>{% url 'helpdesk:list' as hdlist %}
+                            <tr>{% url 'multitenancy.helpdesk:list' as hdlist %}
                                 <td><a
                                         href='{{ hdlist }}?queue={{ queue.queue }}&status=1&status=2'>{{ queue.name }}</a>
                                 </td>
