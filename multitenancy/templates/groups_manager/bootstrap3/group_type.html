@@ -1,0 +1,34 @@
+{% extends "groups_manager/bootstrap3/groups_manager.html" %}
+
+ {% block main_content %}
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item active" >Group Types</li>
+  <!-- <li>
+    <a href="{% url 'groups_manager:group_type_list' %}">Group Types</a>
+  </li> -->
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+  {{ block.super }}
+
+  <ul class="nav nav-sidebar">
+    <li>
+      <a href="{% url 'groups_manager:group_type_list' %}">
+        <i class="fas fa-list"></i> List group types
+      </a>
+    </li>
+    <!--PERMISSIONS_HERE-->
+    {% if perms.groups_manager.add_grouptype %}
+      <li>
+        <a href="{% url 'groups_manager:group_type_add' %}">
+          <i class="fas fa-plus"></i> Add group type
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+
+{% endblock sidebar %}
+{% endblock main_content %}

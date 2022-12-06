@@ -1,0 +1,30 @@
+{% extends "groups_manager/bootstrap3/groups_manager.html" %}
+
+{% block main_content %}
+{% block breadcrumbs %}
+    {{ block.super }}
+    <!-- <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
+    <li class="breadcrumb-item " ><a href="{% url 'groups_manager:groups_manager' %}">Settings</a></li> -->
+    <li class="breadcrumb-item active" >Groups </li>
+
+{% endblock breadcrumbs %}
+
+
+{% block sidebar %}
+
+{{ block.super }}
+
+<ul class="nav nav-sidebar">
+    <!--PERMISSIONS_HERE-->
+    {#% if perms.groups_manager.add_group %#}
+    <li>
+        <a href="{% url 'groups_manager:group_add' %}">
+            <i class="fa fa-plus"></i> Add group
+        </a>
+    </li>
+    {#% endif %#}
+</ul>
+
+{% endblock sidebar %}
+
+{% endblock main_content %}

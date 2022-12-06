@@ -1,0 +1,43 @@
+{% extends "multitenancy/admin/base.html" %}
+
+{% block breadcrumbs %}
+  {{ block.super }}
+  <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
+  {% with request.resolver_match.url_name as url_name %}
+  {%if url_name ==  'groups_manager' %}
+  <li class="breadcrumb-item active" >Groups Manager</li>
+  {%else%}
+  <li class="breadcrumb-item " ><a href="{% url 'groups_manager:groups_manager' %}">Groups Manager</a></li>
+    {%endif%}
+  {%endwith%}
+
+  
+  
+{% endblock breadcrumbs %}
+{% block main_content %}
+
+
+{% block sidebar %}
+
+  {{ block.super }}
+
+  <ul class="nav nav-sidebar">
+    <li>
+      <a href="{% url 'groups_manager:groups_manager' %}">
+        <i class="fa fa-groups-manager-groups-manager"></i> Groups manager
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'groups_manager:group_list' %}">
+        <i class="fas fa-groups-manager-group"></i> Groups
+      </a>
+    </li>
+    <li>
+      <a href="{% url 'groups_manager:member_list' %}">
+        <i class="fas fa-groups-manager-member"></i> Members
+      </a>
+    </li>
+  </ul>
+
+{% endblock sidebar %}
+{% endblock main_content %}

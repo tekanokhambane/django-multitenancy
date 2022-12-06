@@ -1,7 +1,19 @@
 from django.http import HttpResponseRedirect
 from django.urls.base import reverse
+from django.shortcuts import render
 import account.forms
 import account.views
+from django.views.generic import View
+
+class pageNotFound(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, '404.html',
+                      {
+                          'nbar': 'admin',
+                          'title': 'Dashboard!',
+
+                      }
+                      )
 
 
 class LoginView(account.views.LoginView):
