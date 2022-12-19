@@ -1,7 +1,6 @@
 {% load static %}{% load multitenancy_tags %}
 {% load i18n helpdesk_staff %}
 {% load thumbnail %}
-{% load avatar_tags %}
 {% get_company_details as details %}
 
 <!-- Main Sidebar Container -->
@@ -18,8 +17,8 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
+                <img src="{% avatar_url user %}" alt="" class="img-circle elevation-2">
                 
-                {% avatar user.email class="img-circle elevation-2" %}
                 
             </div>
             <div class="info">
@@ -122,7 +121,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "multitenancy.helpdesk:dashboard" %}" class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
+                            <a href="{% url "helpdesk:dashboard" %}" class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
                                 <i class="nav-icon fa-regular fa-envelope-open"></i>
                                 <p>
                                     Support Home
@@ -130,7 +129,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "multitenancy.helpdesk:list" %}" class="nav-link {% if url_name ==  'list' %}active{% endif %}">
+                            <a href="{% url "helpdesk:list" %}" class="nav-link {% if url_name ==  'list' %}active{% endif %}">
                                 <i class="nav-icon fa-solid fa-ticket-simple"></i>
                                 <p>
                                     All Tickets
@@ -145,7 +144,7 @@
                             <div class="dropdown-menu" aria-labelledby="ticketsDropdown">
                               {% if user_saved_queries_ %}
                               {% for q in user_saved_queries_ %}
-                              <a class="dropdown-item small" href="{% url 'multitenancy.helpdesk:list' %}?saved_query={{ q.id }}">{{ q.title }}
+                              <a class="dropdown-item small" href="{% url 'helpdesk:list' %}?saved_query={{ q.id }}">{{ q.title }}
                                   {% if q.shared %}
                                   (Shared{% if user != q.user %} by {{ q.user.get_username }}{% endif %})
                                   {% endif %}
@@ -157,20 +156,20 @@
                             </div>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link {% if url_name ==  'submit' %} active{% endif %}" href="{% url 'multitenancy.helpdesk:submit' %}">
+                            <a class="nav-link {% if url_name ==  'submit' %} active{% endif %}" href="{% url 'helpdesk:submit' %}">
                               <i class="fas fa-fw fa-plus-circle"></i>
                               <span>{% trans "New Ticket" %}</span>
                             </a>
                           </li>
                           <li class="nav-item">
-                            <a class="nav-link {% if url_name ==  'report_index' %} active{% endif %}" href="{% url 'multitenancy.helpdesk:report_index' %}">
+                            <a class="nav-link {% if url_name ==  'report_index' %} active{% endif %}" href="{% url 'helpdesk:report_index' %}">
                               <i class="fas fa-fw fa-chart-area"></i>
                               <span>{% trans "Reports" %}</span>
                             </a>
                           </li>
                           {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
                           <li class="nav-item">
-                            <a class="nav-link {% if url_name == 'kb_index'  %} active{% endif %}" href="{% url 'multitenancy.helpdesk:kb_index' %}">
+                            <a class="nav-link {% if url_name == 'kb_index'  %} active{% endif %}" href="{% url 'helpdesk:kb_index' %}">
                               <i class="fas fa-fw fa-database"></i>
                               <span>{% trans "Knowledgebase" %}</span>
                             </a>

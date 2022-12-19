@@ -12,7 +12,7 @@ django-extensions==3.1.5
 django-measurement==3.2.4
 django-groups-manager==1.1.0
 django-guardian==2.4.0
-django-helpdesk==0.3.0
+multitenancy-helpdesk==0.1.0b2
 django-storages==1.11.1
 django-tenant-users==1.0.0
 django-tenants==3.3.2
@@ -22,7 +22,6 @@ google-cloud-storage==2.1.0
 gunicorn==20.0.4
 django-environ==0.8.1
 django-formtools==2.3
-django-avatar==7.0.1
 django-markdown-deux==1.0.5
 jsonfield==3.1.0
 channels==4.0.0

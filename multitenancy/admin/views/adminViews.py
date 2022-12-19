@@ -26,7 +26,7 @@ from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Lo
 from multitenancy.subscriptions.models import Plan, UserSubcriptions
 from pinax.teams.models import SimpleTeam, Team
 from multitenancy.users.models import Customer, TenantUser
-from multitenancy.apps.models import Tenant, TenantType
+from multitenancy.apps.models import Tenant
 from .baseViews import(
     AdminListView,
     AdminDeleteView,
@@ -186,17 +186,6 @@ class DeleteTenantView(LoginRequiredMixin, AdminDeleteView):
         tenant.delete()
         return HttpResponseRedirect(reverse('tenant_list'))
 
-
-class TenantTypes(AdminListView, LoginRequiredMixin):
-    template_name = 'multitenancy/admin/adminUser/tenant_types.html'
-    model = TenantType
-
-
-class CreateType(AdminCreateView, LoginRequiredMixin):
-    model = TenantType
-    fields = ['name']
-    success_url = reverse_lazy('tenant_types')
-    template_name = 'multitenancy/admin/adminUser/create_tenant_type.html'
 
 
 class TenantList(AdminTemplateView, LoginRequiredMixin):

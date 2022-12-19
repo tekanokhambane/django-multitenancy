@@ -9,5 +9,5 @@ urlpatterns = [
     path('dashboard/', include(customer_urls)),
     path('admin/', include(team_urls)),
     path('admin/profiles/', include(profile_urls)),
-    path(r'admin/support/', include('multitenancy.helpdesk.urls')),
+    # path(r'admin/support/', include('helpdesk.urls')),
 ]

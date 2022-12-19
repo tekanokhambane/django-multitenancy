@@ -5,7 +5,7 @@ from multitenancy.admin.views import (
 
 urlpatterns = [
 
-    path("staff/", teamViews.team_home, name="team_dashboard"),
+    path("home/", teamViews.StaffIndexView.as_view(), name="team_dashboard"),
 
 
 ]

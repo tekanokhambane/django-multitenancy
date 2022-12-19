@@ -16,6 +16,7 @@ downloads/
 /pinax
 manage.py
 /account
+/helpdesk
 eggs/
 .eggs/
 lib/

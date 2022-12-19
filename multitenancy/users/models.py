@@ -1,3 +1,5 @@
+import os
+import uuid
 from django.db import models
 from tenant_users.tenants.models import UserProfile
 from django.utils.translation import ugettext_lazy as _
@@ -6,12 +8,29 @@ from tenant_users.permissions.models import UserTenantPermissions
 from multitenancy.profiles.models import Profile
 
 
+def upload_avatar_to(instance, filename):
+    filename, ext = os.path.splitext(filename)
+    return os.path.join(
+        'avatar_images',
+        'avatar_{uuid}_{filename}{ext}'.format(
+            uuid=uuid.uuid4(), filename=filename, ext=ext)
+    )
+
+
+class TenantUserManager(models.QuerySet):
+        pass    
 # Create your models here.
 class TenantUser(UserProfile):
     class Types(models.TextChoices):
         ADMIN = "Admin", "Admin"
         STAFF = "Staff", "Staff"
         CUSTOMER = "Customer", "Customer"
+    avatar = models.ImageField(
+        verbose_name=_('profile picture'),
+        upload_to=upload_avatar_to,
+        blank=True,
+    )
+
     type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=Types.ADMIN)
     first_name = models.CharField(max_length=300, blank=True, null=True)
     last_name = models.CharField(max_length=300, blank=True, null=True)
@@ -19,6 +38,8 @@ class TenantUser(UserProfile):
     groups = models.ManyToManyField(Group, blank=True)
     # note = models.CharField(max_length=300, blank=True, null=True)
     signup_confirmation = models.BooleanField(default=False)
+
+    # objects = TenantUserManager()
 
     def __str__(self) -> str:
         if self.first_name and self.last_name:
@@ -32,6 +53,19 @@ class TenantUser(UserProfile):
         else:
             return self.email
 
+    class Meta:
+        verbose_name = _('user profile')
+        verbose_name_plural = _('user profiles')
+
+    @property
+    def is_superuser(self):
+        if self.usertenantpermissions.is_superuser:
+            return True
+        else:
+            return False
+    
+    
+    
 
 class AdminManager(models.Manager):
     def get_queryset(self, *args, **kwargs):

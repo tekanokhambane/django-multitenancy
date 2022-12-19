@@ -2,6 +2,7 @@
 
 {% load thumbnail %}
 {#% load url from future %#}
+{% load multitenancy_tags %}
 {% load bootstrap4 %}
 
 {% block body_class %}{{ block.super }} profile{% endblock %}
@@ -19,7 +20,6 @@
 {% endblock%}
 
 {% block main_content %}
-{% load avatar_tags %}
 <div class="container">
     <div class="row p-3 text-dark">
         <div class="col-md-9">
@@ -29,32 +29,13 @@
                 
                 {% bootstrap_field form.name %}
                 <div id="div_id_avatar" class="control-group">
-                    <label for="id_avatar" class="control-label">
-                        Avatar
-                    </label>
+                    
                     <div class="controls">
-                    {% avatar profile.user class="img-polaroid avatar hidden-phone" %}
+                    
 
-                        {% if profile.avatar %}
-                        {% endif %}
-                        {% comment %}
-                        <img class="img-polaroid avatar hidden-phone" src="{% thumbnail profile.avatar 160x160 crop %}" alt="{{ profile.name }}" /><br />
-                        <div class="preview-window" style="margin-top:20px;width:160px;height:160px;overflow:hidden;float:left;">
-                            <img id="preview" style="max-width: none;" class="hide" src="" />
-                        </div>
-                        {% endcomment %}
-                        {% comment %}
-                        <div class="remove">
-                            <label for="avatar-clear_id">Clear Avatar</label>
-                            <input id="avatar-clear_id" name="avatar-clear" type="checkbox">
-                        </div>
-                        {% endcomment %}
-                        <span class="btn btn-success btn-avatar btn-small">
-                            <a href="{% url 'avatar_change' %}">Change your avatar</a>
-                            {% comment %} <span>Select File</span>
-                            <input id="id_avatar" name="avatar" type="file"> {% endcomment %}
-                        </span>
-                        <span class="selected-filename"></span>
+                    <img class="img-polaroid avatar hidden-phone" src="{% avatar_url profile.user %}" alt="{{ profile.name }}" /><br />
+                    
+                        
                     </div>
                 </div>
                 {% bootstrap_field form.job_title %}

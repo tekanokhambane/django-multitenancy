@@ -19,7 +19,7 @@ class ProfileForm(forms.ModelForm):
         fields = [
             "name",
             "job_title",
-            "avatar",
+            
             "bio",
             "skills",
             "display_profile",

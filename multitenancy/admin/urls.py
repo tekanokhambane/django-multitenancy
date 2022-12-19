@@ -31,5 +31,7 @@ urlpatterns = [
     path("settings/general/<int:pk>/address/", adminViews.AddressView.as_view(), name="update_address"),
     path("settings/general/<int:pk>/adminsettings/", adminViews.AdminSettingsView.as_view(), name="update_adminsettings"),
     path("acounts/login/", authViews.LoginView.as_view(), name="accounts_login"),
+    path("page-not-found/", authViews.pageNotFound.as_view(), name="page_not_found"),
 
 ]
+handler404 = 'multitenancy.admin.views.authViews.pageNotFound'
