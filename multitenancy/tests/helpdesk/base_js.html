@@ -1,0 +1,32 @@
+{% load static %}
+<!-- jQuery and Bootstrap Core -->
+{% if helpdesk_settings.HELPDESK_USE_CDN %}
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+{% else %}
+<script src="{% static 'helpdesk/vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'helpdesk/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+{% endif %}
+
+<!-- Core plugin JavaScript-->
+<script src="{% static 'helpdesk/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+<!-- Page level plugin JavaScript-->
+<script src="{% static 'helpdesk/vendor/chart.js/Chart.min.js' %}"></script>
+<script src="{% static 'helpdesk/vendor/datatables/js/jquery.dataTables.js' %}"></script>
+<script src="{% static 'helpdesk/vendor/datatables/js/dataTables.bootstrap4.js' %}"></script>
+<script src="{% static 'helpdesk/vendor/datatables/js/dataTables.buttons.js' %}"></script>
+<script src="{% static 'helpdesk/vendor/datatables/js/buttons.colVis.js' %}"></script>
+
+<!-- jQuery UI DatePicker -->
+<script src='{% static "helpdesk/vendor/jquery-ui/jquery-ui.min.js" %}' type='text/javascript' language='javascript'></script>
+<link href="{% static 'helpdesk/vendor/jquery-ui/jquery-ui.css' %}" rel="stylesheet">
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="{% static 'helpdesk/vendor/metisMenu/metisMenu.min.js' %}"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="{% static 'helpdesk/js/sb-admin.js' %}"></script>
+
+{% block js_bottom %}
+{% endblock %}
