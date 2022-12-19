@@ -1,9 +1,10 @@
 {% extends 'multitenancy/admin/base.html' %}
 {%load static %}
 {% block page_title %}Home{% endblock page_title %}
+{% block welcome_message %}Welcome back, {{user.first_name}}{% endblock welcome_message %}
 {% block main_content %}
 
-    {#% include "multitenancy/admin/teamUser/includes/dashboard.html" %#}
+    {% include "multitenancy/admin/publicUser/includes/stats.html" %}
 
 {% endblock main_content %}
 
@@ -11,7 +12,6 @@
 
     
      <!-- ChartJS -->
-     <script src="{% static "plugins/chart.js/Chart.min.js" %}"></script>
 
 
 {% endblock custom_js %}

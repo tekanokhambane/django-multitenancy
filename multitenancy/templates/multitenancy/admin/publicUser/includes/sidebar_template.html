@@ -1,7 +1,7 @@
 {% load static %}{% load multitenancy_tags %}
 {% load i18n helpdesk_staff %}
 {% load thumbnail %}
-{% load avatar_tags %}
+
 {% get_company_details as details %}
 
 <!-- Main Sidebar Container -->
@@ -20,7 +20,7 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
 
-                {% avatar user.email class="img-circle elevation-2" %}
+                <img src="{% avatar_url user %}" alt="" class="img-circle elevation-2">
                 {% comment %} <img src="{{ avatar.user}}" class="img-circle elevation-2" alt="User Image">
                 {% endcomment %}
                 {% comment %}
@@ -40,8 +40,8 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "team_dashboard" %}"
-                        class="nav-link {% if url_name == "team_dashboard" %}active{% endif %}">
+                    <a href="{% url "customer_dashboard" %}"
+                        class="nav-link {% if url_name == "customer_dashboard" %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -49,32 +49,13 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{% url "pinax_teams:team_list" %}"
-                        class="nav-link {% if url_name == "team_list" %}active{% endif %}">
-                        <i class="nav-icon fas fa-users"></i>
-                        <p>
-                            Teams
-
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{% url "profiles_list" %}"
-                        class="nav-link {% if url_name == "profiles_list" %}active{% endif %}">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Profiles
-
-                        </p>
-                    </a>
-                </li>
+                
                 {% comment "" %}
                 support
                 {% endcomment %}
                 <li class="nav-item has-treeview ">
                     <a href="#"
-                        class="nav-link {% if url_name == 'dashboard' or url_name == 'list' or url_name == 'submit' or url_name == 'report_index' or url_name == 'kb_index'%}active{% endif %}">
+                        class="nav-link {% if url_name == 'home' or url_name == 'list' or url_name == 'submit' or url_name == 'report_index' or url_name == 'kb_index'%}active{% endif %}">
                         <i class="nav-icon fas fa-headset"></i>
                         <p>
                             Helpdesk
@@ -83,64 +64,28 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "multitenancy.helpdesk:dashboard" %}"
-                                class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
+                            <a href="{% url "helpdesk:home" %}"
+                                class="nav-link {% if url_name == 'home'  %}active{% endif %}">
                                 <i class="nav-icon fa-regular fa-envelope-open"></i>
                                 <p>
                                     Support Home
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{% url "multitenancy.helpdesk:list" %}"
-                                class="nav-link {% if url_name ==  'list' %}active{% endif %}">
-                                <i class="nav-icon fa-solid fa-ticket-simple"></i>
-                                <p>
-                                    All Tickets
-                                </p>
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="ticketsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-fw fa-search"></i>
-                                <span>{% trans "Saved Queries" %}</span>
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="ticketsDropdown">
-                                {% if user_saved_queries_ %}
-                                {% for q in user_saved_queries_ %}
-                                <a class="dropdown-item small"
-                                    href="{% url 'multitenancy.helpdesk:list' %}?saved_query={{ q.id }}">{{ q.title }}
-                                    {% if q.shared %}
-                                    (Shared{% if user != q.user %} by {{ q.user.get_username }}{% endif %})
-                                    {% endif %}
-                                </a>
-                                {% endfor %}
-                                {% else %}
-                                <p class="dropdown-item small text-wrap">
-                                    {% trans "No saved queries currently available. You can create one in the All Tickets page." %}
-                                </p>
-                                {% endif %}
-                            </div>
-                        </li>
+                        
+                      
                         <li class="nav-item">
                             <a class="nav-link {% if url_name ==  'submit' %} active{% endif %}"
-                                href="{% url 'multitenancy.helpdesk:submit' %}">
+                                href="{% url 'helpdesk:submit' %}">
                                 <i class="fas fa-fw fa-plus-circle"></i>
                                 <span>{% trans "New Ticket" %}</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if url_name ==  'report_index' %} active{% endif %}"
-                                href="{% url 'multitenancy.helpdesk:report_index' %}">
-                                <i class="fas fa-fw fa-chart-area"></i>
-                                <span>{% trans "Reports" %}</span>
-                            </a>
-                        </li>
+                        
                         {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
                         <li class="nav-item">
                             <a class="nav-link {% if url_name == 'kb_index'  %} active{% endif %}"
-                                href="{% url 'multitenancy.helpdesk:kb_index' %}">
+                                href="{% url 'helpdesk:kb_index' %}">
                                 <i class="fas fa-fw fa-database"></i>
                                 <span>{% trans "Knowledgebase" %}</span>
                             </a>
@@ -148,6 +93,7 @@
                         {% endif %}
                     </ul>
                 </li>
+        
 
             </ul>
             {% endwith %}

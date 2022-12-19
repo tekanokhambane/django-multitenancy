@@ -1,0 +1,145 @@
+<section class="content">
+    <div class="row ">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="row">
+            <div class="col-md-8">
+              <h3 class="m-3 text-dark">Hi, {{user.first_name}}! </h3>
+            
+          </div><!-- /.col -->
+          <div class="col-md-4">
+            <div class="btn btn-info mt-3">My Websites</div>
+          </div><!-- /.col -->
+          </div>
+          
+        </div>
+      </div>
+      
+        
+    </div><!-- /.row -->
+      <div class="container-fluid">
+        
+          
+    
+        <!-- Small boxes (Stat box) -->
+        <div class="row mt-4">
+          <div class="col-lg-3  col-6">
+            <!-- small box -->
+            <div class="small-box border border-warning bg-light">
+              <div class="inner">
+                <h3>{{tenants.count}}</h3>
+  
+                <p>Total Websites</p>
+              </div>
+              <div class="icon border border-warning">
+                <i class="ion ion-ios-cloud-outline text-warning"></i>
+              </div>
+              <a href="{#% url "manage_cms" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box border-danger border bg-light">
+              <div class="inner">
+                <h3>{{domains.count}}</h3>
+  
+                <p>Domains</p>
+              </div>
+              <div class="icon border-danger border ">
+                <i class="ion ion-ios-world text-danger"></i>
+              </div>
+              <a href="{#% url "view_domain" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3  col-6">
+            <!-- small box -->
+            <div class="small-box border-success border  bg-light">
+              <div class="inner">
+                <h3> {{tickets.count}} </h3>
+  
+                <p>Tickets</p>
+              </div>
+              <div class="icon border-success border ">
+                <i class="ion ion-email text-success"></i>
+              </div>
+              <a href="{#% url "view_tickets" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box border-primary border bg-light">
+              <div class="inner">
+                <h3>{{invoices.count}}</h3>
+  
+                <p>Invoices</p>
+              </div>
+              <div class="icon border-primary border">
+                <i class="ion ion-card text-primary"></i>
+              </div>
+              <a href="{#% url 'customer_invoices' %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        <div class="col-md-6">
+  
+          <div class="card card-navy">
+            <div class="card-header">
+              
+              <h3 class="card-title"><i class="fas fa-globe"></i> Register a New Domain</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form action="{#% url 'domain_availability' %#}" class="form-horizontal">
+              <div class="card-body">
+            
+                <div class="input-group input-group-sm">
+                  <input type="text" class="form-control">
+                  <span class="input-group-append">
+                    <button type="search" href="{#% url 'domain_availability' %#}" class="btn btn-info btn-flat">Register</button>
+                <button type="submit" class="btn btn-default">Transfer</button>
+  
+                  </span>
+                </div>
+          
+               
+              <!-- /.card-body -->
+             
+            </form>
+          </div>
+        </div>
+      </div>
+        <div class="col-md-6">
+          <div class="card card-navy">
+            <div class="card-header">
+              <h3 class="card-title">
+                <i class="fas fa-comments"></i>
+                Recent Support Tickets
+              </h3>
+            </div>
+            
+            <!-- /.card-header -->
+            <div class="card-body">
+              <a href="{% url 'helpdesk:submit' %}" > <button href="{% url 'helpdesk:home' %}" class="btn btn-info">  <i class="fas fa-plus"></i>  Open a ticket</button></a>
+                {% for ticket in alltickets %}
+              <a href="{% url 'helpdesk:public_view'  %}?ticket={{ticket.id}}&email={{user.email}}"><p class="  elevation-1 {% if ticket.status == 1 %} text-success {% elif ticket.status == 2 %} text-warning {% elif ticket.status == 3 %} text-danger {% elif ticket.status == 4 %} text-dark {% elif ticket.status == 5 %} text-info {% endif %} m-2"> <span class="bg-dark p-1 m-2" >{{ticket.id}}</span> {{ticket.title}} | {{ticket.description | truncatewords:6}} {{ticket.get_status}} </p></a>
+  
+                {% endfor %}
+                
+            
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.row -->
+          </section>
+          <!-- right col -->
+        </div>
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+  
+    
