@@ -18,7 +18,7 @@
         <div class="col-md-6">
           <div class="list-group">
             
-            <a href="{% url 'update_logo'  logo.pk %}" class="list-group-item inline-block">
+            <a href="{% url 'update_logo' %}" class="list-group-item inline-block">
               <img class="img-thumbnail" src="{{logo.logo.url}}" style="width:100px" alt="Company Logo"/>
               <h4 class="list-group-item-heading">{{logo}}</h4>
               <p class="list-group-item-text">
@@ -26,13 +26,13 @@
               </p>
             </a>
             
-            <a href="{% url 'update_info' info.pk %}" class="list-group-item">
+            <a href="{% url 'update_info' %}" class="list-group-item">
               <h4 class="list-group-item-heading">{{info}}</h4>
               <p class="list-group-item-text">
                 {{info.help_text}}
               </p>
             </a>
-            <a href="{% url 'update_address' address.pk %}" class="list-group-item">
+            <a href="{% url 'update_address' %}" class="list-group-item">
                 <h4 class="list-group-item-heading">{{address}}</h4>
                 <p class="list-group-item-text">
                   {{address.help_text}}
@@ -42,7 +42,7 @@
         </div>
         <div class="col-md-6">
           <div class="list-group">
-            <a href="{% url 'update_adminsettings' admin_settings.pk %}" class="list-group-item">
+            <a href="{% url 'update_adminsettings' %}" class="list-group-item">
               <h4 class="list-group-item-heading">{{admin_settings}}</h4>
               <p class="list-group-item-text">
                 {{admin_settings.help_text}}

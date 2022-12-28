@@ -1,10 +1,10 @@
 {% extends "multitenancy/admin/base.html" %}
 {% load bootstrap4 %}
 
-{% block page_title %}Update {{ object.name }}{% endblock page_title %}
+{% block page_title %}Update template: {{ object.name }}{% endblock page_title %}
 
 {%block breadcrumbs%}
-<li class="breadcrumb-item " ><a href="{% url 'plan_list' %}">Plans</a></li>
+<li class="breadcrumb-item " ><a href="{% url 'template_list' %}">Templates</a></li>
 
 <li class="breadcrumb-item active">Update {{object.name}}</li>
 {% endblock%}
@@ -28,7 +28,7 @@
             
             
             <input type="submit" class="btn btn-info" value="Submit">
-            <a class="btn btn-danger text-light" href="{% url "plan_list" %}" >Cancel</a>
+            <a class="btn btn-danger text-light" href="{% url "template_list" %}" >Cancel</a>
         </form>
         
 
