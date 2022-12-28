@@ -25,6 +25,15 @@ class CustomerForm(forms.ModelForm):
             user.save()
         return user
 
+class CustomerUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'username', 'email']
+        widgets = {
+            'email': forms.EmailInput(),
+        }
+
 
 class TenantForm(forms.ModelForm):
 
