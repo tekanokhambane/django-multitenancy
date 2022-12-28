@@ -92,9 +92,7 @@
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
-                                    <p class="text-dark">
-                                        {{user.is_staff}}
-                                    </p>
+                                    
                                     {% if user.type == 'Admin' %}
                                     <li class="breadcrumb-item"> <a href="{% url "admin_dashboard" %}">Home</a></li>
                                     {% elif user.type == 'Staff' %}
