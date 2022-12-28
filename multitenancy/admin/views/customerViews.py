@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from account.mixins import LoginRequiredMixin
 from multitenancy.admin.decorators import allowed_users
+from multitenancy.admin.views.baseViews import CustomerListView
 from multitenancy.apps.models import Tenant, Domain
 from account.models import Account
 from helpdesk.models import Ticket
@@ -21,3 +22,8 @@ class CustomerIndexView(View, LoginRequiredMixin):
         return render(request, 'multitenancy/admin/publicUser/index.html',
                       {'nbar': 'admin', "tenants": tenants, 'account': account, 'domains':domains,  'tickets': tickets, 'alltickets': alltickets}
                       )
+
+
+class SubscriptionsListView(CustomerListView):
+    template_name = "multitenancy/admin/publicUser/subscriptions.html"
+    model = Tenant

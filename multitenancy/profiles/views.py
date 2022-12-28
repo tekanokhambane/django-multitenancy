@@ -10,7 +10,7 @@ from .forms import ProfileForm
 from .models import Profile
 
 
-class ProfileEditView(LoginRequiredMixin, TeamUpdateView):
+class ProfileEditView(TeamUpdateView):
 
     form_class = ProfileForm
     model = Profile

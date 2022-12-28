@@ -1,19 +1,19 @@
 <section class="content">
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-bottom:80px">
       <!-- Small boxes (Stat box) -->
       <div class="row">
         <div class="col-lg-3 col-6">
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner bg-white">
-              <h3>{{tenants.count}}</h3>
+              <h3>{{subscriptions.count}}</h3>
 
-              <p>Total Tenants</p>
+              <p>Total Subscriptions</p>
             </div>
             <div class="icon">
               <i class="ion ion-home"></i>
             </div>
-            <a href="{#% url "tenant_list" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{% url "subscription_list" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
@@ -21,9 +21,9 @@
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner bg-white">
-              <h3>{{users.count}}</h3>
+              <h3>${{users.count}}</h3>
 
-              <p>Total Registration</p>
+              <p>Total Revenue</p>
             </div>
             <div class="icon">
               <i class="ion ion-stats-bars"></i>
@@ -51,14 +51,14 @@
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner bg-white">
-              <h3>{{staff.count}}</h3>
+              <h3>{{user_tickets.count}}</h3>
 
-              <p>Staff Profiles</p>
+              <p>Tickets</p>
             </div>
             <div class="icon">
               <i class="ion ion-person"></i>
             </div>
-            <a href="{% url "profiles_list" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{% url "helpdesk:dashboard" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
         <!-- ./col -->
