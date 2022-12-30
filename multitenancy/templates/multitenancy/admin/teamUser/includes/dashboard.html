@@ -1,0 +1,71 @@
+<section class="content">
+    <div class="container-fluid" style="padding-bottom:80px">
+      <!-- Small boxes (Stat box) -->
+      <div class="row">
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner bg-white">
+              <h3>{{subscriptions.count}}3</h3>
+
+              <p>Total Subscriptions</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-home"></i>
+            </div>
+            <a href="{% url "subscription_list" %}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner bg-white">
+              <h3>${{users.count}}22</h3>
+
+              <p>Total Revenue</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-stats-bars"></i>
+            </div>
+            <a href="{#% url "manage_users" %#}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner bg-white">
+              <h3>{{customers.count}}45</h3>
+
+              <p>Total Customers</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person-add"></i>
+            </div>
+            <a href="{% url "customer_list" %}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-6">
+          <!-- small box -->
+          <div class="small-box bg-warning">
+            <div class="inner bg-white">
+              <h3>{{user_tickets.count}}</h3>
+
+              <p>Tickets</p>
+            </div>
+            <div class="icon">
+              <i class="ion ion-person"></i>
+            </div>
+            <a href="{% url "helpdesk:dashboard" %}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        {#% include "multitenancy/admin/adminUser/includes/charts.html" %#}
+        {% include "multitenancy/admin/adminUser/includes/recent-activities.html" %}
+      </div>
+      <!-- /.row -->
+        </section>
+     
+      
