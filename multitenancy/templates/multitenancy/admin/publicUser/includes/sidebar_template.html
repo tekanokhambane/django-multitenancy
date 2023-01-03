@@ -29,7 +29,7 @@
             </div>
             <div class="info">
                 <a href="{% url 'profiles_detail' username=user.username %}" class="d-block">Hi,
-                    {{user.profile.display_name}}!</a>
+                    {{user}}!</a>
             </div>
         </div>
 
@@ -45,6 +45,16 @@
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url "subscriptions" %}"
+                        class="nav-link {% if url_name == 'subscriptions' or url_name == 'create_service' %}active{% endif %}">
+                        <i class="nav-icon fas fa-database"></i>
+                        <p>
+                            Subscriptions
 
                         </p>
                     </a>
