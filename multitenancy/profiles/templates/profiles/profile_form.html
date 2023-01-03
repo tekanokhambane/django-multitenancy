@@ -1,6 +1,6 @@
 {% extends "multitenancy/admin/base.html" %}
 
-{% load thumbnail %}
+{% load static %}
 {#% load url from future %#}
 {% load multitenancy_tags %}
 {% load bootstrap4 %}
@@ -10,6 +10,7 @@
 {% block head_title %}Edit Profile{% endblock %}
 {%block custom_css%}
 {{ form.media.css }}
+<link rel="stylesheet" href="{% static "plugins/select2/css/select2-bootstrap4.min.css" %}">
 
 {% endblock%}
 {% block page_title %}Update Profile{% endblock %}
@@ -20,7 +21,7 @@
 {% endblock%}
 
 {% block main_content %}
-<div class="container">
+<div class="container" style="padding-bottom: 100px;">
     <div class="row p-3 text-dark">
         <div class="col-md-9">
             <form class="form profile-form" action="" method="POST" enctype="multipart/form-data">
