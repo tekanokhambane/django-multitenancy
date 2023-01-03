@@ -8,10 +8,10 @@
             <div class="inner bg-white">
               <h3>{{subscriptions.count}}3</h3>
 
-              <p>Total Subscriptions</p>
+              <p>Tasks</p>
             </div>
             <div class="icon">
-              <i class="ion ion-home"></i>
+              <i class="ion ion-checkmark"></i>
             </div>
             <a href="{% url "subscription_list" %}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
@@ -21,12 +21,13 @@
           <!-- small box -->
           <div class="small-box bg-warning">
             <div class="inner bg-white">
-              <h3>${{users.count}}22</h3>
+              <h3>{{users.count}}22</h3>
 
-              <p>Total Revenue</p>
+              <p>Rooms</p>
             </div>
             <div class="icon">
-              <i class="ion ion-stats-bars"></i>
+              <i class="ion ion-chatboxes"></i>
+              
             </div>
             <a href="{#% url "manage_users" %#}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
@@ -38,7 +39,7 @@
             <div class="inner bg-white">
               <h3>{{customers.count}}45</h3>
 
-              <p>Total Customers</p>
+              <p>Leads</p>
             </div>
             <div class="icon">
               <i class="ion ion-person-add"></i>
@@ -56,7 +57,7 @@
               <p>Tickets</p>
             </div>
             <div class="icon">
-              <i class="ion ion-person"></i>
+              <i class="fa fa-ticket"></i>
             </div>
             <a href="{% url "helpdesk:dashboard" %}" style="color: white !important;" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
