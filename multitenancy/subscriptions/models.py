@@ -1,11 +1,15 @@
 from django.db import models
 from multitenancy.users.models import Customer
 from django_tenants.utils import get_tenant_type_choices
-# Create your models here.
 
+
+def get_plans():
+    items = get_tenant_type_choices()
+    items.pop(0) 
+    return items
 
 class Plan(models.Model):
-    name = models.CharField(max_length=250, blank=False, null=False, choices=get_tenant_type_choices())
+    name = models.CharField(max_length=250, blank=False, unique=True, null=False, choices=get_plans())
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(default=75,  # type: ignore
                                 max_digits=12, verbose_name="Price", decimal_places=2)
