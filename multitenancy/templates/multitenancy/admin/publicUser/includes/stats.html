@@ -8,7 +8,7 @@
             
           </div><!-- /.col -->
           <div class="col-md-4">
-            <div class="btn btn-info mt-3">My Websites</div>
+            <a href="{% url "subscriptions" %}" class="btn btn-info mt-3 text-light">My Subscriptions</a>
           </div><!-- /.col -->
           </div>
           
@@ -27,14 +27,14 @@
             <!-- small box -->
             <div class="small-box border border-warning bg-light">
               <div class="inner">
-                <h3>{{tenants.count}}</h3>
+                <h3>{{subscriptions.count}}</h3>
   
-                <p>Total Websites</p>
+                <p>Subscriptions</p>
               </div>
               <div class="icon border border-warning">
                 <i class="ion ion-ios-cloud-outline text-warning"></i>
               </div>
-              <a href="{#% url "manage_cms" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url "subscriptions" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -64,7 +64,7 @@
               <div class="icon border-success border ">
                 <i class="ion ion-email text-success"></i>
               </div>
-              <a href="{#% url "view_tickets" %#}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="{% url "helpdesk:home" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -72,7 +72,7 @@
             <!-- small box -->
             <div class="small-box border-primary border bg-light">
               <div class="inner">
-                <h3>{{invoices.count}}</h3>
+                <h3>5</h3>
   
                 <p>Invoices</p>
               </div>
