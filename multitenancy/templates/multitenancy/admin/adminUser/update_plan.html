@@ -13,7 +13,7 @@
 {% block main_content %}
 
 <!-- Main content -->
-<section class="content">
+<section class="content" style="padding-bottom: 100px;">
     <div class="container text-dark">
         <form method="POST" enctype="multipart/form-data">
 
@@ -22,7 +22,7 @@
         
             
             {% bootstrap_field form.name %}
-            {% bootstrap_field form.type %}
+            {% bootstrap_field form.description %}
             {% bootstrap_field form.price %}
             
             
