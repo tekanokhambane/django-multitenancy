@@ -10,8 +10,9 @@
 
 {% block page_title %}Account{% endblock %}
 {%block breadcrumbs%}
+{%if user.is_superuser%}
 <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
-
+{%endif%}
 <li class="breadcrumb-item active">Account</li>
 {% endblock%}
 
@@ -22,6 +23,7 @@
             <form method="POST" action="{% url "account_settings" %}">
                 
                 {% csrf_token %}
+                {% bootstrap_field form.email %}
                 {% bootstrap_field form.timezone %}
                 {% bootstrap_field form.language %}
                 <button class="btn btn-info" type="submit">{% trans "Save" %}</button>
