@@ -1,0 +1,106 @@
+{% extends "multitenancy/admin/base.html" %}
+
+
+{% block page_title %}Manage Subscriptions{% endblock page_title %}
+{%block breadcrumbs%}
+
+<li class="breadcrumb-item active">Subscriptions</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            
+            <div class="col-md">
+                <div class="mb-5 mr-3">
+                   <a href="{% url "create_service" %}"><button type="submit" class="btn btn-success shadow float-right"><i class="fas fa-plus"></i> Create Service</i></button></a> 
+                </div>
+                
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Subscription Details</h3>
+
+                        <div class="card-tools">
+                            <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
+                                <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
+                                    placeholder="Search subscriptions">
+                                <div class="input-group-append">
+                                    <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            <form />
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <!-- <th>Schema Name</th> -->
+                                    <th>Domain</th>
+                                    <th>Plan</th>
+                                    <th>Date Created</th>
+                                    <th>Date Modified</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%if filter.qs %}
+                                {% for tenant in filter.qs%}
+                                <tr>
+                                    <td>{{tenant.id}}</td>
+                                    <!-- <td>{{tenant.schema_name}}</td> -->
+                                    <td>{{tenant.slug}}</td>
+                                    <td>{{tenant.type}}</td>
+                                    
+
+                                    <td>{{tenant.created}}</td>
+                                    <td>{{tenant.modified}}</td>
+                                    
+                                    <th> <a name="" id="" class="btn btn-success text-light" href="{% url 'update_template' tenant.pk %}"
+                                            role="button"><i class="fas fa-level-up"></i> Upgrade</a> 
+                                            
+                                            <a name="" id="" class="btn btn-danger text-light" href="{% url 'delete_tenant' tenant.pk %}"
+                                            role="button"><i class="fas fa-trash"></i> Cancel</a> 
+                                    </th>
+                                        
+
+                                    {% endfor %}
+                                    {%else%}
+                                    <td>There are no records to display</td>
+                                    {%endif%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+<script>
+    let filter = document.getElementById("filter-form")
+    filter.addEventListener("submit", ()=>{
+        alert("submit")
+    })
+    
+</script>
+{%endblock%}
