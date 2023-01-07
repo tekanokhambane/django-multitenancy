@@ -66,7 +66,7 @@ TENANT_TYPES = {
             'reversion',
             'django_countries',
             "phonenumber_field",
-            
+            'django_crontab',
             'django_redis',
             'django_select2',
             "bootstrap4",
