@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.utils.text import slugify 
 from multitenancy.users.models import Customer
 from django_tenants.utils import get_tenant_type_choices
 
@@ -20,6 +21,7 @@ class ProductFeature(models.Model):
 
 class Plan(models.Model):
     name = models.CharField(max_length=250, blank=False, unique=True, null=False, choices=get_plans())
+    slug = models.SlugField()
     description = models.TextField(blank=True, null=True)
     features = models.ManyToManyField(ProductFeature)
     price = models.DecimalField(default=75,  # type: ignore
@@ -27,6 +29,11 @@ class Plan(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):  # new
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super().save(*args, **kwargs)
 
 
 class ProductTypeManager(models.Manager):
@@ -52,7 +59,7 @@ class Subscription(models.Model):
         ANNUALLY = "annually", "annually"
     status = models.IntegerField()
     cycle = models.CharField(max_length=50, choices=Cycles.choices, default=Cycles.MONTHLY)
-    subscription_duration = models.IntegerField()
+    subscription_duration = models.IntegerField(default=30)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField()
     renewal_date = models.DateField(null=True)
