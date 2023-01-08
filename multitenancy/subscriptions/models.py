@@ -10,21 +10,22 @@ def get_plans():
     items.pop(0) 
     return items
 
-class Plan(models.Model):
-    name = models.CharField(max_length=250, blank=False, unique=True, null=False, choices=get_plans())
-    description = models.TextField(blank=True, null=True)
-    price = models.DecimalField(default=75,  # type: ignore
-                                max_digits=12, verbose_name="Price", decimal_places=2)
-
-    def __str__(self):
-        return self.name
-
-
 class ProductFeature(models.Model):
     name = models.CharField(max_length=250)
     description = models.TextField()
 
     def __str__(self) -> str:
+        return self.name
+
+
+class Plan(models.Model):
+    name = models.CharField(max_length=250, blank=False, unique=True, null=False, choices=get_plans())
+    description = models.TextField(blank=True, null=True)
+    features = models.ManyToManyField(ProductFeature)
+    price = models.DecimalField(default=75,  # type: ignore
+                                max_digits=12, verbose_name="Price", decimal_places=2)
+
+    def __str__(self):
         return self.name
 
 
@@ -34,10 +35,9 @@ class ProductTypeManager(models.Manager):
 class ProductType(models.Model):
     class Types(models.TextChoices):
         TENANT_APP = "tenant", "Tenant App"
-        DOMAIN = "domain"
+        DOMAIN = "domain", "Custom Domain"
         THIRD_PARTY_APP = "third_party", "3rd party App"
     name = models.CharField(max_length=115,choices=Types.choices, default=Types.TENANT_APP)
-    features = models.ManyToManyField(ProductFeature)
     objects = ProductTypeManager()
 
 
@@ -93,9 +93,9 @@ class Subscription(models.Model):
             # Set the renewal date to today
             self.renewal_date = datetime.date.today()
             # Update the reason 
-            self.reason = "Subscription renewal"
+            self.reason = "Subscription renewed"
             self.save()
-            # Charge the customer here
+            # Charge the customer here and create invoice
         elif self.renewal_status == 'expired':
             # Send a notification to the customer here
             pass
@@ -105,20 +105,33 @@ class Subscription(models.Model):
         self.renewal_status = 'cancelled'
         # Set the end date to today
         self.end_date = datetime.date.today()
+        # Update the reason 
+        self.reason = "Subscription cancelled"
         self.save()
 
     def activate_subscription(self):
-        pass
+        # In future checks will be done to ensure there are no outstanding invoices
+        # update the renewal status
+        self.renewal_status = 'active'
+        # Calculate and update the new end date for the subscription
+        self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
+        # Set the renewal date to today
+        self.renewal_date = datetime.date.today()
+        # Update the reason 
+        self.reason = "Subscription activated"
+        self.save()
 
     def update_duration(self):
         pass
 
     def is_active(self):
+        # a check to see if the active
         pass
 
     def get_service(self):
         pass
 
-    def get_product_type(self, type):
+    def get_product_type(self, type:str):
+        # On service creation each subscription must be assigned to a product type
         self.product_type = type
         self.save()
