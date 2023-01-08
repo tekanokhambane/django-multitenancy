@@ -33,7 +33,7 @@ class Tenant(TenantBase):
     is_template = models.BooleanField(default=True)
     plan = models.ForeignKey(Plan, null=True, on_delete=models.PROTECT, related_name="tenants")
     description = models.TextField(max_length=200)
-    subscription = models.OneToOneField(Subscription, blank=True,on_delete=models.CASCADE, related_name="tenants")
+    subscription = models.OneToOneField(Subscription, null=True, blank=True,on_delete=models.CASCADE, related_name="tenants")
     # paid_until = models.DateField()
     trail_duration = models.IntegerField(null=True, blank=True)
     on_trial = models.BooleanField(default=False)
