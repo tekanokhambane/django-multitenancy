@@ -13,7 +13,7 @@ class CustomerIndexView(View, LoginRequiredMixin):
     @allowed_users(allowed_types=["Customer"])
     def get(self, request, *args, **kwargs):
         subscriptions = Tenant.objects.filter(owner=self.request.user)
-        domains = Domain.objects.filter(tenant__owner=request.user).filter(has_custom=True)
+        domains = Domain.objects.filter(tenant__owner=request.user).filter(is_custom=True)
         account = Account.objects.get_or_create(user=request.user)
         tickets = Ticket.objects.filter(
             submitter_email=request.user.email, status=1)
