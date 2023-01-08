@@ -25,7 +25,7 @@ from multitenancy.admin.forms import (
     PlanForm,
     TenantForm)
 from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
-from multitenancy.subscriptions.models import Plan, UserSubcriptions
+from multitenancy.subscriptions.models import Plan, Subscription
 from pinax.teams.models import SimpleTeam, Team
 from multitenancy.users.models import Customer, TenantUser
 from multitenancy.apps.models import Tenant
@@ -118,6 +118,7 @@ class TemplateListView(AdminTemplateView):
         queryset = TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
 
         context['filter'] = queryset
+        
         return context
 
 
@@ -255,8 +256,8 @@ class DeletePlanView(AdminDeleteView):
     success_url = reverse_lazy("plan_list")
 
 
-class UserSubcriptionsListView(AdminListView):
-    model = UserSubcriptions
+class UserSubscriptionsListView(AdminListView):
+    model = Subscription
     template_name = 'multitenancy/admin/adminUser/usersubscriptions_list.html'
 
 
