@@ -39,7 +39,7 @@ django_sendmail_backend
 psycopg2
 pinax-invitations==7.0.0
 pinax-teams==2.0.0
-sweetify==2.1.0
+sweetify==2.3.1
 django-cors-headers==3.11.0
 social-auth-app-django
 whois==0.9.13
