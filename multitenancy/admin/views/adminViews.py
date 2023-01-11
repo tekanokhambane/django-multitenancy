@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
 # import time
+from django.forms.models import modelform_factory
 from django.conf import settings
 from tenant_users.tenants.utils import (get_tenant_model,
                                         get_tenant_domain_model)
@@ -23,9 +24,10 @@ from multitenancy.admin.forms import (
     GeneralInfoForm,
     LogoForm,
     PlanForm,
+    ProductFeatureForm,
     TenantForm)
 from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
-from multitenancy.subscriptions.models import Plan, Subscription
+from multitenancy.subscriptions.models import Plan, ProductFeature, Subscription
 from pinax.teams.models import SimpleTeam, Team
 from multitenancy.users.models import Customer, TenantUser
 from multitenancy.apps.models import Tenant
@@ -175,7 +177,7 @@ class CreateTemplateView(AdminCreateView):
                 if tenant is not None:
                     # Flag is set to auto-drop the schema for the tenant
                     tenant.delete(True)
-                raise
+                    raise Exception('Tenant already exists')
                 return tenant_domain
         # return super().post(request, *args, **kwargs)
 
@@ -241,6 +243,54 @@ class CreatePlanView(AdminCreateView):
     form_class = PlanForm
     success_url = reverse_lazy('plan_list')
     template_name = 'multitenancy/admin/adminUser/create_plan.html'
+
+
+class PlanDetailView(AdminTemplateView):
+    template_name = "multitenancy/admin/adminUser/plan_detail.html"
+
+    def get_context_data(self, slug,*args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        plan = Plan.objects.get(slug=slug)
+        print(plan.features)
+        context['plan'] = plan
+        context['form'] =  ProductFeatureForm()
+        return context
+
+class FeatureCreateView(View, LoginRequiredMixin):
+
+    @allowed_users(allowed_types=["Admin"])
+    def post(self, request, *args: str, **kwargs):
+        if request.method != "POST":
+            return HttpResponseRedirect("Method Not Allowed")
+        else:
+            form = ProductFeatureForm(request.POST)
+            print(request.content_params)
+            if form.is_valid():
+                name = form.cleaned_data["name"]
+                description = form.cleaned_data["description"]
+                
+                plan_name = form.cleaned_data["plan_name"]
+                plan = form.cleaned_data["plan"]
+                feature = None
+                
+                try:
+                    feature = ProductFeature.objects.create(name=name, description=description)
+                    feature.save()
+                    print(feature.pk)
+                    feature_plan = Plan.objects.get(id=plan)
+                    feature_plan.features.add(feature)
+                    print(feature_plan.pk)
+                    feature_plan.add_feature(feature.pk)
+                    
+                    sweetify.success(request, "Successfully Added Feature!", icon='success', timer=5000)
+                    return HttpResponseRedirect(f"/admin/settings/plans/{plan_name}/")
+                except:                               
+                    sweetify.error(request, "Failed to Add Feature!")
+                    return HttpResponseRedirect(f"/admin/settings/plans/{plan_name}/")
+            else:
+                form=ProductFeatureForm(request.POST)
+                return render(request, 'multitenancy/admin/adminUser/plan_detail.html', {"feature_form":form})
+
 
 
 class UpdatePlanView(AdminUpdateView):

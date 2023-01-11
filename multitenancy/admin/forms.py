@@ -3,7 +3,7 @@ from phonenumber_field.formfields import PhoneNumberField
 from django_countries.widgets import CountrySelectWidget
 from multitenancy.apps.models import Tenant
 from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
-from multitenancy.subscriptions.models import Plan
+from multitenancy.subscriptions.models import Plan, ProductFeature
 
 from multitenancy.users.models import Customer
 
@@ -47,6 +47,14 @@ class PlanForm(forms.ModelForm):
     class Meta:
         model = Plan
         fields = ['name', 'description', 'price']
+
+
+class ProductFeatureForm(forms.Form):
+    name = forms.CharField(label="Name", max_length=250)
+    description = forms.CharField(label="Description", max_length=250, widget=forms.Textarea(
+        attrs={"class": "form-control"}))
+    plan = forms.IntegerField(label="plan", widget=forms.HiddenInput())
+    plan_name = forms.CharField(widget=forms.HiddenInput())
 
 
 class LogoForm(forms.ModelForm):

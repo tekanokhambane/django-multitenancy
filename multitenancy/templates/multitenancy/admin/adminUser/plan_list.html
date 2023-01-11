@@ -5,7 +5,7 @@
 
 {%block breadcrumbs%}
 <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
-<li class="breadcrumb-item active">Plan</li>
+<li class="breadcrumb-item active">Plans</li>
 {% endblock%}
 
 
@@ -58,7 +58,7 @@
                                     <td>{{plan.description}} </td>
                                     <td>{{plan.price}}</td>
                                     
-                                    <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'update_plan' plan.pk %}"
+                                    <th> <a name="" id="" class="btn btn-success text-white" href="{% url 'plan_detail' plan.slug %}"
                                             role="button"><i class="fas fa-edit"></i> Edit</a> 
                                             <!-- <a name="" id="" class="btn btn-danger text-white" href="{% url 'delete_plan' plan.pk %}"
                                             role="button"><i class="fas fa-trash"></i> Delete</a>  -->
