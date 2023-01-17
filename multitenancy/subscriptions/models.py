@@ -29,11 +29,30 @@ class Plan(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def add_feature(self, feature):
+        self.features.create(plan_id=self.pk, productfeature_id=feature)
+        self.save()
 
     def save(self, *args, **kwargs):  # new
         if not self.slug:
             self.slug = slugify(self.name)
         return super().save(*args, **kwargs)
+    
+    @property
+    def price_weekly(self):
+        price = self.price / 4
+        return price
+    
+    @property
+    def price_quartely(self):
+        price = self.price * 3
+        return price
+
+    @property
+    def price_annually(self):
+        price = self.price * 12
+        return price
 
 
 class ProductTypeManager(models.Manager):

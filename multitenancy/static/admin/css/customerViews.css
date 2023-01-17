@@ -1,0 +1,97 @@
+.service-list {
+  width: 100%;
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+.service-list .service-card {
+  background-color: ghostwhite;
+  border: 0.5px solid black;
+  position: relative;
+  top: 0;
+  padding: 0px;
+  min-height: 14rem;
+  min-width: 14rem;
+  cursor: pointer;
+  transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.service-list .service-card .service-card-footer {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+.service-list .service-card .service-card-body {
+  background-color: ghostwhite;
+  color: gray;
+  padding: 2rem;
+  align-items: center;
+  justify-content: center;
+  display: grid;
+}
+.service-list .service-card .service-card-body ul li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  gap: 5px;
+}
+.service-list .service-card .service-card-body ul li i {
+  color: #fff;
+  padding: 1px;
+  border-radius: 100%;
+}
+.service-list .service-card .service-card-head {
+  padding: 10px;
+  font-size: 14px;
+  background-color: rgb(70, 163, 16);
+  transition: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  align-items: center;
+  display: grid;
+  justify-content: center;
+  position: relative;
+}
+.service-list .service-card .service-card-head .price {
+  border-radius: 8%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.service-list .service-card .service-card-head h3 {
+  color: white;
+  padding-top: 35px;
+  border-radius: 50%;
+}
+.service-list .service-card .service-card-head h4 {
+  top: 0;
+  background: #000;
+  padding: 8px;
+  border-radius: 0 0 30px 0%;
+}
+.service-list .service-card .service-card-head:hover {
+  background-color: aqua;
+}
+
+.billing-cycle {
+  padding: 1rem;
+  margin: 3rem;
+  color: #000;
+  font-weight: 300;
+  width: 100%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+}
+
+.billing-cycle h5 {
+  color: rgb(14, 122, 223);
+}
+
+.billing-cycle label {
+  font-weight: 200;
+  font-size: small;
+  color: rgb(107, 107, 107);
+}/*# sourceMappingURL=customerViews.css.map */

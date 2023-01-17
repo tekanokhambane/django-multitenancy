@@ -1,0 +1,17 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+{%block custom_css%}
+<link rel="stylesheet" href="{% static "admin/css/customerViews.css" %}">
+{%endblock%}
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'subscriptions' %}">Services</a></li>
+<li class="breadcrumb-item active">Create a Service</li>
+{% endblock%}
+{% block main_content %}
+<div id="root"></div>
+{%endblock%}
+
+{% block custom_js %}
+<script src="{% static "/publicUser/index.bundle.js" %}"></script>
+
+{% endblock %}

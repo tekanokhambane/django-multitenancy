@@ -1,0 +1,78 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+{%block custom_css%}
+<link rel="stylesheet" href="{% static "admin/css/customerViews.css" %}">
+{%endblock%}
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'subscriptions' %}">Services</a></li>
+<li class="breadcrumb-item active">Create a Service</li>
+{% endblock%}
+{%block main_content%}
+<section class="content" style="padding-bottom:100px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col text-muted text-center">
+                <button type="button" class="btn btn-info btn-lg">Launch Service</button>
+                <h2 class="text-dark">Creating a service is easy</h2>
+                <p>It looks like you’re already a DreamHost customer, 
+                    so choose a plan below to take advantage of a full account immediately! 
+                    Your account will be billed at the start of your next billing cycle.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="service-list">
+            {% for plan in plans %}
+                <form class="service-card" id="plan" data-type="{{plan.name}}" data-plan="{{plan.id}}" data-price="{{plan.price}}">
+                    <div class="service-card-head bg-info">
+                        <h3>{{plan.name | capfirst}}</h3>
+                        <div class="price">
+                            <h4>${{plan.price}}</h4>
+                        </div>
+                    </div>
+                    <div class="service-card-body">
+                        <p class="text-success">{{plan.description}}</p>
+                        {% for feature in plan.features.all %}
+                            <ul>
+                                <li> <i class="fa fa-check"></i> {{feature.name}}</li>
+                            </ul>
+                        {%endfor%}
+                    </div>
+                    <div class="service-card-footer">
+                        <form  method="get">
+                            <input type="hidden" name="plan" value="{{plan.id}}" data-name="{{plan.id}}">
+                            <input type="hidden" name="type" value="{{plan.name}}" data-name="{{plan.name}}">
+                            <input type="hidden" name="price" value="{{plan.price}}" data-name="{{plan.price}}">
+
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-lg">Select Service</button>
+                        </form>
+                    </div>
+                </>
+                {%endfor%}
+            </div>
+            <div class="billing-cycle">
+                <h5>
+                    You've selected the STANDARD plan
+                </h5>
+                <p>Please select how you would like to be billed:
+                </p>
+                <form >
+                    <input type="checkbox" name="" id="">
+                    <input type="checkbox" name="" id="">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock%}
+
+{% block custom_js %}
+    <script>
+        let plan = document.getElementById("plan").addEventListener("click", selectPlan)
+
+        function selectPlan(){
+        
+        }
+        
+    </script>
+{% endblock %}

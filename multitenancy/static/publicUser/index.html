@@ -1,0 +1,12 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+
+{% block main_content %}
+<div id="root"></div>
+{%endblock%}
+
+{% block custom_js %}
+<script src="/index.bundle.js"></script>
+<script src="{% static "/publicUser/index.bundle.js" %}"></script>
+
+{% endblock %}

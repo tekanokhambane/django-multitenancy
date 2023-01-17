@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.shortcuts import render
 from django.views.generic import View
@@ -8,6 +9,8 @@ from multitenancy.admin.views.baseViews import CustomerListView
 from multitenancy.apps.models import Tenant, Domain
 from account.models import Account
 from helpdesk.models import Ticket
+
+from multitenancy.subscriptions.models import Plan
 
 class CustomerIndexView(View, LoginRequiredMixin):
     @allowed_users(allowed_types=["Customer"])
@@ -33,4 +36,9 @@ class SubscriptionsListView(View, LoginRequiredMixin):
     
 class CreateService(View, LoginRequiredMixin):
     def get(self,request):
-        return render(request,"multitenancy/admin/publicUser/create_service.html")
+        plans = Plan.objects.all()
+        settings.STATICFILES_DIRS = [
+            os.path.join(settings.PROJECT_DIR, 'templates/client/static/'),
+        ]
+        settings.TENANT_CREATION_TEMPLATE ="client/static/publicUser/index.html"
+        return render(request,settings.TENANT_CREATION_TEMPLATE, {"plans":plans})
