@@ -13,9 +13,9 @@
 {% block main_content %}
 
 <!-- Main content -->
-<section class="content">
+<section class="content" style="padding-bottom: 100px;">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 p-100">
           <div class="list-group">
             <a href="{% url 'pinax_teams:team_list' %}" class="list-group-item">
               <h4 class="list-group-item-heading">Teams</h4>
@@ -56,6 +56,12 @@
               <h4 class="list-group-item-heading">Subscriptions</h4>
               <p class="list-group-item-text">
                 View and Manage User Subscriptions
+              </p>
+            </a>
+            <a href="{% url 'producttype_list' %}" class="list-group-item">
+              <h4 class="list-group-item-heading">Product Types</h4>
+              <p class="list-group-item-text">
+                View and Manage Product Types
               </p>
             </a>
             <a href="{% url 'helpdesk:system_settings' %}" class="list-group-item">

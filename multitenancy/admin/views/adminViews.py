@@ -28,7 +28,7 @@ from multitenancy.admin.forms import (
     TenantForm)
 from django.views.generic import TemplateView, ListView, DeleteView, View, CreateView, UpdateView, DetailView
 from multitenancy.settings.models import Address, AdminSettings, GeneralInfo, Logo
-from multitenancy.subscriptions.models import Plan, ProductFeature, Subscription
+from multitenancy.subscriptions.models import Plan, ProductFeature, ProductType, Subscription
 from pinax.teams.models import SimpleTeam, Team
 from account.mixins import LoginRequiredMixin
 from multitenancy.users.models import Customer, TenantUser
@@ -307,26 +307,10 @@ class UserSubscriptionsListView(LoginRequiredMixin, AdminListView):
 
 class SettingsView(LoginRequiredMixin, AdminTemplateView):
     template_name = 'multitenancy/admin/adminUser/generalsettings_index.html'
-    model = None
     settings_list = []
 
-    # def get_model(self):
-    #     """
-    #     Return a list of template names to be used for the request. Must return
-    #     a list. May not be called if render_to_response() is overridden.
-    #     """
-    #     if self.model is None:
-    #         raise ImproperlyConfigured(
-    #             "TemplateResponseMixin requires either a definition of "
-    #             "'template_name' or an implementation of 'get_template_names()'")
-    #     else:
-    #         return [self.model]
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        # item = self.model
-        # if item not in self.settings_list:
-        #     self.settings_list.append(item)
-
         context['logo'] = Logo.load()
         context['address'] = Address.load()
         context['admin_settings'] = AdminSettings.load()
@@ -375,3 +359,15 @@ class AdminSettingsView(LoginRequiredMixin, AdminUpdateView):
 
     def get_object(self):
         return self.model.objects.first()
+
+class ProductTypeListView(LoginRequiredMixin, AdminListView):
+    model = ProductType
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        ProductType.objects.create_defaults()
+        
+        context['object_list'] = ProductType.objects.all()
+        return context
+
+    template_name = 'multitenancy/admin/adminUser/product_type_list.html'

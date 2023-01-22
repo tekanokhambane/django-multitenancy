@@ -1,0 +1,92 @@
+{% extends "multitenancy/admin/base.html" %}
+
+
+{% block page_title %}Manage Product Types{% endblock page_title %}
+{%block breadcrumbs%}
+
+<li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
+<li class="breadcrumb-item active">Product Types</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title text-dark">Product Types Details</h3>
+
+                        <div class="card-tools">
+                            <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
+                                <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
+                                    placeholder="Search Product Types">
+                                <div class="input-group-append">
+                                    <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                </div>
+                            <form />
+                        </div>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body text-dark table-responsive p-0">
+                        <table class="table table-hover text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {%if object_list %}
+                                {% for type in object_list%}
+                                <tr>
+                                    <td>{{type.id}}</td>
+
+                                    <td>{{type.name}}</td>
+                                    
+                                    
+
+                                    
+                                    {% if type.schema_name != "public" %}
+                                    <th> <a name="" id="" class="btn btn-success text-light" href="{% url 'update_template' type.pk %}"
+                                            role="button"><i class="fas fa-edit"></i> Edit</a> 
+                                            
+                                            <a name="" id="" class="btn btn-danger text-light" href="{% url 'delete_tenant' type.pk %}"
+                                            role="button"><i class="fas fa-trash"></i> Delete</a> 
+                                    </th>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    {%else%}
+                                    <td>There are no records to display</td>
+                                    {%endif%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{%block custom_js%}
+<script>
+    let filter = document.getElementById("filter-form")
+    filter.addEventListener("submit", ()=>{
+        alert("submit")
+    })
+    
+</script>
+{%endblock%}

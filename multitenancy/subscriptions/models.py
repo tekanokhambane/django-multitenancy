@@ -56,7 +56,10 @@ class Plan(models.Model):
 
 
 class ProductTypeManager(models.Manager):
-    pass
+    def create_defaults(self):
+        self.get_or_create(name=ProductType.Types.TENANT_APP)
+        self.get_or_create(name=ProductType.Types.DOMAIN)
+        self.get_or_create(name=ProductType.Types.THIRD_PARTY_APP)
 
 class ProductType(models.Model):
     class Types(models.TextChoices):

@@ -5,7 +5,7 @@ from multitenancy.admin.views import (
     authViews
 )
 
-
+#app_name = "multitenancy"
 
 urlpatterns = [
     path(r"", adminViews.AdminIndexView.as_view(), name="admin_dashboard"),
@@ -15,7 +15,7 @@ urlpatterns = [
     path("templates/<int:pk>/update/", adminViews.UpdateTemplateView.as_view(), name="update_template"),
     path("templates/<int:pk>/delete/", adminViews.DeleteTenantView.as_view(), name="delete_tenant"),
     path("subscriptions/", adminViews.SubscriptionList.as_view(), name="subscription_list"),
-    path("customers/", adminViews.CustomerList.as_view(), name="customer_list"),
+    path(route="customers/", view=adminViews.CustomerList.as_view(), name="customer_list", ),
     path("customers/create/", adminViews.CreateCustomerView.as_view(), name="create_customer"),
     path("customers/<int:pk>/update", adminViews.UpdateCustomerView.as_view(), name="update_customer"),
     path("customers/<int:pk>/delete", adminViews.DeleteCustomerView.as_view(), name="delete_customer"),
@@ -28,6 +28,7 @@ urlpatterns = [
     path("settings/plans/<int:pk>/update/", adminViews.UpdatePlanView.as_view(), name="update_plan"),
     path("settings/plans/<int:pk>/delete/", adminViews.DeletePlanView.as_view(), name="delete_plan"),
     path("settings/usersubscriptions/", adminViews.UserSubscriptionsListView.as_view(), name="usersubscription_list"),
+    path("settings/producttypes/", adminViews.ProductTypeListView.as_view(), name="producttype_list"),
     path("settings/general/", adminViews.SettingsView.as_view(), name="generalsettings_index"),
     path("settings/general/logo/", adminViews.UpdateLogoView.as_view(), name="update_logo"),
     path("settings/general/info/", adminViews.GeneralInfoView.as_view(), name="update_info"),
