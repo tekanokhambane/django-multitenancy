@@ -53,9 +53,9 @@ class Tenant(TenantBase):
         """
         if the user has no active or inactive tenants than start trail
         """
-        if self.owner.tenants == None:
-            self.on_trial = True
-            self.save()
+        self.on_trial = True
+        self.trail_duration = 30
+        self.save()            
 
     def end_trail(self):
         """
