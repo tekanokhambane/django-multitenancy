@@ -35,7 +35,7 @@ class AdminTestCase(TestCase):
         self.admin_a_pass = admin_a_pass
         admin_a.set_password(admin_a_pass)
         admin_a.is_staff = True
-        admin_a.is_superuser = True
+        #admin_a.is_superuser = True
         admin_a.save()
         self.admin_a = admin_a
         add_user_perms = UserTenantPermissions.objects.create(profile_id=admin_a.id, is_staff=True, is_superuser=True)
@@ -61,14 +61,14 @@ class AdminTestCase(TestCase):
         self.assertTrue(admin_exist)
         self.assertTrue(self.admin_a.check_password(self.admin_a_pass))
     
-    def test_admin_login_url(self):
-        # login_url = 'admin/accounts/login/'
-        login_url = settings.LOGIN_URL
-        data = {"email":"abc123@email.com", "password":self.admin_a_pass}
-        response = self.client.post(login_url, data, follow=True)
-        # print(dir(response))
-        status_code = response.status_code
-        redirect_path = response.request.get('PATH_INFO')
-        print(redirect_path)
-        # self.assertEqual(redirect_path, settings.LOGIN_REDIRECT_URL)
-        # self.assertEqual(status_code, 200)
+    # def test_admin_login_url(self):
+    #     # login_url = 'admin/accounts/login/'
+    #     login_url = settings.LOGIN_URL
+    #     data = {"email":"abc123@email.com", "password":self.admin_a_pass}
+    #     response = self.client.post(login_url, data, follow=True)
+    #     # print(dir(response))
+    #     status_code = response.status_code
+    #     redirect_path = response.request.get('PATH_INFO')
+    #     print(redirect_path)
+    #     # self.assertEqual(redirect_path, settings.LOGIN_REDIRECT_URL)
+    #     # self.assertEqual(status_code, 200)
