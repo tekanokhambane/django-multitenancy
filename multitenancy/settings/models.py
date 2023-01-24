@@ -15,7 +15,7 @@ class SettingsPage:
 
 
 class Logo(BaseSetting):
-    logo = models.ImageField()
+    logo = models.ImageField(default="core/logo.png")
     name = 'slug'
     help_text = _('Upload Company Logo')
 
