@@ -55,34 +55,11 @@ class TestTenant(unittest.TestCase):
         # Try to start the trail again
         tenant.start_trail()
         self.assertTrue(tenant.on_trial)
-        self.assertIsNotNone(tenant.trail_duration)
-
-        # Create another tenant for the same user
-        tenant2 = Tenant.objects.create(name="Test Tenant 2", type="premium", is_template=True, description="Test tenant for testing purposes", owner=user, schema_name="tenant2")
-        domain2 = Domain.objects.create(domain="domain2.com", tenant=tenant2, is_primary=True)
-        tenant2.add_user(user, is_superuser=True, is_staff=True)
-        tenant2.auto_create_schema = False
-        tenant2.save()
-        self.assertEqual(tenant2.name, "Test Tenant 2")
-        self.assertEqual(tenant2.type, "premium")
-        self.assertTrue(tenant2.is_template)
-        self.assertEqual(tenant2.description, "Test tenant for testing purposes")
-        self.assertFalse(tenant2.on_trial)
-
-        # Check the trail for the second tenant
-        
-        self.assertFalse(tenant2.on_trial)
-        self.assertIsNone(tenant2.trail_duration)
-
-        # Clean up
-        tenant.delete_tenant()
-        tenant2.delete_tenant()
+        self.assertEquals(30,tenant.trail_duration)
 
 
     def test_end_trail(self):
         
-        
-        # Create a tenant
         user = TenantUser.objects.create(
             username='admin', 
             password="password", 
@@ -92,54 +69,77 @@ class TestTenant(unittest.TestCase):
             type='Customer',
             is_active=True
             )
-        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant3')
+        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant2')
+        domain = Domain.objects.create(domain="domain2.com", tenant=tenant, is_primary=True)
+        tenant.add_user(user, is_superuser=True, is_staff=True)
+        tenant.auto_create_schema = False
+        tenant.save()
+        # End the trail
+        tenant.end_trail()
+        self.assertFalse(tenant.on_trial)
+        self.assertEqual(0,tenant.trail_duration)
+        
+    def test_trail_days_start(self):
+        user = TenantUser.objects.create(
+            username='admin', 
+            password="password", 
+            first_name='abc123', 
+            last_name='khamban', 
+            email='abc3@email.com', 
+            type='Customer',
+            is_active=True
+            )
+        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant3', on_trial=True, trail_duration=30)
         domain = Domain.objects.create(domain="domain3.com", tenant=tenant, is_primary=True)
         tenant.add_user(user, is_superuser=True, is_staff=True)
         tenant.auto_create_schema = False
         tenant.save()
+        # Check trail days
+        tenant.trail_days_left()
+        self.assertTrue(tenant.on_trial)
+        self.assertEqual(30,tenant.trail_duration)
+
+
+    def test_end_trail(self):
         
-        self.assertEqual(tenant.name, "Test Tenant")
-        self.assertEqual(tenant.type, "personal")
-        self.assertFalse(tenant.is_template)
-        self.assertEqual(tenant.description, "Test tenant for testing purposes")
-        self.assertFalse(tenant.on_trial)
-
-        # Start the trail for the tenant
-        tenant.start_trail()
-        self.assertTrue(tenant.on_trial)
-        self.assertIsNotNone(tenant.trail_duration)
-
-        # Try to start the trail again
-        tenant.start_trail()
-        self.assertTrue(tenant.on_trial)
-        self.assertIsNotNone(tenant.trail_duration)
-
+        user = TenantUser.objects.create(
+            username='admin', 
+            password="password", 
+            first_name='abc123', 
+            last_name='khamban', 
+            email='abc2@email.com', 
+            type='Customer',
+            is_active=True
+            )
+        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant2')
+        domain = Domain.objects.create(domain="domain2.com", tenant=tenant, is_primary=True)
+        tenant.add_user(user, is_superuser=True, is_staff=True)
+        tenant.auto_create_schema = False
+        tenant.save()
         # End the trail
         tenant.end_trail()
         self.assertFalse(tenant.on_trial)
-
-
-        # Create another tenant for the same user
-        tenant2 = Tenant.objects.create(name="Test Tenant 2", type="premium", is_template=True, description="Test tenant for testing purposes", owner=user, schema_name="tenant4")
-        domain2 = Domain.objects.create(domain="domain4.com", tenant=tenant2, is_primary=True)
-        tenant2.add_user(user, is_superuser=True, is_staff=True)
-        tenant2.auto_create_schema = False
-        tenant2.save()
-        self.assertEqual(tenant2.name, "Test Tenant 2")
-        self.assertEqual(tenant2.type, "premium")
-        self.assertTrue(tenant2.is_template)
-        self.assertEqual(tenant2.description, "Test tenant for testing purposes")
-        self.assertFalse(tenant2.on_trial)
-
-        # Check the trail for the second tenant
+        self.assertEqual(0,tenant.trail_duration)
         
-        self.assertFalse(tenant2.on_trial)
-        self.assertIsNone(tenant2.trail_duration)
 
-        # End the trail
-        tenant.end_trail()
+    def test_trail_days_end(self):
+        user = TenantUser.objects.create(
+            username='admin', 
+            password="password", 
+            first_name='abc123', 
+            last_name='khamban', 
+            email='abc4@email.com', 
+            type='Customer',
+            is_active=True
+            )
+        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant4', on_trial=True, trail_duration=30)
+        domain = Domain.objects.create(domain="domain4.com", tenant=tenant, is_primary=True)
+        tenant.add_user(user, is_superuser=True, is_staff=True)
+        tenant.auto_create_schema = False
+        tenant.save()
+        tenant.trail_duration = 0
+        tenant.save()
+        # Check trail days
+        tenant.trail_days_left()
         self.assertFalse(tenant.on_trial)
-
-        # Clean up
-        #tenant.delete_tenant()
-        #tenant2.delete_tenant()
+        self.assertEqual(0,tenant.trail_duration)

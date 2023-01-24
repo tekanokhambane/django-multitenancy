@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django_tenants.models import DomainMixin
+from datetime import datetime, timedelta
 from tenant_users.tenants.models import TenantBase
 from django_tenants.utils import get_tenant_type_choices
 
@@ -24,6 +25,9 @@ class TenantManager(models.Manager):
     def filter_by_plan(self):
         pass
 
+    def active(self):
+        pass
+
     
 
 class Tenant(TenantBase):
@@ -35,7 +39,7 @@ class Tenant(TenantBase):
     description = models.TextField(max_length=200)
     subscription = models.OneToOneField(Subscription, null=True, blank=True,on_delete=models.CASCADE, related_name="tenants")
     # paid_until = models.DateField()
-    trail_duration = models.IntegerField(null=True, blank=True)
+    trail_duration = models.IntegerField(default=0)
     on_trial = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
     modified = models.DateField(auto_now=True)
@@ -48,14 +52,20 @@ class Tenant(TenantBase):
         unique_together = ['id', 'name']
         verbose_name = settings.TENANT_DISPLAY_NAME
         verbose_name_plural = settings.TENANT_DISPLAY_NAME_PLURAL
+    
+    
 
     def start_trail(self):
         """
         if the user has no active or inactive tenants than start trail
         """
-        self.on_trial = True
-        self.trail_duration = 30
-        self.save()            
+        
+        if self.owner.tenants.count() > 1:
+            raise ValueError("User has no trails available")
+        else:
+            self.on_trial = True
+            self.trail_duration = 30
+            self.save()
 
     def end_trail(self):
         """
@@ -63,12 +73,34 @@ class Tenant(TenantBase):
         """
         if self.on_trial == True:
             self.on_trial = False
-            self.trail_duration = 0
+            self.trail_duration = None
+            self.deactivate()
             self.save()            
+    
 
-    def upgrade(self):
+    
+    def trail_days_left(self):
         """
-        Upgrade plan
+        Calculate the number of days left for the trail to end
+        """
+        if self.on_trial:
+            trail_end_date = self.created + timedelta(days=self.trail_duration)
+            days_left = (trail_end_date - datetime.now().date()).days
+            # update the duration
+            self.trail_duration = days_left
+            self.save()
+            # update duration and end trail then deactivate service
+            if self.trail_duration == 0:
+                self.on_trial = False
+                self.deactivate()
+                self.save()
+            return days_left
+        else:
+            return None
+
+    def upgrade(self, plan):
+        """
+        Iterate over the plans and then select a plan to upgrade and update the subscription
         """
         pass
 
