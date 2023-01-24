@@ -37,7 +37,7 @@ class Tenant(TenantBase):
     is_template = models.BooleanField(default=True)
     plan = models.ForeignKey(Plan, null=True, on_delete=models.PROTECT, related_name="tenants")
     description = models.TextField(max_length=200)
-    subscription = models.OneToOneField(Subscription, null=True, blank=True,on_delete=models.CASCADE, related_name="tenants")
+    subscription = models.OneToOneField(Subscription,  blank=True,on_delete=models.CASCADE, related_name="tenants")
     # paid_until = models.DateField()
     trail_duration = models.IntegerField(default=0)
     on_trial = models.BooleanField(default=False)
@@ -65,6 +65,7 @@ class Tenant(TenantBase):
         else:
             self.on_trial = True
             self.trail_duration = 30
+            self.subscription.start_subscription("monthly")
             self.save()
 
     def end_trail(self):
@@ -102,7 +103,8 @@ class Tenant(TenantBase):
         """
         Iterate over the plans and then select a plan to upgrade and update the subscription
         """
-        pass
+        self.type = plan
+        self.save()
 
     def downgrade(self):
         """
