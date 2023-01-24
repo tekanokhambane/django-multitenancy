@@ -61,7 +61,10 @@ class Tenant(TenantBase):
         """
         End trail when the trail duration is reached
         """
-        pass
+        if self.on_trial == True:
+            self.on_trial = False
+            self.trail_duration = 0
+            self.save()            
 
     def upgrade(self):
         """
