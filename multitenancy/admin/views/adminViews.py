@@ -48,13 +48,14 @@ from .baseViews import(
 
 
 
-class AdminIndexView(LoginRequiredMixin ,TemplateView):
+class AdminIndexView(LoginRequiredMixin ,AdminTemplateView):
     template_name = 'multitenancy/admin/adminUser/index.html'
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
         context['subscriptions'] = get_tenant_model().objects.all().exclude(schema_name='public').exclude(is_template=True)
         context['users'] = TenantUser.objects.all()
+        ProductType.objects.create_defaults()
         context['staff'] = Profile.objects.filter()
         context['customers'] = Customer.objects.filter()
         context['users'] = TenantUser.objects.all()
@@ -365,7 +366,7 @@ class ProductTypeListView(LoginRequiredMixin, AdminListView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        ProductType.objects.create_defaults()
+        
         
         context['object_list'] = ProductType.objects.all()
         return context
