@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django_tenants.models import DomainMixin
 from datetime import datetime, timedelta
@@ -26,7 +26,11 @@ class TenantManager(models.Manager):
         pass
 
     def active(self):
-        pass
+        return Tenant.objects.filter(subscription__is_active=True)
+
+    def get_null_subsriptions(self):
+        null_subsriptions = Tenant.objects.filter(subscription=None)
+        return null_subsriptions
 
     
 
@@ -53,7 +57,19 @@ class Tenant(TenantBase):
         verbose_name = settings.TENANT_DISPLAY_NAME
         verbose_name_plural = settings.TENANT_DISPLAY_NAME_PLURAL
     
+
+    @classmethod
+    def create_tenant(cls, name, type, is_template, description, trail_duration, owner, subscription_plan):
+        subscription = Subscription.objects.create(plan=subscription_plan, owner=owner)
+        tenant = cls.objects.create(name=name, type=type, is_template=is_template, description=description, trail_duration=trail_duration, subscription=subscription, owner=owner)
+        return tenant
     
+    @transaction.atomic
+    def create_tenant_with_subscription(self, plan, **kwargs):
+        subscription = Subscription.objects.create(plan=plan)
+        kwargs['subscription'] = subscription
+        tenant = Tenant.objects.create(**kwargs)
+        return tenant
 
     def start_trail(self):
         """
