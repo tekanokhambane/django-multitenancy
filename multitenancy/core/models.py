@@ -3,8 +3,7 @@ from django.db import models
 
 class AbstractSetting(models.Model):
     """
-    The abstract base model for settings. Subclasses must be registered using
-    :func:`~wagtail.contrib.settings.registry.register_setting`
+    
     """
 
     class Meta:
