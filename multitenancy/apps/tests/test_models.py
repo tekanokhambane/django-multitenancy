@@ -1,6 +1,7 @@
 import unittest
 from django.test import TestCase, Client
 from multitenancy.apps.models import Tenant, Domain
+from multitenancy.subscriptions.models import Subscription
 from multitenancy.users.models import Admin, Customer, TenantUser
 from tenant_users.permissions.models import UserTenantPermissions
 
@@ -35,12 +36,14 @@ class TestTenant(unittest.TestCase):
             type='Customer',
             is_active=True
             )
-        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant1')
+        subscription = Subscription.objects.create()
+        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant1', subscription=subscription)
         domain = Domain.objects.create(domain="domain1.com", tenant=tenant, is_primary=True)
         tenant.add_user(user, is_superuser=True, is_staff=True)
         tenant.auto_create_schema = False
         tenant.save()
         
+        self.assertTrue(tenant.subscription.is_active)
         self.assertEqual(tenant.name, "Test Tenant")
         self.assertEqual(tenant.type, "personal")
         self.assertFalse(tenant.is_template)
