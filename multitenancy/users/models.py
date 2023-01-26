@@ -31,7 +31,7 @@ class TenantUser(UserProfile):
         blank=True,
     )
 
-    type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=Types.ADMIN)
+    type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=Types.CUSTOMER)
     first_name = models.CharField(max_length=300, blank=True, null=True)
     last_name = models.CharField(max_length=300, blank=True, null=True)
     username = models.CharField(max_length=250, blank=True, null=True)
@@ -64,6 +64,14 @@ class TenantUser(UserProfile):
         else:
             return False
     
+    def add_role(self, role):
+        if role not in self.roles:
+            self.roles.append(role)
+            
+    def remove_role(self, role):
+        if role in self.roles:
+            self.roles.remove(role)
+
     
     
 
@@ -90,9 +98,9 @@ class Admin(TenantUser):
         profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
         return profile
 
-    @property
+    
     def create_public_superuser(self, *args, **kwargs):
-        UserTenantPermissions.objects.create(profile_id=self.id, is_staff=True, is_superuser=True)  # type: ignore
+        UserTenantPermissions.objects.create(profile_id=self.pk, is_staff=True, is_superuser=True)
 
     class Meta:
         proxy = True
