@@ -11,7 +11,7 @@ from multitenancy.admin.decorators import allowed_users
 class AdminView(UserPassesTestMixin, View):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -19,7 +19,7 @@ class AdminView(UserPassesTestMixin, View):
 class AdminCreateView(UserPassesTestMixin, CreateView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -27,7 +27,7 @@ class AdminCreateView(UserPassesTestMixin, CreateView):
 class AdminDetailView(UserPassesTestMixin, DetailView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -38,7 +38,7 @@ class AdminDetailView(UserPassesTestMixin, DetailView):
 class AdminUpdateView(UserPassesTestMixin, UpdateView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -52,7 +52,7 @@ class AdminUpdateView(UserPassesTestMixin, UpdateView):
 class AdminDeleteView(UserPassesTestMixin, DeleteView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -66,7 +66,7 @@ class AdminDeleteView(UserPassesTestMixin, DeleteView):
 class AdminListView(UserPassesTestMixin, ListView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
@@ -76,7 +76,7 @@ class AdminListView(UserPassesTestMixin, ListView):
 class AdminTemplateView(UserPassesTestMixin, TemplateView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.is_superuser or self.request.user.type == 'Admin'
+        return  self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         raise Http404
