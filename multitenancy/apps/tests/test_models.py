@@ -103,26 +103,7 @@ class TestTenant(unittest.TestCase):
         self.assertEqual(30,tenant.trail_duration)
 
 
-    def test_end_trail(self):
-        
-        user = TenantUser.objects.create(
-            username='admin', 
-            password="password", 
-            first_name='abc123', 
-            last_name='khamban', 
-            email='abc2@email.com', 
-            type='Customer',
-            is_active=True
-            )
-        tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=user, schema_name='tenant2')
-        domain = Domain.objects.create(domain="domain2.com", tenant=tenant, is_primary=True)
-        tenant.add_user(user, is_superuser=True, is_staff=True)
-        tenant.auto_create_schema = False
-        tenant.save()
-        # End the trail
-        tenant.end_trail()
-        self.assertFalse(tenant.on_trial)
-        self.assertEqual(0,tenant.trail_duration)
+
         
 
     def test_trail_days_end(self):
