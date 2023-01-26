@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.utils import timezone
 from django.utils.text import slugify 
 from multitenancy.users.models import Customer
 from django_tenants.utils import get_tenant_type_choices
@@ -31,7 +32,8 @@ class Plan(models.Model):
         return self.name
     
     def add_feature(self, feature):
-        self.features.create(plan_id=self.pk, productfeature_id=feature)
+        new_feature = ProductFeature.objects.create(name=feature)
+        self.features.add(new_feature)
         self.save()
 
     def save(self, *args, **kwargs):  # new
@@ -79,24 +81,32 @@ class Subscription(models.Model):
         MONTHLY = "monthly", "Monthly"
         QUARTERLY = "quartely", "quarterly"
         ANNUALLY = "annually", "annually"
-    status = models.IntegerField()
+    
     cycle = models.CharField(max_length=50, choices=Cycles.choices, default=Cycles.MONTHLY)
     subscription_duration = models.IntegerField(default=30)
     start_date = models.DateField(auto_now_add=True)
-    end_date = models.DateField()
+    end_date = models.DateField(auto_now_add=True)
     renewal_date = models.DateField(null=True)
     reference = models.TextField(max_length=100, help_text="Free text field for user references")
     last_updated = models.DateTimeField(
         auto_now=True, help_text="Keeps track of when a record was last updated"
     )
-    product_type = models.ForeignKey(ProductType, null=True, on_delete=models.CASCADE, related_name="subscriptions")
+    product_type = models.ForeignKey(ProductType,null=True, on_delete=models.CASCADE, related_name="subscriptions")
     reason = models.TextField(help_text="Reason for state change, if applicable.")
-    renewal_status = models.CharField(max_length=10, choices=[('active', 'Active'), ('cancelled', 'Cancelled'), ('expired', 'Expired')], default="active")
+    status = models.CharField(max_length=10, choices=[('active', 'Active'),('inactive', 'Inactive') ,('cancelled', 'Cancelled'), ('expired', 'Expired')], default="inactive")
     objects = SubscriptionManager()
+    
 
-    def get_cycle(self):
+    def start_subscription(self, cycle):
+        
         # calculate the subscription_duration based on the subscription cycle
-        cycle = self.cycle
+        cycle = cycle
+        self.cycle = cycle
+        self.status = "active"
+        self.reason = "Start Subscription"
+        self.renewal_date = datetime.date.today()
+        self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
+        self.save()
         if cycle == 'weekly':
             self.subscription_duration = 7
             self.save()
@@ -116,7 +126,7 @@ class Subscription(models.Model):
 
     def renew(self):
         
-        if self.renewal_status == 'active':
+        if self.status == 'active':
             # Calculate and update the new end date for the subscription
             self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
             # Set the renewal date to today
@@ -125,13 +135,13 @@ class Subscription(models.Model):
             self.reason = "Subscription renewed"
             self.save()
             # Charge the customer here and create invoice
-        elif self.renewal_status == 'expired':
+        elif self.status == 'expired':
             # Send a notification to the customer here
             pass
     
     def cancel_subscription(self):
         # set the status to cancelled
-        self.renewal_status = 'cancelled'
+        self.status = 'cancelled'
         # Set the end date to today
         self.end_date = datetime.date.today()
         # Update the reason 
@@ -141,7 +151,7 @@ class Subscription(models.Model):
     def activate_subscription(self):
         # In future checks will be done to ensure there are no outstanding invoices
         # update the renewal status
-        self.renewal_status = 'active'
+        self.status = 'active'
         # Calculate and update the new end date for the subscription
         self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
         # Set the renewal date to today
@@ -155,7 +165,10 @@ class Subscription(models.Model):
 
     def is_active(self):
         # a check to see if the active
-        pass
+        if self.status == "active":
+            return True
+        else:
+            return False
 
     def get_service(self):
         pass
