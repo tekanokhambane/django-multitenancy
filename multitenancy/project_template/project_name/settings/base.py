@@ -82,7 +82,7 @@ TENANT_TYPES = {
             'django.contrib.humanize',  # Required for elapsed time formatting
             'markdown_deux',  # Required for Knowledgebase item formatting
             'bootstrap4form', # Required for nicer formatting of forms with the default templates
-            'helpdesk',
+            'helpdesk', # Required for helpdesk
             # Django
             'django.contrib.sites',
             'django.contrib.admin',
@@ -94,66 +94,9 @@ TENANT_TYPES = {
             'django.contrib.contenttypes',
                   # shared apps here
                   ],
-        "URLCONF": "tenantscrm.public_urls", # url for the public type here
+        "URLCONF": "{{ project_name }}.public_urls", # url for the public type here
     },
-    "personal": {
-        "APPS": [
-            'tenant_users.permissions',
-
-            'rest_framework',
-            'storages',
-
-            # Your apps
-
-            # Dango
-            'django.contrib.sites',
-            'django.contrib.auth',
-            'django.contrib.messages',
-            'django.contrib.sitemaps',
-            'django.contrib.staticfiles',
-            'django.contrib.contenttypes',
-                 
-                 ],
-        "URLCONF": "{{project_name}}.urls",
-    },
-    "premium": {
-        "APPS": [
-                'rest_framework',
-                'tenant_users.permissions',
-
-
-                
-
-                # Dango
-                'django.contrib.sites',
-                'django.contrib.auth',
-                'django.contrib.messages',
-                'django.contrib.sitemaps',
-                'django.contrib.staticfiles',
-                'django.contrib.contenttypes',
-                 # type1 apps here
-                 ],
-        "URLCONF": "tenantscrm.urls_premium",
-    },
-    "business": {
-        "APPS": [
-                'rest_framework',
-                'tenant_users.permissions',
-
-
-
-
-                # Dango
-                'django.contrib.sites',
-                'django.contrib.auth',
-                'django.contrib.messages',
-                'django.contrib.sitemaps',
-                'django.contrib.staticfiles',
-                'django.contrib.contenttypes',
-                 # type1 apps here
-                 ],
-        "URLCONF": "tenantscrm.urls_business",
-    }
+    
 }
 
 

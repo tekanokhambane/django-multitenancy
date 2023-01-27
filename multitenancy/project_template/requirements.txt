@@ -1,0 +1,46 @@
+oauthlib
+requests_oauthlib
+unidecode
+django-cogwheels
+django-polymorphic==3.1.0
+django-countries==7.3.2
+django-phonenumber-field==6.1.0
+phonenumbers==8.12.45
+django-ipware==4.0.2
+easy-thumbnails==2.8.3
+django-extensions==3.1.5
+django-measurement==3.2.4
+django-groups-manager==1.1.0
+django-guardian==2.4.0
+multitenancy-helpdesk==0.1.0b6
+django-crontab==0.7.1
+django-storages==1.11.1
+django-tenant-users==1.0.0
+django-tenants==3.3.2
+django-timezone-field==4.2.1
+django-user-accounts==3.0.4
+google-cloud-storage==2.1.0
+gunicorn==20.0.4
+django-environ==0.8.1
+django-formtools==2.3
+django-markdown-deux==1.0.5
+jsonfield==3.1.0
+channels==4.0.0
+django-select2==7.10.1
+django-compressor==3.1
+django-redis==5.2.0
+# django_sendmail_backend enables sending email from your web host server.
+# Remove this if using a different email backend.
+django_sendmail_backend
+
+# To use with MariaDB or MySQL, uncomment the line below:
+#mysqlclient
+# To use with PostgreSQL, uncomment the line below:
+psycopg2
+pinax-invitations==7.0.0
+pinax-teams==2.0.0
+sweetify==2.3.1
+django-cors-headers==3.11.0
+social-auth-app-django
+whois==0.9.13
+django-widget-tweaks==1.4.12
