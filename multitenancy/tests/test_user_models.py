@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import reverse_lazy
 from django.test import TestCase
-from ..models import Admin, Staff, TenantUser
+from multitenancy.users.models import Admin, Staff, TenantUser
 from tenant_users.permissions.models import UserTenantPermissions
 
 
