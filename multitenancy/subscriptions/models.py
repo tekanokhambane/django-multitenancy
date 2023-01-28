@@ -83,7 +83,7 @@ class Subscription(models.Model):
         ANNUALLY = "annually", "annually"
     
     cycle = models.CharField(max_length=50, choices=Cycles.choices, default=Cycles.MONTHLY)
-    subscription_duration = models.IntegerField(default=30)
+    subscription_duration = models.IntegerField(default=0)
     start_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_now_add=True)
     renewal_date = models.DateField(null=True)
@@ -100,27 +100,29 @@ class Subscription(models.Model):
     def start_subscription(self, cycle):
         
         # calculate the subscription_duration based on the subscription cycle
-        cycle = cycle
-        self.cycle = cycle
         self.status = "active"
-        self.reason = "Start Subscription"
+        self.cycle = cycle
+        self.reason =  "Start Subscription"
         self.renewal_date = datetime.date.today()
-        self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
         self.save()
         if cycle == 'weekly':
-            self.subscription_duration = 7
+            self.subscription_duration =  7
+            self.end_date =  self.renewal_date + datetime.timedelta(days=self.subscription_duration)
             self.save()
             return self.subscription_duration
         elif  cycle == 'monthly':
             self.subscription_duration = 30
+            self.end_date = self.renewal_date + datetime.timedelta(days=self.subscription_duration)
             self.save()
             return self.subscription_duration
         elif  cycle == 'quartely':
             self.subscription_duration = 90
+            self.end_date = self.renewal_date + datetime.timedelta(days=self.subscription_duration)
             self.save()
             return self.subscription_duration
         else:
             self.subscription_duration = 365
+            self.end_date = self.renewal_date + datetime.timedelta(days=self.subscription_duration)
             self.save()
             return self.subscription_duration
 
@@ -141,28 +143,31 @@ class Subscription(models.Model):
     
     def cancel_subscription(self):
         # set the status to cancelled
-        self.status = 'cancelled'
-        # Set the end date to today
-        self.end_date = datetime.date.today()
-        # Update the reason 
-        self.reason = "Subscription cancelled"
-        self.save()
+        if self.status == 'active':
+            self.status = 'cancelled'
+            # Set the end date to today
+            self.end_date = datetime.date.today()
+            # Update the reason 
+            self.reason = "Subscription cancelled"
+            self.save()
 
-    def activate_subscription(self):
+    def activate_subscription(self, duration):
         # In future checks will be done to ensure there are no outstanding invoices
         # update the renewal status
         self.status = 'active'
-        # Calculate and update the new end date for the subscription
-        self.end_date = self.end_date + datetime.timedelta(days=self.subscription_duration)
         # Set the renewal date to today
         self.renewal_date = datetime.date.today()
+        # Calculate and update the new end date for the subscription
+        self.end_date = self.renewal_date + datetime.timedelta(days=duration)
         # Update the reason 
         self.reason = "Subscription activated"
         self.save()
 
-    def update_duration(self):
-        pass
+    def update_duration(self, duration):
+        self.subscription_duration = duration
+        self.save()
 
+    @property
     def is_active(self):
         # a check to see if the active
         if self.status == "active":

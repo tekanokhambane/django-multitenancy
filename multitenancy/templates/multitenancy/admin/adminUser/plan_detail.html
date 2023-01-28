@@ -13,10 +13,10 @@
     <div class="row">
         <div class="col-md-12">
             <div class="list-group">
-                <a href="{% url 'update_plan' plan.pk %}" class="list-group-item">
-                    <h4 class="list-group-item-heading">{{plan.name}}</h4>
+                <a href="{% url 'update_plan' object.pk %}" class="list-group-item">
+                    <h4 class="list-group-item-heading">{{object.name}}</h4>
                     <p class="list-group-item-text">
-                        {{plan.description}}
+                        {{object.description}}
                     </p>
                 </a>
             </div>    
@@ -31,7 +31,7 @@
             <div class="">
                 <h5 class="text-dark">Features</d>
                     <div class="list-group pt-2">
-                        {% for feature in plan.features.all %}
+                        {% for feature in object.features.all %}
                         <button type="button" href="{#% url 'update_feature' feature.pk %#}" class="list-group-item" >
                             <h4 class="list-group-item-heading">{{feature.name}}</h4>
                             <p class="list-group-item-text">
@@ -44,7 +44,7 @@
         </div>
         
     </div>
-    {% include "multitenancy/admin/adminUser/includes/create_feature.html" %}
+    {#% include "multitenancy/admin/adminUser/includes/create_feature.html" %#}
     {#% include "multitenancy/admin/adminUser/includes/update_feature.html" %#}
 </section>
 

@@ -1,0 +1,14 @@
+include README.md
+include CONTRIBUTING.rst
+include SECURITY.md
+include AUTHORS
+include LICENSE*
+include requirements.txt
+include requirements-testing.txt
+
+recursive-include multitenancy/static/ *
+recursive-include multitenancy/locale *.po *.mo
+recursive-include multitenancy/templates *
+recursive-include multitenancy/fixtures *.json
+recursive-include docs/html *
+recursive-include demo *

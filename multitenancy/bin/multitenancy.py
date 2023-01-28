@@ -1,29 +1,70 @@
 #!/usr/bin/env python
+import fileinput
+import fnmatch
 import os
+import re
 import sys
+from argparse import ArgumentParser
+from difflib import unified_diff
 
-from django.core.management.templates import TemplateCommand
-from django.core.management.utils import get_random_secret_key
-
+from django.core.management import ManagementUtility
 
 CURRENT_PYTHON = sys.version_info[:2]
-REQUIRED_PYTHON = (3, 4)
+REQUIRED_PYTHON = (3, 7)
 
 if CURRENT_PYTHON < REQUIRED_PYTHON:
     sys.stderr.write(
-        "This version of Multitenancy requires Python {}.{} or above - you are running {}.{}\n".format(*(REQUIRED_PYTHON + CURRENT_PYTHON))  # noqa
+        "This version of dajgno-Multitenacy requires Python {}.{} or above - you are running {}.{}\n".format(
+            *(REQUIRED_PYTHON + CURRENT_PYTHON)
+        )
     )
     sys.exit(1)
 
 
-class CreateProject(TemplateCommand):
-    """
-    Based on django.core.management.startproject
-    """
-    help = "Creates the directory structure for a new Multitenancy project."
-    missing_args_message = "You must provide a project name."
+def pluralize(value, arg="s"):
+    return "" if value == 1 else arg
+
+
+class Command:
+    description = None
+
+    def create_parser(self, command_name=None):
+        if command_name is None:
+            prog = None
+        else:
+            # hack the prog name as reported to ArgumentParser to include the command
+            prog = "%s %s" % (prog_name(), command_name)
+
+        parser = ArgumentParser(
+            description=getattr(self, "description", None), add_help=False, prog=prog
+        )
+        self.add_arguments(parser)
+        return parser
 
     def add_arguments(self, parser):
+        pass
+
+    def print_help(self, command_name):
+        parser = self.create_parser(command_name=command_name)
+        parser.print_help()
+
+    def execute(self, argv):
+        parser = self.create_parser()
+        options = parser.parse_args(sys.argv[2:])
+        options_dict = vars(options)
+        self.run(**options_dict)
+
+
+class CreateProject(Command):
+    description = "Creates the directory structure for a new Multitenancy project."
+
+    def add_arguments(self, parser):
+        parser.add_argument("project_name", help="Name for your Multitenancy project")
+        parser.add_argument(
+            "dest_dir",
+            nargs="?",
+            help="Destination directory inside which to create the project",
+        )
         parser.add_argument(
             '--sitename',
             help='Human readable name of your organisation or brand, e.g. "Mega Corp Inc."'
@@ -44,97 +85,64 @@ class CreateProject(TemplateCommand):
             '--port',
             help='The port for your database'
         )
-        super().add_arguments(parser)
 
-    def handle(self, **options):
-        # pop standard args
-        project_name = options.pop('name')
-        target = options.pop('directory')
-
+    def run(self, project_name=None, dest_dir=None):
         # Make sure given name is not already in use by another python package/module.
         try:
             __import__(project_name)
         except ImportError:
             pass
         else:
-            sys.exit("'%s' conflicts with the name of an existing "
-                     "Python module and cannot be used as a project "
-                     "name. Please try another name." % project_name)
+            sys.exit(
+                "'%s' conflicts with the name of an existing "
+                "Python module and cannot be used as a project "
+                "name. Please try another name." % project_name
+            )
 
-        # Create a random SECRET_KEY to put it in the main settings.
-        options['secret_key'] = get_random_secret_key()
+        print(  # noqa
+            "Creating a Multitenancy project called %(project_name)s"
+            % {"project_name": project_name}
+        )  # noqa
 
-        # Handle custom template logic
+        # Create the project from the Wagtail template using startapp
+
+        # First find the path to Wagtail
         import multitenancy
-        tenants_path = os.path.dirname(multitenancy.__file__)
-        
-        template_path = os.path.join(
-            os.path.join(tenants_path, 'project_template'),
-            options['template']
-        )
 
-        # Check if provided template is built-in to coderedcms,
-        # otherwise, do not change it.
-        if os.path.isdir(template_path):
-            options['template'] = template_path
+        multitenancy_path = os.path.dirname(multitenancy.__file__)
+        template_path = os.path.join(multitenancy_path, "project_template")
 
-        # Treat these files as Django templates to render the boilerplate.
-        options['extensions'] = ['py', 'md', 'txt']
-        options['files'] = ['Dockerfile']
+        # Call django-admin startproject
+        utility_args = [
+            "django-admin",
+            "startproject",
+            "--template=" + template_path,
+            "--ext=html,rst,txt,md,py",
+            "--name=Dockerfile",
+            project_name,
+        ]
 
-        # Set options
-        message = "Creating a Multitenancy project called %(project_name)s"
+        if dest_dir:
+            utility_args.append(dest_dir)
 
-        if options.get('sitename'):
-            message += " for %(sitename)s"
-        else:
-            options['sitename'] = project_name
+        utility = ManagementUtility(utility_args)
+        utility.execute()
 
-        if options.get('domain'):
-            message += " (%(domain)s)"
-            # Stip protocol out of domain if it is present.
-            options['domain'] = options['domain'].split('://')[-1]
-            # Figure out www logic.
-            if options['domain'].startswith('www.'):
-                options['domain_nowww'] = options['domain'].split('www.')[-1]
-            else:
-                options['domain_nowww'] = options['domain']
-        else:
-            options['domain'] = 'localhost'
-            options['domain_nowww'] = options['domain']
+        print(  # noqa
+            "Success! %(project_name)s has been created"
+            % {"project_name": project_name}
+        )  # noqa
 
-        # Add additional custom options to the context.
-        options['multitenancy_release'] = multitenancy.release
 
-        # Print a friendly message
-        print(message % {
-            'project_name': project_name,
-            'sitename': options.get('sitename'),
-            'domain': options.get('domain'),
-            'database': options.get('database'),
-            'password': options.get('password'),
-            'port': options.get('port'),
-        })
 
-        # Run command
-        super().handle('project', project_name, target, **options)
 
-        # Be a friend once again.
-        print("Success! %(project_name)s has been created" % {'project_name': project_name})
 
-        nextsteps = """
-Next steps:
-    1. cd %(directory)s/
-    2. python manage.py migrate_schemas
-    3. python manage.py createsuperuser
-    4. python manage.py runserver
-    5. Go to http://localhost:8000/admin/ and start editing!
-"""
-        print(nextsteps % {'directory': target if target else project_name})
+
 
 
 COMMANDS = {
-    'start': CreateProject(),
+    "start": CreateProject(),
+    
 }
 
 
@@ -143,10 +151,12 @@ def prog_name():
 
 
 def help_index():
-    print("Type '%s help <subcommand>' for help on a specific subcommand.\n" % prog_name())  # NOQA
+    print(  # noqa
+        "Type '%s help <subcommand>' for help on a specific subcommand.\n" % prog_name()
+    )  # NOQA
     print("Available subcommands:\n")  # NOQA
     for name, cmd in sorted(COMMANDS.items()):
-        print("    %s%s" % (name.ljust(20), cmd.help))  # NOQA
+        print("    %s%s" % (name.ljust(20), cmd.description))  # NOQA
 
 
 def unknown_command(command):
@@ -162,7 +172,7 @@ def main():
         help_index()
         return
 
-    if command_name == 'help':
+    if command_name == "help":
         try:
             help_command_name = sys.argv[2]
         except IndexError:
@@ -175,7 +185,7 @@ def main():
             unknown_command(help_command_name)
             return
 
-        command.print_help(prog_name(), help_command_name)
+        command.print_help(help_command_name)
         return
 
     try:
@@ -184,7 +194,7 @@ def main():
         unknown_command(command_name)
         return
 
-    command.run_from_argv(sys.argv)
+    command.execute(sys.argv)
 
 
 if __name__ == "__main__":

@@ -22,15 +22,12 @@ class TenantManager(models.Manager):
         lookups = Q(name__icontains=query ) | Q(id__exact=query) | Q(type__iexact=query)
         return Tenant.objects.filter(lookups)
     
-    def filter_by_plan(self):
-        pass
+    def filter_by_plan(self, plan):
+        filter = Tenant.objects.filter(type=plan)
+        return filter
 
     def active(self):
         return Tenant.objects.filter(subscription__is_active=True)
-
-    def get_null_subsriptions(self):
-        null_subsriptions = Tenant.objects.filter(subscription=None)
-        return null_subsriptions
 
     
 
