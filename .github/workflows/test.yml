@@ -40,7 +40,8 @@ jobs:
     - name: Run tests
       run: |
         export DATABASE_PASSWORD="testing"
-        coverage run --source multitenancy/test manage.py test
+        cd multitenancy/test
+        coverage run manage.py test
   django_compatibility:
     name:  Django compatibility ${{ matrix.django-version}} / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
@@ -80,5 +81,6 @@ jobs:
     - name: Run tests
       run: |
         export DATABASE_PASSWORD="testing"
-        coverage run --source multitenancy/test manage.py test
+        cd multitenancy/test
+        coverage run manage.py test
     
