@@ -1,4 +1,4 @@
-name: Python application
+name: Django Multitenancy CI
 
 on:
   push:
