@@ -1,9 +1,10 @@
 name: code
 
 on:
-  pull_request:
   push:
-    branches: master
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   postgres_compatibility:
@@ -39,7 +40,7 @@ jobs:
     - name: Run tests
       run: |
         export DATABASE_PASSWORD="testing"
-        ./run_tests.sh
+        coverage run ./multitenancy/test/manage.py test
   django_compatibility:
     name:  Django compatibility ${{ matrix.django-version}} / Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
