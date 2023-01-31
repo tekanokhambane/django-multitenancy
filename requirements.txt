@@ -1,6 +1,7 @@
 oauthlib
 requests_oauthlib
 unidecode
+django==3.2
 django-cogwheels
 django-polymorphic==3.1.0
 django-countries==7.3.2
