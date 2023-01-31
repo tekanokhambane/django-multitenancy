@@ -33,15 +33,11 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cp -r multitenancy/test/* .
         python -m venv venv
         source venv/bin/activate
         pip install coverage
         pip install -r requirements.txt
-        cp -r multitenancy/test/* .
-
-    - name: Database setup
-      run: |
-        python manage.py migrate --noinput
 
     - name: Run tests
       run: |
