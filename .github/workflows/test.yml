@@ -8,6 +8,7 @@ on:
 
 env:
   DATABASE_URL: postgres://postgres@localhost/test
+  CI: false
 
 jobs:
   build:
