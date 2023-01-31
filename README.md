@@ -1,6 +1,16 @@
 # django-multitenancy
 A client portal in django  for managing multi tenant saas apps using django tenants and django tenants users.
 The aim of this project is to speed up the process of launch your saas app.
+<p align="center">
+    <br>
+    <a href="https://github.com/django-multitenancy/django-multitenancy/actions">
+        <img src="https://github.com/django-multitenancy/django-multitenancy/workflows/Multitenancy%20CI/badge.svg" alt="Build Status" />
+    </a>
+    <a href="https://opensource.org/licenses/BSD-3-Clause">
+        <img src="https://img.shields.io/badge/license-BSD-blue.svg" alt="License" />
+    </a>
+</p>
+
 
 #### :warning: This package is still in its alpha stage and is not ready for production
 
