@@ -1,4 +1,4 @@
-name: Django CI
+name: Python application
 
 on:
   push:
@@ -6,49 +6,35 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  DATABASE_URL: postgres://postgres@localhost/test
-  CI: false
-
 jobs:
   build:
-    runs-on: ubuntu-20.04
+
+    runs-on: ubuntu-latest
 
     services:
       postgres:
         image: postgres:12
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: testing
-          POSTGRES_DB: testing_project
-        ports: [5432]
-
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Set up Python 3.x
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.x
-
+        python-version: 3.9
     - name: Install dependencies
       run: |
-        
+        python -m pip install --upgrade pip
         pip install coverage
         pip install -r requirements.txt
-
     - name: Run tests
       run: |
         cp -r multitenancy/test/* .
-        ls
-        ls -la
-        echo "Environment variables:"
-        env
-        echo "Error Output:"
-        cat error.log || echo "error.log not found, displaying standard error instead:"
-        cat stderr.log
         coverage run manage.py test
-
-
-
