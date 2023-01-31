@@ -41,6 +41,11 @@ jobs:
       run: |
         cp -r multitenancy/test/* .
         ls
+        ls -la
+        echo "Environment variables:"
+        env
+        echo "Error Output:"
+        cat error.log
         coverage run manage.py test
 
 
