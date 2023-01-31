@@ -31,7 +31,7 @@ channels==4.0.0
 django-select2==7.10.1
 django-compressor==3.1
 django-redis==5.2.0
-django-filters==2.4.0
+django-filter==2.4.0
 # django_sendmail_backend enables sending email from your web host server.
 # Remove this if using a different email backend.
 django_sendmail_backend
