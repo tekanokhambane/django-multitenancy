@@ -33,7 +33,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cp -r multitenancy/test/* .
+        
         python -m venv venv
         source venv/bin/activate
         pip install coverage
@@ -41,6 +41,7 @@ jobs:
 
     - name: Run tests
       run: |
+        cp -r multitenancy/test/* .
         coverage run manage.py test
 
 
