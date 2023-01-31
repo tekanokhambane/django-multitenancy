@@ -48,7 +48,7 @@ TENANT_TYPES = {
             'multitenancy.subscriptions.apps.SubscriptionsConfig',
             'multitenancy.apps',
             'multitenancy.admin',
-            'multitenancy.group.apps.GroupConfig',
+            #'multitenancy.group.apps.GroupConfig',
             'multitenancy.profiles',
             'multitenancy.settings',
 
@@ -68,7 +68,7 @@ TENANT_TYPES = {
             'widget_tweaks',
             'django_extensions',
             'guardian',
-            'groups_manager',
+            #'groups_manager',
             'account',
             'pinax.teams',
             'pinax.invitations',
