@@ -1,9 +1,11 @@
 from django.views.generic import TemplateView, ListView, DeleteView, View, CreateView, UpdateView, DetailView
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.http import Http404
+from django.template.loader import get_template
+from django.http import Http404, HttpResponseNotFound
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext as _
 from multitenancy.admin.decorators import allowed_users
+
 
 
 
@@ -14,7 +16,9 @@ class AdminView(UserPassesTestMixin, View):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class AdminCreateView(UserPassesTestMixin, CreateView):
     redirect_field_name = 'next'
@@ -22,7 +26,9 @@ class AdminCreateView(UserPassesTestMixin, CreateView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class AdminDetailView(UserPassesTestMixin, DetailView):
     redirect_field_name = 'next'
@@ -30,7 +36,9 @@ class AdminDetailView(UserPassesTestMixin, DetailView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
     
 
@@ -41,7 +49,9 @@ class AdminUpdateView(UserPassesTestMixin, UpdateView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
     
     def get(self, request, *args, **kwargs):
         self.object = None
@@ -55,7 +65,9 @@ class AdminDeleteView(UserPassesTestMixin, DeleteView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -69,7 +81,9 @@ class AdminListView(UserPassesTestMixin, ListView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
     
 
 
@@ -79,7 +93,9 @@ class AdminTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class StaffCreateView(UserPassesTestMixin, CreateView):
     redirect_field_name = 'next'
@@ -87,7 +103,9 @@ class StaffCreateView(UserPassesTestMixin, CreateView):
         return self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class StaffUpdateView(UserPassesTestMixin, UpdateView):
@@ -96,7 +114,9 @@ class StaffUpdateView(UserPassesTestMixin, UpdateView):
         return  self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class StaffDeleteView(UserPassesTestMixin, DeleteView):
@@ -105,7 +125,9 @@ class StaffDeleteView(UserPassesTestMixin, DeleteView):
         return  self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class StaffListView(UserPassesTestMixin, ListView):
@@ -114,7 +136,9 @@ class StaffListView(UserPassesTestMixin, ListView):
         return  self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class StaffTemplateView(UserPassesTestMixin, TemplateView):
     redirect_field_name = 'next'
@@ -122,7 +146,9 @@ class StaffTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class TeamDetailView(UserPassesTestMixin, DetailView):
@@ -131,7 +157,9 @@ class TeamDetailView(UserPassesTestMixin, DetailView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class TeamCreateView(UserPassesTestMixin, CreateView):
@@ -140,7 +168,9 @@ class TeamCreateView(UserPassesTestMixin, CreateView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class TeamUpdateView(UserPassesTestMixin, UpdateView):
@@ -149,7 +179,9 @@ class TeamUpdateView(UserPassesTestMixin, UpdateView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class TeamDeleteView(UserPassesTestMixin, DeleteView):
@@ -158,7 +190,9 @@ class TeamDeleteView(UserPassesTestMixin, DeleteView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 
 class TeamListView(UserPassesTestMixin, ListView):
@@ -167,7 +201,9 @@ class TeamListView(UserPassesTestMixin, ListView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class TeamTemplateView(UserPassesTestMixin, TemplateView):
     redirect_field_name = 'next'
@@ -175,7 +211,9 @@ class TeamTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.type == 'Staff' or self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
     
 
 class CustomerView(UserPassesTestMixin, View):
@@ -184,7 +222,9 @@ class CustomerView(UserPassesTestMixin, View):
         return self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class CustomerTemplateView(UserPassesTestMixin, TemplateView):
     redirect_field_name = 'next'
@@ -192,7 +232,9 @@ class CustomerTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
     
 class CustomerListView(UserPassesTestMixin, ListView):
     redirect_field_name = 'next'
@@ -200,7 +242,9 @@ class CustomerListView(UserPassesTestMixin, ListView):
         return  self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
 
 class CustomerDetailView(UserPassesTestMixin, DetailView):
     redirect_field_name = 'next'
@@ -208,4 +252,6 @@ class CustomerDetailView(UserPassesTestMixin, DetailView):
         return self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
-        raise Http404
+        template = get_template('404.html')
+        html = template.render()
+        return HttpResponseNotFound(html)
