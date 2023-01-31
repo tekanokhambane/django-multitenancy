@@ -40,7 +40,7 @@ jobs:
     - name: Run tests
       run: |
         export DATABASE_PASSWORD="testing"
-        cp multitenancy/test/* .
+        cp -r multitenancy/test/* .
         coverage run manage.py test
         echo "Current directory contents:"
         ls -la
@@ -87,7 +87,7 @@ jobs:
     - name: Run tests
       run: |
         export DATABASE_PASSWORD="testing"
-        cp multitenancy/test/* .
+        cp -r multitenancy/test/* .
         coverage run manage.py test
         echo "Current directory contents:"
         ls -la
