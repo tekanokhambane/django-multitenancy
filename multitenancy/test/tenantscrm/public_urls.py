@@ -22,7 +22,7 @@ urlpatterns = [
    #url(r'', include(customers_urls)),
    #path('accounts/', include('allauth.urls')),
    url(r"^admin/account/", include("account.urls")),
-   url(r'^admin/settings/groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
+   # url(r'^admin/settings/groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
     
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 
