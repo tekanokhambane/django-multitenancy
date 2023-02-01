@@ -39,10 +39,5 @@ jobs:
         cp -r multitenancy/test/* .
         python manage.py makemigrations
         
-    - name: Run migrations
-      run: | 
-        
-        python manage.py makemigrations
-        python manage.py migrate
     - name: Run tests
       run: coverage run manage.py test
