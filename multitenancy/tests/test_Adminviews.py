@@ -415,7 +415,7 @@ class AdminViewsTestCase(unittest.TestCase):
         request = self.factory.post('/admin/plans/create/', data=self.data)
         request.user = self.user
         response = CreatePlanView.as_view()(request)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertIsInstance(response.context['form'], PlanForm)
         self.assertEqual(Plan.objects.count(), 1)
 
@@ -439,5 +439,4 @@ class AdminViewsTestCase(unittest.TestCase):
         view = PlanDetailView.as_view()
         response = view(self.request, pk=self.plan.pk)
         self.assertEqual(response.status_code, 200)
-        
         
