@@ -7,15 +7,17 @@ from multitenancy.admin.views.adminViews import (
     CreateCustomerView,
     CreatePlanView,
     CustomerList,
+    PlanDetailView,
     PlanListView,
     SettingsIndexView,
     SubscriptionList, 
     UpdateCustomerView,
     DeleteCustomerView
     )
+from multitenancy.subscriptions.models import Plan
 from multitenancy.users.models import Admin, Customer, TenantUser
 from  multitenancy.admin.decorators import allowed_users
-from multitenancy.admin.forms import CustomerForm, CustomerUpdateForm
+from multitenancy.admin.forms import CustomerForm, CustomerUpdateForm, PlanForm
 from multitenancy.admin import urls
 
 
@@ -388,26 +390,54 @@ class AdminViewsTestCase(unittest.TestCase):
             )
         
         self.client.force_login(user=self.user)
-        request = self.factory.get(reverse_lazy('create_plan'))
+        request = self.factory.get('/admin/settings/plans/create/')
         request.user = self.user
         response = CreatePlanView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         
-
                                               
-    # def test_post_create_customer_view(self):
-    #     self.user = TenantUser.objects.get(
-    #         username='admin', 
-    #         password="password", 
-    #         first_name='abc123', 
-    #         last_name='khamban', 
-    #         email='abc123@email.com', 
-    #         type='Admin',
-    #         is_active=True
-    #         )
-    #     self.client.force_login(user=self.user)
-    #     request = self.factory.post('/admin/customers/create/', data=self.customer_data)
-    #     request.user = self.user
-    #     response = CreateCustomerView.as_view()(request)
-    #     self.assertEqual(response.status_code, 302)
-    #     self.assertEqual(Customer.objects.count(), 3)
+    def test_post_create_plan_view(self):
+        self.user = TenantUser.objects.get(
+            username='admin', 
+            password="password", 
+            first_name='abc123', 
+            last_name='khamban', 
+            email='abc123@email.com', 
+            type='Admin',
+            is_active=True
+            )
+        self.client.force_login(user=self.user)
+        self.data= {
+            "name":"basic",
+            "description":"basic plan",
+            "price":78,
+        }
+        request = self.factory.post('/admin/plans/create/', data=self.data)
+        request.user = self.user
+        response = CreatePlanView.as_view()(request)
+        self.assertEqual(response.status_code, 302)
+        self.assertIsInstance(response.context['form'], PlanForm)
+        self.assertEqual(Plan.objects.count(), 1)
+
+    
+    def test_plan_detail_view(self):
+        self.user = TenantUser.objects.get(
+            username='admin', 
+            password="password", 
+            first_name='abc123', 
+            last_name='khamban', 
+            email='abc123@email.com', 
+            type='Admin',
+            is_active=True
+            )
+        self.client.force_login(user=self.user)
+        self.plan = Plan.objects.get(
+            name='basic',
+        )
+        self.request = self.factory.get(f'/settings/plans/{self.plan}/')
+        self.request.user = self.user
+        view = PlanDetailView.as_view()
+        response = view(self.request, pk=self.plan.pk)
+        self.assertEqual(response.status_code, 200)
+        
+        
