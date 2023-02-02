@@ -1,6 +1,8 @@
 import datetime
 from django.db import models
+from calendar import monthrange
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify 
 from multitenancy.users.models import Customer
 from django_tenants.utils import get_tenant_type_choices
@@ -18,6 +20,9 @@ class ProductFeature(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    class Meta:
+        ordering= ('-pk',)
 
 
 class Plan(models.Model):
@@ -27,6 +32,9 @@ class Plan(models.Model):
     features = models.ManyToManyField(ProductFeature)
     price = models.DecimalField(default=75,  # type: ignore
                                 max_digits=12, verbose_name="Price", decimal_places=2)
+    
+    class Meta:
+        ordering = ('-price',)
 
     def __str__(self):
         return self.name
@@ -72,8 +80,21 @@ class ProductType(models.Model):
     objects = ProductTypeManager()
 
 
-class SubscriptionManager(models.Manager):
-    pass
+class SubscriptionQueryset(models.QuerySet):
+    def get_product_type(self, name):
+        return self.filter(product_type__name=name)
+
+    def get_status(self, query):
+        return self.filter(status__contains=query)
+
+    def get_active(self):
+        return self.filter(status__contains="active")
+    
+    def search(self):
+        pass
+    
+    
+
 
 class Subscription(models.Model):
     class Cycles(models.TextChoices):
@@ -94,7 +115,26 @@ class Subscription(models.Model):
     product_type = models.ForeignKey(ProductType,null=True, on_delete=models.CASCADE, related_name="subscriptions")
     reason = models.TextField(help_text="Reason for state change, if applicable.")
     status = models.CharField(max_length=10, choices=[('active', 'Active'),('inactive', 'Inactive') ,('cancelled', 'Cancelled'), ('expired', 'Expired')], default="inactive")
-    objects = SubscriptionManager()
+    objects = SubscriptionQueryset().as_manager()
+
+    
+    class Meta:
+        verbose_name = _("Subscription")
+        ordering = ("-last_updated",)
+
+    
+    @classmethod
+    def get_active_subscriptions_data(cls):
+        today = timezone.now().date()
+        first_day_of_month = today.replace(day=1)
+        last_day_of_month = today.replace(day=monthrange(today.year, today.month)[1])
+        data = []
+        for i in range((last_day_of_month - first_day_of_month).days + 1):
+            date = first_day_of_month + datetime.timedelta(days=i)
+            count_active = cls.objects.filter(status="active", end_date__gte=date).count()
+            count_inactive = cls.objects.filter(status="inactive", end_date__gte=date).count()
+            data.append((date.strftime("%Y-%m-%d"), count_active, count_inactive))
+        return data
     
 
     def start_subscription(self, cycle):
@@ -166,6 +206,8 @@ class Subscription(models.Model):
     def update_duration(self, duration):
         self.subscription_duration = duration
         self.save()
+
+
 
     @property
     def is_active(self):

@@ -1,3 +1,4 @@
+import json
 from django.urls.base import reverse, reverse_lazy
 import sweetify
 # import environ
@@ -59,6 +60,18 @@ class AdminIndexView(LoginRequiredMixin ,AdminTemplateView):
         context['users'] = TenantUser.objects.all()
         ProductType.objects.create_defaults()
         context['staff'] = Profile.objects.filter()
+        active_date = []
+        active_count = []
+        inactive_count = []
+        for date in Subscription.get_active_subscriptions_data():
+            active_date.append(date[0])
+            active_count.append(date[1])
+            inactive_count.append(date[2])
+
+        context['active_date'] = json.dumps(active_date)
+        context['active_count'] = json.dumps(active_count )
+        context['inactive_count'] = json.dumps(inactive_count)
+        
         context['customers'] = Customer.objects.filter()
         context['users'] = TenantUser.objects.all()
         context['active_tickets'] = Ticket.objects.select_related('queue').exclude(
@@ -72,21 +85,21 @@ class CreateCustomerView(LoginRequiredMixin ,AdminCreateView):
     model = Customer
     form_class = CustomerForm
     # success_url = '/admin/customers/'
-    success_url = reverse_lazy('customer_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('customer_list', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/create_customer.html'
 
 
 class UpdateCustomerView(LoginRequiredMixin ,AdminUpdateView):
     model = Customer
     form_class = CustomerUpdateForm
-    success_url = reverse_lazy('customer_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('customer_list', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_customer.html'
 
 
 class DeleteCustomerView(LoginRequiredMixin ,AdminDeleteView):
     model = Customer
     template_name = "multitenancy/admin/adminUser/delete_customer.html"
-    success_url = reverse_lazy("customer_list", urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy("customer_list", urlconf="multitenancy.urls")
 
     def delete(self, request, *args, **kwargs):
         customer_id = self.kwargs['pk']
@@ -112,17 +125,17 @@ class TemplateListView(LoginRequiredMixin ,AdminTemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        queryset = TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
+        query = self.request.GET.get("q") 
+        queryset = Tenant.objects.filter(is_template=True).search(query=query)   # type: ignore
+        # queryset = TenantFilter(queryset=Tenant.objects.filter(is_template=True))   # type: ignore
 
         context['filter'] = queryset
         
         return context
-
-
-class CreateTemplateView(LoginRequiredMixin ,AdminCreateView):
+class CreateTemplateView(LoginRequiredMixin, AdminCreateView):
     model = Tenant
     form_class = TenantForm
-    success_url = reverse_lazy('tenant_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('template_list')
     template_name = 'multitenancy/admin/adminUser/create_template.html'
 
     def post(self, request, is_staff=True, *args, **kwargs):
@@ -149,10 +162,12 @@ class CreateTemplateView(LoginRequiredMixin ,AdminCreateView):
             domain = None
             tenant = None
             try:
+                subscription = Subscription.objects.create()
 
                 tenant = Tenant.objects.create(name=name,
                                                slug=tenant_slug,
                                                schema_name=schema_name,
+                                               subscription=subscription,
                                                owner=user,
                                                is_template=True,
                                                type=type)
@@ -172,29 +187,31 @@ class CreateTemplateView(LoginRequiredMixin ,AdminCreateView):
                 if tenant is not None:
                     # Flag is set to auto-drop the schema for the tenant
                     tenant.delete(True)
-                    raise Exception('Tenant already exists')
+                raise
                 return tenant_domain
         # return super().post(request, *args, **kwargs)
+
+
 
 
 class UpdateTemplateView(LoginRequiredMixin ,AdminUpdateView):
     model = Tenant
     form_class = TenantForm
-    success_url = reverse_lazy('template_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('template_list', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_template.html'
 
 
 class DeleteTenantView(LoginRequiredMixin ,AdminDeleteView):
     model = Tenant
     template_name = "multitenancy/admin/adminUser/delete_tenant.html"
-    success_url = reverse_lazy("template_list", urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy("template_list", urlconf="multitenancy.urls")
 
     def delete(self, request, *args, **kwargs):
         tenant_id = self.kwargs['pk']
 
         tenant = Tenant.objects.filter(id=tenant_id)
         tenant.delete()
-        return HttpResponseRedirect(reverse('tenant_list', urlconf="multitenancy.admin.urls"))
+        return HttpResponseRedirect(reverse('tenant_list', urlconf="multitenancy.urls"))
 
 
 
@@ -237,7 +254,7 @@ class PlanListView(LoginRequiredMixin ,AdminListView):
 class CreatePlanView(LoginRequiredMixin ,AdminCreateView):
     model = Plan
     form_class = PlanForm
-    success_url = reverse_lazy('plan_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('plan_list', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/create_plan.html'
 
 
@@ -294,14 +311,14 @@ class FeatureCreateView(LoginRequiredMixin, AdminView):
 class UpdatePlanView(LoginRequiredMixin, AdminUpdateView):
     model = Plan
     form_class = PlanForm
-    success_url = reverse_lazy('plan_list', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('plan_list', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_plan.html'
 
 
 class DeletePlanView(LoginRequiredMixin, AdminDeleteView):
     model = Plan
     template_name = "multitenancy/admin/adminUser/delete_plan.html"
-    success_url = reverse_lazy("plan_list", urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy("plan_list", urlconf="multitenancy.urls")
 
 
 class UserSubscriptionsListView(LoginRequiredMixin, AdminListView):
@@ -326,7 +343,7 @@ class UpdateLogoView(LoginRequiredMixin, AdminUpdateView):
 
     model = Logo
     form_class = LogoForm
-    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_logo.html'
 
     def get_object(self):
@@ -337,7 +354,7 @@ class GeneralInfoView(LoginRequiredMixin, AdminUpdateView):
 
     model = GeneralInfo
     form_class = GeneralInfoForm
-    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_info.html'
 
     def get_object(self):
@@ -348,7 +365,7 @@ class AddressView(LoginRequiredMixin, AdminUpdateView):
 
     model = Address
     form_class = AddressForm
-    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_address.html'
 
     def get_object(self):
@@ -358,7 +375,7 @@ class AdminSettingsView(LoginRequiredMixin, AdminUpdateView):
 
     model = AdminSettings
     form_class = AdminSettingsForm
-    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.admin.urls")
+    success_url = reverse_lazy('generalsettings_index', urlconf="multitenancy.urls")
     template_name = 'multitenancy/admin/adminUser/update_adminsettings.html'
 
     def get_object(self):
