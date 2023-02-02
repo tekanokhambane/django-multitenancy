@@ -32,10 +32,10 @@
 
                         <div class="card-tools">
                             <form method="get" id="filter-form" class="input-group input-group-md" style="width: 200px;">
-                                <input type="number" step="any" id="id_id" name="id" class="form-control float-right"
+                                <input type="text" step="any" name="q" class="form-control float-right"
                                     placeholder="Search tenant">
                                 <div class="input-group-append">
-                                    <button type="submit" id="" class="btn btn-default"><i class="fas fa-search"></i></button>
+                                    <button type="submit"  class="btn btn-default"><i class="fas fa-search"></i></button>
                                 </div>
                             <form />
                         </div>
@@ -57,7 +57,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for tenant in filter.qs%}
+                                {% for tenant in filter%}
                                 <tr>
                                     <td>{{tenant.id}}</td>
                                     <!-- <td>{{tenant.schema_name}}</td> -->
@@ -98,7 +98,7 @@
 <script>
     let filter = document.getElementById("filter-form")
     filter.addEventListener("submit", ()=>{
-        alert("submit")
+        
     })
     
 </script>

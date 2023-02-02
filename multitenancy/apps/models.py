@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models, transaction
+
 from django.db.models import Q
 from django_tenants.models import DomainMixin
 from datetime import datetime, timedelta
@@ -17,19 +18,32 @@ def get_types():
     items.pop(0) 
     return items
 
-class TenantManager(models.Manager):
-    def search(self, query):
-        lookups = Q(name__icontains=query ) | Q(id__exact=query) | Q(type__iexact=query)
-        return Tenant.objects.filter(lookups)
+class TenantQuerySet(models.QuerySet):
+    def search(self, query=None):
+        if query is None or query =="":
+            return self.all()
+        lookups = Q(name__icontains=query ) | Q(id__contains=query) | Q(type__iexact=query)| Q(owner__id__icontains=query)| Q(owner__email__icontains=query)| Q(owner__username__icontains=query)
+        return self.filter(lookups)
     
     def filter_by_plan(self, plan):
-        filter = Tenant.objects.filter(type=plan)
+        filter = self.filter(type=plan)
         return filter
 
     def active(self):
-        return Tenant.objects.filter(subscription__is_active=True)
+        return self.filter(subscription__is_active=True)
 
+class TenantManager(models.Manager):
+    def get_queryset(self):
+        return TenantQuerySet(self.model, using=self._db)
     
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
+    def filter_by_plan(self, plan):
+        return self.get_queryset().filter_by_plan(plan=plan)
+    
+    def active(self):
+        return self.get_queryset().active()
 
 class Tenant(TenantBase):
     id = models.AutoField(primary_key=True, auto_created=True)
@@ -134,9 +148,8 @@ class Tenant(TenantBase):
             self.subscription.get_product_type("tenant")
             self.save()
         
+    
 
-    def get_features(self):
-        pass
 
 
 class DomainManager(models.Manager):
