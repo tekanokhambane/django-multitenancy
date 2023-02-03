@@ -124,17 +124,27 @@ class Subscription(models.Model):
 
     
     @classmethod
-    def get_active_subscriptions_data(cls):
+    def get_active_inactive_subscriptions_data(cls):
         today = timezone.now().date()
         first_day_of_month = today.replace(day=1)
         last_day_of_month = today.replace(day=monthrange(today.year, today.month)[1])
         data = []
         for i in range((last_day_of_month - first_day_of_month).days + 1):
             date = first_day_of_month + datetime.timedelta(days=i)
-            count_active = cls.objects.filter(status="active", end_date__gte=date).count()
-            count_inactive = cls.objects.filter(status="inactive", end_date__gte=date).count()
-            data.append((date.strftime("%Y-%m-%d"), count_active, count_inactive))
+            if date <= today:
+                active_count = cls.objects.filter(status="active", end_date__gte=date).count()
+                inactive_count = cls.objects.filter(status="inactive", end_date__lte=date).count()
+                
+            else:
+                active_count = 0
+                inactive_count = 0
+            data.append((date.strftime("%Y-%m-%d"), active_count, inactive_count))
+            # active_data[date.strftime("%Y-%m-%d")] = active_count
+            # inactive_data[date.strftime("%Y-%m-%d")] = inactive_count
         return data
+
+
+
     
 
     def start_subscription(self, cycle):

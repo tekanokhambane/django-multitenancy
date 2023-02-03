@@ -63,7 +63,8 @@ class AdminIndexView(LoginRequiredMixin ,AdminTemplateView):
         active_date = []
         active_count = []
         inactive_count = []
-        for date in Subscription.get_active_subscriptions_data():
+        print(Subscription.get_active_inactive_subscriptions_data())
+        for date in Subscription.get_active_inactive_subscriptions_data():
             active_date.append(date[0])
             active_count.append(date[1])
             inactive_count.append(date[2])
