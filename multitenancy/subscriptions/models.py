@@ -106,7 +106,7 @@ class Subscription(models.Model):
     cycle = models.CharField(max_length=50, choices=Cycles.choices, default=Cycles.MONTHLY)
     subscription_duration = models.IntegerField(default=0)
     start_date = models.DateField(auto_now_add=True)
-    created_date = models.DateField(auto_now_add=True)
+    created_date = models.DateField(auto_now_add=True,null=True)
     end_date = models.DateField(auto_now_add=True)
     renewal_date = models.DateField(null=True)
     reference = models.TextField(max_length=100, help_text="Free text field for user references")
