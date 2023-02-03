@@ -106,6 +106,7 @@ class Subscription(models.Model):
     cycle = models.CharField(max_length=50, choices=Cycles.choices, default=Cycles.MONTHLY)
     subscription_duration = models.IntegerField(default=0)
     start_date = models.DateField(auto_now_add=True)
+    created_date = models.DateField(auto_now_add=True)
     end_date = models.DateField(auto_now_add=True)
     renewal_date = models.DateField(null=True)
     reference = models.TextField(max_length=100, help_text="Free text field for user references")
@@ -132,8 +133,8 @@ class Subscription(models.Model):
         for i in range((last_day_of_month - first_day_of_month).days + 1):
             date = first_day_of_month + datetime.timedelta(days=i)
             if date <= today:
-                active_count = cls.objects.filter(status="active", end_date__gte=date).count()
-                inactive_count = cls.objects.filter(status="inactive", end_date__lte=date).count()
+                active_count = cls.objects.filter(status="active", created_date__lte=date).count()
+                inactive_count = cls.objects.filter(status="inactive", created_date__lte=date).count()
                 
             else:
                 active_count = 0
