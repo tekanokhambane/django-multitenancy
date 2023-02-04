@@ -10,7 +10,7 @@ from multitenancy.admin.views.adminViews import (
     PlanDetailView,
     PlanListView,
     SettingsIndexView,
-    SubscriptionList, 
+    TenantListView, 
     UpdateCustomerView,
     DeleteCustomerView
     )
@@ -25,10 +25,7 @@ from multitenancy.admin import urls
 class AdminViewsTestCase(unittest.TestCase):
 
     def setUp(self):
-        self.factory = RequestFactory                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ()
-       
-        
-        
+        self.factory = RequestFactory()
         self.client = Client()
         self.customer_data = {
             'first_name': 'customer',
@@ -253,9 +250,9 @@ class AdminViewsTestCase(unittest.TestCase):
             )
         
         self.client.force_login(user=self.user)
-        request = self.factory.get('/admin/subscriptions/')
+        request = self.factory.get('/admin/tenants/')
         request.user = self.user
-        response = SubscriptionList.as_view()(request)
+        response = TenantListView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.client.session.get('_auth_user_id'))
         self.assertIn('_auth_user_id', self.client.session)
@@ -268,9 +265,9 @@ class AdminViewsTestCase(unittest.TestCase):
             )
         
         self.client.force_login(user=self.user)
-        request = self.factory.get('/admin/subscriptions/')
+        request = self.factory.get('/admin/tenants/')
         request.user = self.user
-        response = SubscriptionList.as_view()(request)
+        response = TenantListView.as_view()(request)
         
         self.assertEqual(response.status_code, 404)
 
