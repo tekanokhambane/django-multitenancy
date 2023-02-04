@@ -59,6 +59,9 @@ TENANT_TYPES = {
             'multitenancy.group.apps.GroupConfig',
             'multitenancy.profiles',
             'multitenancy.subscriptions',
+            'multitenancy.billing',
+            'multitenancy.order',
+            'multitenancy.address',
             'multitenancy.settings',
 
             # 3rd party apps
@@ -96,7 +99,62 @@ TENANT_TYPES = {
                   ],
         "URLCONF": "{{ project_name }}.public_urls", # url for the public type here
     },
-    
+    "basic": {
+        "APPS": [
+            'tenant_users.permissions',
+
+            'rest_framework',
+
+            'storages',
+            # Dango
+            'django.contrib.sites',
+            'django.contrib.auth',
+            'django.contrib.messages',
+            'django.contrib.sitemaps',
+            'django.contrib.staticfiles',
+            'django.contrib.contenttypes',
+                 # type1 apps here
+                 ],
+        "URLCONF": "{{project_name}}.urls_basic",
+    },
+    "premium": {
+        "APPS": [
+                'rest_framework',
+                'tenant_users.permissions',
+
+
+                
+
+                # Dango
+                'django.contrib.sites',
+                'django.contrib.auth',
+                'django.contrib.messages',
+                'django.contrib.sitemaps',
+                'django.contrib.staticfiles',
+                'django.contrib.contenttypes',
+                 # type1 apps here
+                 ],
+        "URLCONF": "{{project_name}}.urls_premium",
+    },
+    "business": {
+        "APPS": [
+                'rest_framework',
+                'tenant_users.permissions',
+
+
+
+
+                # Dango
+                'django.contrib.sites',
+                'django.contrib.auth',
+                'django.contrib.messages',
+                'django.contrib.sitemaps',
+                'django.contrib.staticfiles',
+                'django.contrib.contenttypes',
+                 # type1 apps here
+                 ],
+        "URLCONF": "{{project_name}}.urls_business",
+    }
 }
 
 
