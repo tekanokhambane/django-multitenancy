@@ -4,14 +4,14 @@
 {% block page_title %}Manage User Subscriptions{% endblock page_title %}
 {%block breadcrumbs%}
 <li class="breadcrumb-item " ><a href="{% url 'settings_index' %}">Settings</a></li>
-<li class="breadcrumb-item active">User Subscriptions</li>
+<li class="breadcrumb-item active">Subscriptions</li>
 {% endblock%}
 
 
 {% block main_content %}
 
 <!-- Main content -->
-<section class="content">
+<section class="content" style="padding-bottom: 100px;">
     <div class="container-fluid">
         <!-- /.row -->
         
@@ -37,18 +37,35 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>User</th>
-                                    <th>Subscriptions</th>
+                                    <th>Type</th>
+                                    <th>Duration</th>
                                     
-                                    <th>Action</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Renewal Date</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for subscription in filter.qs%}
+                                {% for subscription in object_list%}
                                 <tr>
                                     <td>{{subscription.id}}</td>
-                                    <td>{{subscription.user}}</td>
-                                    <td>{{subscription.subscriptions.count}}</td>
+                                    <td>{{subscription.product_type.name}}</td>
+                                    <td>{{subscription.subscription_duration}} 
+                                        {%if subscription.cycle == "monthly"%}
+                                        days
+                                        {% elif subscription.cycle == "weekly" %}
+                                        days
+                                        {% elif subscription.cycle == "quartely" %}
+                                        months
+                                        {% elif subscription.cycle == "annually" %}
+                                        year/s
+                                        {%endif%}
+                                    </td>
+                                    <td>{{subscription.start_date}} </td>
+                                    <td>{{subscription.end_date}} </td>
+                                    <td>{{subscription.renewal_date}} </td>
+                                    <td>{{subscription.status}} </td>
                                     
                                     
                                     <th> <a name="" id="" class="btn btn-success text-light" href="{% url 'update_template' subscription.pk %}"
