@@ -63,7 +63,6 @@ class AdminIndexView(LoginRequiredMixin ,AdminTemplateView):
         active_date = []
         active_count = []
         inactive_count = []
-        print(Subscription.get_active_inactive_subscriptions_data())
         for date in Subscription.get_active_inactive_subscriptions_data():
             active_date.append(date[0])
             active_count.append(date[1])
@@ -216,7 +215,7 @@ class DeleteTenantView(LoginRequiredMixin ,AdminDeleteView):
 
 
 
-class SubscriptionList(LoginRequiredMixin ,AdminTemplateView):
+class TenantListView(LoginRequiredMixin ,AdminTemplateView):
     template_name = "multitenancy/admin/adminUser/subscription_list.html"
 
     def get_context_data(self, *args, **kwargs):
