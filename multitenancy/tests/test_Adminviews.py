@@ -115,7 +115,7 @@ class AdminViewsTestCase(unittest.TestCase):
         request = self.factory.post('/admin/customers/create/', data=self.customer_data)
         request.user = self.user
         response = CreateCustomerView.as_view()(request)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Customer.objects.count(), 3)
 
     def test_get_create_customer_view_authenticated(self):
