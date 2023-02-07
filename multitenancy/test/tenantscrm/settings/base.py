@@ -48,7 +48,9 @@ TENANT_TYPES = {
             'multitenancy.subscriptions.apps.SubscriptionsConfig',
             'multitenancy.apps',
             'multitenancy.admin',
-            #'multitenancy.group.apps.GroupConfig',
+            'multitenancy.billing',
+            'multitenancy.order',
+            'multitenancy.address',
             'multitenancy.profiles',
             'multitenancy.settings',
 
