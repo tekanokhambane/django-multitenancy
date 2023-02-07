@@ -126,6 +126,9 @@ class Subscription(models.Model):
     
     @classmethod
     def get_active_inactive_subscriptions_data(cls):
+        """
+        Create a dataset for total active and inactive subscriptions, the data is updated daily and the data can be displayed on a dashboard graph
+        """
         today = timezone.now().date()
         first_day_of_month = today.replace(day=1)
         last_day_of_month = today.replace(day=monthrange(today.year, today.month)[1])

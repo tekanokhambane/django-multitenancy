@@ -19,6 +19,8 @@
         <link rel="stylesheet" href="{% static "plugins/fontawesome/css/all.min.css" %}">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+
         <link rel="stylesheet" href="{% static "plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css"%}">
         <!-- Theme style -->
         <link rel="stylesheet" href="{% static "dist/css/adminlte.min.css" %}">
@@ -130,6 +132,7 @@
      
      <!-- Bootstrap 4 -->
      <script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
      <!-- SweetAlert2 -->
      {% load sweetify %}
     {% sweetify %}
@@ -137,7 +140,7 @@
      <script src="{% static "plugins/sweetalert2/sweetalert2.all.min.js" %}"></script>
 
          
-         <!-- AdminLTE for demo purposes -->
+         
             {% block custom_js %}
             {% endblock custom_js %}
     </body>

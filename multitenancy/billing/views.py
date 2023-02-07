@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+from multitenancy.admin.views.baseViews import AdminTemplateView
+
+
+class BillingIndexView(AdminTemplateView):
+    template_name = "multitenancy/billing/billing.html"

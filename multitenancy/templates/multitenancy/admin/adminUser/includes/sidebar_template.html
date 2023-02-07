@@ -1,6 +1,5 @@
 {% load static %}{% load multitenancy_tags %}
 {% load i18n helpdesk_staff %}
-{% load thumbnail %}
 {% get_company_details as details %}
 
 <!-- Main Sidebar Container -->
@@ -13,16 +12,18 @@
     </a>
 
     <!-- Sidebar -->
-    <div class="sidebar os-host os-theme-light os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden">
+    <div
+        class="sidebar os-host os-theme-light os-host-resize-disabled os-host-transition os-host-scrollbar-horizontal-hidden os-host-scrollbar-vertical-hidden">
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 <img src="{% avatar_url user %}" alt="" class="img-circle elevation-2">
-                
-                
+
+
             </div>
             <div class="info">
-                <a href="{% url 'profiles_detail' username=user.username %}" class="d-block">Hi, {{user.profile.display_name}}!</a>
+                <a href="{% url 'profiles_detail' username=user.username %}" class="d-block">Hi,
+                    {{user.profile.display_name}}!</a>
             </div>
         </div>
 
@@ -33,7 +34,8 @@
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item">
-                    <a href="{% url "admin_dashboard" %}" class="nav-link {% if url_name == 'admin_dashboard' %}active{% endif %}">
+                    <a href="{% url "admin_dashboard" %}"
+                        class="nav-link {% if url_name == 'admin_dashboard' %}active{% endif %}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Home
@@ -45,7 +47,7 @@
                 Tenants
                 {% endcomment %}
                 <li class="nav-item has-treeview ">
-                    <a href="#" 
+                    <a href="#"
                         class="nav-link {% if url_name ==   'create_template' or url_name == 'template_list'%}active{% endif %}">
                         <i class="nav-icon fas fa-clone"></i>
                         <p>
@@ -55,7 +57,8 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "create_template" %}" class="nav-link {% if url_name  == 'create_template'  %}active{% endif %}">
+                            <a href="{% url "create_template" %}"
+                                class="nav-link {% if url_name  == 'create_template'  %}active{% endif %}">
                                 <i class="nav-icon fas fa-paste"></i>
                                 <p>
                                     Create Template
@@ -74,7 +77,7 @@
 
                     </ul>
                 </li>
-                
+
                 {% comment "" %}
                 users
                 {% endcomment %}
@@ -89,7 +92,8 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "profiles_list" %}" class="nav-link {% if url_name == 'profiles_list'  %}active{% endif %}">
+                            <a href="{% url "staff_list" %}"
+                                class="nav-link {% if url_name == 'profiles_list'  %}active{% endif %}">
                                 <i class="nav-icon fas fa-users-cog"></i>
                                 <p>
                                     Manage Staff
@@ -97,7 +101,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "customer_list" %}" class="nav-link {% if url_name ==  'customer_list' %}active{% endif %}">
+                            <a href="{% url "customer_list" %}"
+                                class="nav-link {% if url_name ==  'customer_list' %}active{% endif %}">
                                 <i class="nav-icon fas fa-user-tag"></i>
                                 <p>
                                     Manage Customers
@@ -107,6 +112,8 @@
 
                     </ul>
                 </li>
+
+
                 {% comment "" %}
                 support
                 {% endcomment %}
@@ -121,7 +128,8 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{% url "helpdesk:dashboard" %}" class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
+                            <a href="{% url "helpdesk:dashboard" %}"
+                                class="nav-link {% if url_name == 'dashboard'  %}active{% endif %}">
                                 <i class="nav-icon fa-regular fa-envelope-open"></i>
                                 <p>
                                     Support Home
@@ -129,7 +137,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url "helpdesk:list" %}" class="nav-link {% if url_name ==  'list' %}active{% endif %}">
+                            <a href="{% url "helpdesk:list" %}"
+                                class="nav-link {% if url_name ==  'list' %}active{% endif %}">
                                 <i class="nav-icon fa-solid fa-ticket-simple"></i>
                                 <p>
                                     All Tickets
@@ -137,48 +146,68 @@
                             </a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="ticketsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="fas fa-fw fa-search"></i>
-                              <span>{% trans "Saved Queries" %}</span>
+                            <a class="nav-link dropdown-toggle" href="#" id="ticketsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-fw fa-search"></i>
+                                <span>{% trans "Saved Queries" %}</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="ticketsDropdown">
-                              {% if user_saved_queries_ %}
-                              {% for q in user_saved_queries_ %}
-                              <a class="dropdown-item small" href="{% url 'helpdesk:list' %}?saved_query={{ q.id }}">{{ q.title }}
-                                  {% if q.shared %}
-                                  (Shared{% if user != q.user %} by {{ q.user.get_username }}{% endif %})
-                                  {% endif %}
-                              </a>
-                              {% endfor %}
-                              {% else %}
-                              <p class="dropdown-item small text-wrap">{% trans "No saved queries currently available. You can create one in the All Tickets page." %}</p>
-                              {% endif %}
+                                {% if user_saved_queries_ %}
+                                {% for q in user_saved_queries_ %}
+                                <a class="dropdown-item small"
+                                    href="{% url 'helpdesk:list' %}?saved_query={{ q.id }}">{{ q.title }}
+                                    {% if q.shared %}
+                                    (Shared{% if user != q.user %} by {{ q.user.get_username }}{% endif %})
+                                    {% endif %}
+                                </a>
+                                {% endfor %}
+                                {% else %}
+                                <p class="dropdown-item small text-wrap">
+                                    {% trans "No saved queries currently available. You can create one in the All Tickets page." %}
+                                </p>
+                                {% endif %}
                             </div>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link {% if url_name ==  'submit' %} active{% endif %}" href="{% url 'helpdesk:submit' %}">
-                              <i class="fas fa-fw fa-plus-circle"></i>
-                              <span>{% trans "New Ticket" %}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if url_name ==  'submit' %} active{% endif %}"
+                                href="{% url 'helpdesk:submit' %}">
+                                <i class="fas fa-fw fa-plus-circle"></i>
+                                <span>{% trans "New Ticket" %}</span>
                             </a>
-                          </li>
-                          <li class="nav-item">
-                            <a class="nav-link {% if url_name ==  'report_index' %} active{% endif %}" href="{% url 'helpdesk:report_index' %}">
-                              <i class="fas fa-fw fa-chart-area"></i>
-                              <span>{% trans "Reports" %}</span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if url_name ==  'report_index' %} active{% endif %}"
+                                href="{% url 'helpdesk:report_index' %}">
+                                <i class="fas fa-fw fa-chart-area"></i>
+                                <span>{% trans "Reports" %}</span>
                             </a>
-                          </li>
-                          {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
-                          <li class="nav-item">
-                            <a class="nav-link {% if url_name == 'kb_index'  %} active{% endif %}" href="{% url 'helpdesk:kb_index' %}">
-                              <i class="fas fa-fw fa-database"></i>
-                              <span>{% trans "Knowledgebase" %}</span>
+                        </li>
+                        {% if helpdesk_settings.HELPDESK_KB_ENABLED %}
+                        <li class="nav-item">
+                            <a class="nav-link {% if url_name == 'kb_index'  %} active{% endif %}"
+                                href="{% url 'helpdesk:kb_index' %}">
+                                <i class="fas fa-fw fa-database"></i>
+                                <span>{% trans "Knowledgebase" %}</span>
                             </a>
-                          </li>
-                          {% endif %}
+                        </li>
+                        {% endif %}
                     </ul>
                 </li>
+                {% comment "" %}
+                Billing
+                {% endcomment %}
                 <li class="nav-item">
-                    <a href="{% url "settings_index" %}" class="nav-link {% if url_name == 'settings_index' %}active{% endif %}">
+                    <a href="{% url "billing" %}" class="nav-link {% if url_name == 'billing' %}active{% endif %}">
+                        <i class="nav-icon fas fa-credit-card"></i>
+                        <p>
+                            Billing Management
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url "settings_index" %}"
+                        class="nav-link {% if url_name == 'settings_index' %}active{% endif %}">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
                             Settings
@@ -186,12 +215,12 @@
                         </p>
                     </a>
                 </li>
-                
-                    </ul>
-                    {% endwith %} 
-                </li>
-                
-                </li>
+
+            </ul>
+            {% endwith %}
+            </li>
+
+            </li>
 
 
         </nav>

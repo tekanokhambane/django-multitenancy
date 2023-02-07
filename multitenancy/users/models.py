@@ -1,7 +1,8 @@
 import os
 import uuid
 from django.db import models
-from tenant_users.tenants.models import UserProfile
+from django.db.models import Q
+from tenant_users.tenants.models import UserProfile, UserProfileManager
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.models import Group
 from tenant_users.permissions.models import UserTenantPermissions
@@ -17,8 +18,21 @@ def upload_avatar_to(instance, filename):
     )
 
 
-class TenantUserManager(models.QuerySet):
-        pass    
+class TenantUserQuerySet(models.QuerySet):
+        def search(self, query=None):
+            if query is None or query =="":
+                return self.all()
+            lookups = Q(first_name__icontains=query ) | Q(last_name__icontains=query ) | Q(id__contains=query) | Q(email__icontains=query) | Q(username__icontains=query)
+            return self.filter(lookups)
+        
+class TenantUserManager(UserProfileManager):
+    def get_queryset(self):
+        return TenantUserQuerySet(self.model, using=self._db)
+    
+    def search(self, query=None):
+        return self.get_queryset().search(query=query)
+    
+    
 # Create your models here.
 class TenantUser(UserProfile):
     class Types(models.TextChoices):
@@ -39,7 +53,7 @@ class TenantUser(UserProfile):
     # note = models.CharField(max_length=300, blank=True, null=True)
     signup_confirmation = models.BooleanField(default=False)
 
-    # objects = TenantUserManager()
+    objects = TenantUserManager()
 
     def __str__(self) -> str:
         if self.first_name and self.last_name:
@@ -63,6 +77,9 @@ class TenantUser(UserProfile):
             return True
         else:
             return False
+    def get_username(self) -> str:
+        uname = self.username
+        return uname
     
     def add_role(self, role):
         if role not in self.roles:

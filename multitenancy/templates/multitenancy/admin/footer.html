@@ -1,6 +1,6 @@
 {% load multitenancy_tags %}
 {% get_company_details as details %}
-<footer class="main-footer text-center" style="bottom:0; position: fixed; width: 100%; z-index: 1000;">
+<footer class="main-footer text-center" >
     <strong class="text-center">Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="{{details.info.website}}">{{details.info.company_name}}</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">

@@ -4,20 +4,25 @@ from django.urls import reverse, reverse_lazy
 from tenant_users.permissions.models import UserTenantPermissions
 from multitenancy.admin.views.adminViews import (
     AdminIndexView, 
-    CreateCustomerView,
-    CreatePlanView,
-    CustomerList,
+    )
+from multitenancy.settings.views import SettingsIndexView
+from multitenancy.apps.views import TenantListView
+from multitenancy.subscriptions.views import (
+    CreatePlanView, 
     PlanDetailView,
     PlanListView,
-    SettingsIndexView,
-    TenantListView, 
+)
+from multitenancy.users.views import(
+    CreateCustomerView,
+    DeleteCustomerView,
+    CustomerListView,
     UpdateCustomerView,
-    DeleteCustomerView
-    )
+)
 from multitenancy.subscriptions.models import Plan
 from multitenancy.users.models import Admin, Customer, TenantUser
 from  multitenancy.admin.decorators import allowed_users
-from multitenancy.admin.forms import CustomerForm, CustomerUpdateForm, PlanForm
+from multitenancy.users.forms import CustomerForm, CustomerUpdateForm
+from multitenancy.subscriptions.forms import PlanForm
 from multitenancy.admin import urls
 
 
@@ -287,7 +292,7 @@ class AdminViewsTestCase(unittest.TestCase):
         self.client.force_login(user=self.user)
         request = self.factory.get('/admin/customers/')
         request.user = self.user
-        response = CustomerList.as_view()(request)
+        response = CustomerListView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.client.session.get('_auth_user_id'))
         self.assertIn('_auth_user_id', self.client.session)
@@ -302,7 +307,7 @@ class AdminViewsTestCase(unittest.TestCase):
         self.client.force_login(user=self.user)
         request = self.factory.get('/admin/customers/')
         request.user = self.user
-        response = CustomerList.as_view()(request)
+        response = CustomerListView.as_view()(request)
         
         self.assertEqual(response.status_code, 404)
 
