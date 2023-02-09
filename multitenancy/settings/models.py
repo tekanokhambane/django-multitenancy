@@ -25,9 +25,9 @@ class Logo(BaseSetting):
 
 class GeneralInfo(BaseSetting):
     help_text = 'Update the name, phone number, etc of the company'
-    company_name = models.CharField(max_length=255, blank=True, null=True)
-    phone_number = PhoneNumberField(blank=True)
-    website = models.URLField(null=True, blank=True,)
+    company_name = models.CharField(max_length=255, blank=True, default="Django Multitenancy")
+    phone_number = PhoneNumberField(blank=True, default="+27212345678")
+    website = models.URLField(blank=True, default="https://example.com")
     email = models.EmailField(null=True, blank=True)
 
     class Meta:
