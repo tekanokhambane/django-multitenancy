@@ -2,7 +2,9 @@ let data = [];
 
     var table = new Tabulator("#customers-table", {
         data: data,
-        height: "300px",
+        pagination:true, //enable.
+        paginationSize:10, // this option can take any positive integer value
+        //height: "300px",
         rowHeight: 40, //set rows to 40px height
         layout: "fitColumns",
         movableColumns: true,
@@ -45,7 +47,19 @@ let data = [];
     form.addEventListener("keyup", async function(event) {
         const input = event.target;
         const value = input.value;
+        console.log(value)
         const response = await fetch(`/api/customers/?q=${value}`);
+        const data = await response.json();
+        table.setData(data)
+    });
+
+    const idFilter = document.getElementById("filter-id-form");
+    // perfom a query then set new data
+    idFilter.addEventListener("keyup", async function(event) {
+        const input = event.target;
+        const value = input.value;
+        console.log(value)
+        const response = await fetch(`/api/customers/?id=${value}`);
         const data = await response.json();
         table.setData(data)
     });

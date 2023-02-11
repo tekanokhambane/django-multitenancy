@@ -2,14 +2,25 @@ let data = [];
 
     var table = new Tabulator("#staff-table", {
         data: data,
+        pagination:true, //enable.
+        paginationSize:3, // this option can take any positive integer value
         height: "300px",
-        rowHeight: 40, //set rows to 40px height
+        rowHeight: 60, //set rows to 40px height
         layout: "fitColumns",
         movableColumns: true,
         layoutColumnsOnNewData: true,
         columns: [
-            {title: "ID", field: "id", width: 80, },
-            // {title: "Avatar", field: "avatar", width: 80, },
+            {title: "ID", field: "id", width: 60, },
+            {title:"Avatar", field:"avatar",hozAlign:"center", width:80, formatter:function(cell, formatterParams){
+                var value = cell.getValue();
+                if (value == null) {
+                    return `<img class="img-circle" src="http://www.gravatar.com/avatar/5d032fa2a3fe3be0f5b406fad098459c?s=100&d=mm" width="50"/>`;     
+                } else {
+                    return `<img class="img-circle" src="${value}" width="50"/>`;
+                    
+                 }
+                 
+             }},
             {title: "First Name", field: "first_name"},
             {title: "Last Name", field: "last_name"},
             {title: "Username", field: "username"},

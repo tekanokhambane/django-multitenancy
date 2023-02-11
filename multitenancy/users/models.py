@@ -22,8 +22,13 @@ class TenantUserQuerySet(models.QuerySet):
         def search(self, query=None):
             if query is None or query =="":
                 return self.all()
-            lookups = Q(first_name__icontains=query ) | Q(last_name__icontains=query ) | Q(id__contains=query) | Q(email__icontains=query) | Q(username__icontains=query)
+            lookups = Q(first_name__icontains=query ) | Q(last_name__icontains=query ) | Q(email__icontains=query) | Q(username__icontains=query)
             return self.filter(lookups)
+        
+        def filter_by_id(self, query=None):
+            if query is None or query =="":
+                return self.all()
+            return self.filter(id__exact=query)
         
 class TenantUserManager(UserProfileManager):
     def get_queryset(self):
@@ -31,6 +36,9 @@ class TenantUserManager(UserProfileManager):
     
     def search(self, query=None):
         return self.get_queryset().search(query=query)
+    
+    def filter_by_id(self, query=None):
+        return self.get_queryset().filter_by_id(query=query)
     
     
 # Create your models here.
@@ -139,6 +147,9 @@ class Staff(TenantUser):
     @property
     def account(self):
         return self.account
+    
+    def add_user_perms(self, *args, **kwargs):
+        UserTenantPermissions.objects.create(profile_id=self.pk, is_staff=True, is_superuser=False)
 
     @property
     def get_profile(self):

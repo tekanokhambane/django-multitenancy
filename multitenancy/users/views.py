@@ -38,7 +38,7 @@ class DeleteCustomerView(LoginRequiredMixin ,AdminDeleteView):
 
         user = Customer.objects.filter(id=customer_id)
         user.delete()
-        return HttpResponseRedirect(reverse('customer_list', urlconf="multitenancy.urls"))
+        return HttpResponseRedirect(reverse('customer_list', urlconf="multitenancyl.urls"))
 
 class CreateCustomerView(LoginRequiredMixin ,AdminCreateView):
     model = TenantUser
@@ -88,6 +88,12 @@ class CreateStaffView(LoginRequiredMixin ,AdminCreateView):
         user_permission.save()
         return response
 
+class UpdateStaffView(LoginRequiredMixin ,AdminUpdateView):
+    model = Staff
+    form_class = StaffUpdateForm
+    success_url = reverse_lazy('staff_list', urlconf="multitenancy.urls")
+    template_name = 'multitenancy/users/update_staff.html'
+
 
 class DeleteStaffView(LoginRequiredMixin ,AdminDeleteView):
     model = Staff
@@ -116,8 +122,9 @@ class CustomerViewSet(viewsets.ModelViewSet):
                           permissions.IsAdminUser]
 
     def get_queryset(self):
-        query = self.request.GET.get("q") 
-        queryset = TenantUser.objects.filter(type="Customer").exclude(email="AnonymousUser").search(query=query)
+        query = self.request.GET.get("q")
+        id_query  = self.request.GET.get("id")
+        queryset = TenantUser.objects.filter(type="Customer").exclude(email="AnonymousUser").search(query=query).filter_by_id(query=id_query).distinct()
         return queryset
 
 
