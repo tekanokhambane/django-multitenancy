@@ -34,16 +34,6 @@ from .serializers import TenantSerializer
 class TemplateListView(LoginRequiredMixin ,AdminTemplateView):
     template_name = "multitenancy/apps/template_list.html"
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(*args, **kwargs)
-        query = self.request.GET.get("q") 
-        queryset = Tenant.objects.filter(is_template=True).search(query=query)   
-
-        context['filter'] = queryset
-        
-        return context
-
-
 class CreateTemplateView(LoginRequiredMixin, AdminCreateView):
     model = Tenant
     form_class = TenantForm
@@ -154,7 +144,7 @@ class CreateService(LoginRequiredMixin, CustomerView):
         settings.TENANT_CREATION_TEMPLATE ="client/static/publicUser/index.html"
         return render(request,settings.TENANT_CREATION_TEMPLATE, {"plans":plans})
 
-class TenantViewSet(viewsets.ModelViewSet):
+class TenantTemplateViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,
     `update` and `destroy` actions.
@@ -176,8 +166,3 @@ class TenantViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 
-@api_view(['GET'])
-def api_root(request, format=None):
-    return Response({
-        'tenants': reverse('tenant-list', request=request, format=format)
-    })

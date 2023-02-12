@@ -19,7 +19,7 @@ let data = [];
     });
     async function getTemplates() {
         // gets the response from the api and put it inside a constant
-        const response = await fetch('/api/tenants/?q=');
+        const response = await fetch('/api/templates');
         //the response have to be converted to json type file, so it can be used
         const data = await response.json();
         //the addData adds the object "data" to an array
@@ -44,7 +44,7 @@ let data = [];
     form.addEventListener("keyup", async function(event) {
         const input = event.target;
         const value = input.value;
-        const response = await fetch(`/api/tenants/?q=${value}`);
+        const response = await fetch(`/api/templates/?q=${value}`);
         const data = await response.json();
         table.setData(data)
     });
