@@ -12,7 +12,6 @@ class UserSerializerTestCase(APITestCase):
             'type': 'member',
             'signup_confirmation': True,
             'avatar': 'http://example.com/avatar.jpg',
-            'last_login': '2022-12-31T12:00:00Z'
         }
         self.invalid_data = {
             'first_name': 'John',
@@ -22,7 +21,6 @@ class UserSerializerTestCase(APITestCase):
             'type': 'member',
             'signup_confirmation': True,
             'avatar': 'http://example.com/avatar.jpg',
-            'last_login': '2022-12-31T12:00:00Z'
         }
 
     def test_serializer_with_valid_data(self):

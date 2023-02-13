@@ -1,7 +1,4 @@
 import unittest
-from django.conf import settings
-from django.urls import reverse_lazy
-from django.test import TestCase
 from multitenancy.users.models import Admin, Customer, Staff, TenantUser
 from tenant_users.permissions.models import UserTenantPermissions
 
