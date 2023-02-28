@@ -21,7 +21,7 @@
           <!-- small box -->
           <div class="small-box bg-info">
             <div class="inner bg-white">
-              <h3>${{users.count}}</h3>
+              <h3>${{revenue}}</h3>
 
               <p>Total Revenue</p>
             </div>
@@ -61,6 +61,7 @@
             <a href="{% url "helpdesk:dashboard" %}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
           </div>
         </div>
+        
         <!-- ./col -->
         {% include "multitenancy/admin/adminUser/includes/charts.html" %}
         {% include "multitenancy/admin/adminUser/includes/recent-activities.html" %}
