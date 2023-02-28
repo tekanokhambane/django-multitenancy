@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models, transaction
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django_tenants.models import DomainMixin
 from datetime import datetime, timedelta
 from tenant_users.tenants.models import TenantBase
@@ -31,6 +31,8 @@ class TenantQuerySet(models.QuerySet):
 
     def active(self):
         return self.filter(subscription__is_active=True)
+    
+    
 
 class TenantManager(models.Manager):
     def get_queryset(self):
@@ -81,14 +83,24 @@ class Tenant(TenantBase):
         kwargs['subscription'] = subscription
         tenant = Tenant.objects.create(**kwargs)
         return tenant
+    
+    @classmethod
+    def total_revenue(cls):
+        revenue = cls.objects.aggregate(Sum('plan__price'))['plan__price__sum']
+        if revenue is None:
+            return 0
+        return revenue
 
     def start_trail(self):
         """
         if the user has no active or inactive tenants than start trail
         """
         
-        if self.owner.tenants.count() > 1:
-            raise ValueError("User has no trails available")
+        if self.owner.tenants.count() > 2:
+            self.on_trial = False
+            self.trail_duration = 0
+            self.subscription.start_subscription("monthly")
+            self.save()
         else:
             self.on_trial = True
             self.trail_duration = 30
