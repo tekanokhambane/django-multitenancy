@@ -82,7 +82,7 @@ class CreateTemplateView(LoginRequiredMixin, AdminCreateView):
                 # Create cursor
                 sweetify.success(request, "Successfully Created Tenant!", icon='success', timer=5000)
                 # messages.success(request, "Successfully Added Tenant!")
-                return redirect("template_list")
+                return reverse_lazy("template_list", urlconf="multitenancy.urls")
             except Exception:
                 if domain is not None:
                     domain.delete()
