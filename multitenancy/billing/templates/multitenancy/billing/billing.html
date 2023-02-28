@@ -1,7 +1,46 @@
 {% extends "multitenancy/admin/base.html" %}
-
-
+{% load static %}
+{% block page_title %}Manage Billing{% endblock page_title %}
+{% block custom_css %}
+        <link rel="stylesheet" href="{% static "multitenancy/billing/css/billing.css" %}">
+{% endblock custom_css %}
+{%block breadcrumbs%}
+<li class="breadcrumb-item active">Billing</li>
+{%endblock%}
 {% block main_content %}
-<div id="example-table"></div>
+<section class="content">
+    <div class="container">
+        <div class="billing-items">
+            <a href="{% url 'invoice_list' %}" class="billing-item">
+                <h3>Invoices</h3>
+                <p>View, manage and create customer invoices.</p>
+            </a>
+            <a href="{% url 'credits_list' %}" class="billing-item">
+                <h3>Credits</h3>
+                <p>View and manage customer credits.</p>
+            </a>
+            <a href="{% url 'refunds_list' %}" class="billing-item">
+                <h3>Refunds</h3>
+                <p>View , create and manage all refunds made to customers.</p>
+            </a>
+            <a href="{% url 'orders_index' %}" class="billing-item">
+                <h3>Orders</h3>
+                <p>View and manage all customer orders and create new orders.</p>
+            </a>
+            <a href="{% url 'usersubscription_list' %}" class="billing-item">
+                <h3>Subscriptions</h3>
+                <p>View and Manage User Subscriptions.</p>
+              </a>
+            
+            <a href="{% url 'pinax_teams:team_list' %}" class="billing-item">
+                <h3>Payment Gateways</h3>
+                <p>Create and manage payment gateways. You can disable and enable gateways.</p>
+            </a>
+            <a href="{% url 'pinax_teams:team_list' %}" class="billing-item">
+                <h3>Payments</h3>
+                <p>View subscribers payments</p>
+            </a>
+        </div>
+    </div>
+</section>
 {% endblock %}
-

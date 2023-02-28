@@ -1,0 +1,38 @@
+
+.billing-items{
+    display: grid;
+    grid-template-columns: repeat(3,1fr) !important;
+    grid-column: 1;
+    gap: 10px;
+    padding-bottom: 50px;
+    height:100%;
+}
+
+.billing-item{
+    color: black;
+    background-color: white;
+    padding: 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12),0 1px 2px rgba(0,0,0,.24)!important;
+}
+
+.billing-item p{
+    padding: 0 10px 0 10px;
+    color: rgb(85, 85, 85);
+}
+
+.billing-item:hover{
+    box-shadow: 0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23)!important;
+}
+
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    .billing-items {
+      display: flex;
+      flex-direction: column;
+      /* grid-template-columns: auto; */
+    }
+  }
+  
