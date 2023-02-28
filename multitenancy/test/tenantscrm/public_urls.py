@@ -8,9 +8,6 @@ from multitenancy.admin import urls as admin_urls
 #from portal.HodViews import GetEmails
 urlpatterns = [
    
-   # Admin
-   #   path(r'^cart/', include('cart.urls', namespace='cart')),
-   #url(r'^payfast/', include('django_tenants_portal.billing.urls')),
    path('django-admin/', admin.site.urls),
    path(r'', include("multitenancy.urls")),
    url(r"^admin/teams/", include("pinax.teams.urls", namespace="pinax_teams")),
@@ -18,11 +15,7 @@ urlpatterns = [
    
    path("select2/", include("django_select2.urls")),
    path('admin/support/', include('helpdesk.urls', namespace='helpdesk')),
-   #url(r'', include(accounts_urls)),
-   #url(r'', include(customers_urls)),
-   #path('accounts/', include('allauth.urls')),
    url(r"^admin/account/", include("account.urls")),
-   # url(r'^admin/settings/groups-manager/', include('groups_manager.urls', namespace='groups_manager')),
     
 ]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)+static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
 
