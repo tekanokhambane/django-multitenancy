@@ -10,7 +10,6 @@ from multitenancy.admin.views import (
 urlpatterns = [
     path(r"", adminViews.AdminIndexView.as_view(), name="admin_dashboard"),
     path("teams/all", adminViews.TeamsIndexView.as_view(), name="teams_index"),    
-    path('billing/orders/',adminViews.OrdersListView.as_view(), name="orders_list"),
     path("acounts/login/", authViews.LoginView.as_view(), name="accounts_login"),
     path("page-not-found/", authViews.pageNotFound.as_view(), name="page_not_found"),
 
