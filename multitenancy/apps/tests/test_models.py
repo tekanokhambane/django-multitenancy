@@ -26,12 +26,12 @@ class TestTenant(unittest.TestCase):
         public_tenant = create_public_tenant("localhost", "tkhambane@gmail.com", "publicuser123")
         
         # Create a tenant
-        user = TenantUser.objects.create(
+        user = TenantUser.objects.create_user(
             username='admin', 
             password="password", 
             first_name='abc123', 
             last_name='khamban', 
-            email='abc@email.com', 
+            email='abcpp@email.com', 
             type='Customer',
             is_active=True
             )

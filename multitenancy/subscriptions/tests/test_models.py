@@ -7,14 +7,14 @@ import datetime
 class TestPlan(unittest.TestCase):
     
     def test_add_feature(self):
-        plan = Plan.objects.create(name="business")
+        plan = Plan.objects.create(name="basic")
         plan.add_feature("Free domain")
         features = plan.features.all()
         for feature in features:
             self.assertEquals(feature.name,"Free domain")
 
 
-        self.assertEquals(plan.name,"business")
+        self.assertEquals(plan.name,"basic")
     
 
 class TestProductType(unittest.TestCase):

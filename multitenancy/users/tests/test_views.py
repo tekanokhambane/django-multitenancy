@@ -374,7 +374,7 @@ class StaffViewsTestCase(unittest.TestCase):
             )
         
         self.client.force_login(user=self.user)
-        self.customer = Customer.objects.create(
+        self.customer = Customer.objects.get(
             username='customer', 
             password="password", 
             first_name='abc123', 

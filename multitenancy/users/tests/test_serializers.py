@@ -9,18 +9,18 @@ class UserSerializerTestCase(APITestCase):
             'last_name': 'Doe',
             'username': 'johndoe',
             'email': 'johndoe@example.com',
-            'type': 'member',
+            'type': 'Customer',
             'signup_confirmation': True,
-            'avatar': 'http://example.com/avatar.jpg',
+            'password':'password',
         }
         self.invalid_data = {
             'first_name': 'John',
             'last_name': 'Doe',
             'username': 'johndoe',
             'email': 'invalidemail',
-            'type': 'member',
+            'type': 'Customer',
             'signup_confirmation': True,
-            'avatar': 'http://example.com/avatar.jpg',
+            'password':'password',
         }
 
     def test_serializer_with_valid_data(self):
