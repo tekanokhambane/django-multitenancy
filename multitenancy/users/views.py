@@ -38,7 +38,7 @@ class DeleteCustomerView(LoginRequiredMixin ,AdminDeleteView):
 
         user = Customer.objects.filter(id=customer_id)
         user.delete()
-        return HttpResponseRedirect(reverse('customer_list', urlconf="multitenancyl.urls"))
+        return HttpResponseRedirect(reverse('customer_list', urlconf="multitenancy.urls"))
 
 class CreateCustomerView(LoginRequiredMixin ,AdminCreateView):
     model = TenantUser
