@@ -14,10 +14,7 @@ from multitenancy.admin.views.baseViews import(
     )
 
 class SettingsIndexView(LoginRequiredMixin ,AdminTemplateView):
-    template_name = "multitenancy/admin/adminUser/settings_list.html"
-
-
-
+    template_name = "multitenancy/settings/settings_list.html"
 
 
 class SettingsView(LoginRequiredMixin, AdminTemplateView):
