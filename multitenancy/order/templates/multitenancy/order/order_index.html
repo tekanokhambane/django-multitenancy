@@ -1,0 +1,27 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+{% block page_title %}Manage Order{% endblock page_title %}
+{% block custom_css %}
+        <link rel="stylesheet" href="{% static "multitenancy/order/css/order.css" %}">
+{% endblock custom_css %}
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'billing' %}">Billing</a></li>
+<li class="breadcrumb-item active">Order</li>
+{%endblock%}
+{% block main_content %}
+<section class="content">
+    <div class="container">
+        <div class="order-items">
+            <a href="{% url 'orders_list' %}" class="order-item">
+                <h3>View Orders</h3>
+                <p>View all customer orders and create new orders.</p>
+            </a>
+            <a href="{% url 'credits_list' %}" class="order-item">
+                <h3>Coupons</h3>
+                <p>Create and manage coupons.</p>
+            </a>
+            
+        </div>
+    </div>
+</section>
+{% endblock %}
