@@ -1,0 +1,48 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+{% block page_title %}Settings{% endblock page_title %}
+
+{%block custom_css%}
+<link rel="stylesheet" href="{% static 'multitenancy/settings/css/settings.css' %}">
+{%endblock%}
+{%block breadcrumbs%}
+
+<li class="breadcrumb-item active">Settings</li>
+{% endblock%}
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+  <div class="container">
+    <div class="settings-items">
+      <a href="{% url 'pinax_teams:team_list' %}" class="settings-item">
+        <h3>Teams</h3>
+        <p>List of managed teams.</p>
+      </a>
+      <a href="{% url 'generalsettings_index' %}" class="settings-item">
+        <h3>General Settings</h3>
+        <p>Edit Company details (e.g Name of org, address, logo etc).</p>
+      </a>
+      <a href="{% url 'plan_list' %}" class="settings-item">
+        <h3>Plans</h3>
+        <p>Setup pricing plan for your tenant apps.</p>
+      </a>
+      <a href="{% url 'template_list' %}" class="settings-item">
+        <h3>Tenant Templates</h3>
+        <p>Create and manage couponsCreate templates for your tenant apps.</p>
+      </a>
+      
+      <a href="{% url 'producttype_list' %}" class="settings-item">
+        <h3>Product Types</h3>
+        <p>View and Manage Product Types</p>
+      </a>
+      <a href="{% url 'helpdesk:system_settings' %}" class="settings-item">
+        <h3>Helpdesk</h3>
+        <p>Manage Helpdesk Settings.</p>
+      </a>
+    </div>
+  </div>
+</section>
+<!-- /.content -->
+{% endblock main_content %}
