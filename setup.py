@@ -138,7 +138,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 setup(
     name="django-multitenancy-manager",
     version=version,
-    description="A client portal in django for managing multi tenant saas apps for django tenants",
+    description="Django Multitenancy is a Django app that handles user subscriptions for tenant apps.",
     long_description=get_long_description(),
     classifiers=[
         "Development Status :: 4 - Beta",

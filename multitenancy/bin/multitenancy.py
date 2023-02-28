@@ -6,7 +6,8 @@ import re
 import sys
 from argparse import ArgumentParser
 from difflib import unified_diff
-
+from django.core.management.templates import TemplateCommand
+from django.core.management.utils import get_random_secret_key
 from django.core.management import ManagementUtility
 
 CURRENT_PYTHON = sys.version_info[:2]
@@ -25,46 +26,14 @@ def pluralize(value, arg="s"):
     return "" if value == 1 else arg
 
 
-class Command:
-    description = None
-
-    def create_parser(self, command_name=None):
-        if command_name is None:
-            prog = None
-        else:
-            # hack the prog name as reported to ArgumentParser to include the command
-            prog = "%s %s" % (prog_name(), command_name)
-
-        parser = ArgumentParser(
-            description=getattr(self, "description", None), add_help=False, prog=prog
-        )
-        self.add_arguments(parser)
-        return parser
-
-    def add_arguments(self, parser):
-        pass
-
-    def print_help(self, command_name):
-        parser = self.create_parser(command_name=command_name)
-        parser.print_help()
-
-    def execute(self, argv):
-        parser = self.create_parser()
-        options = parser.parse_args(sys.argv[2:])
-        options_dict = vars(options)
-        self.run(**options_dict)
 
 
-class CreateProject(Command):
+class CreateProject(TemplateCommand):
     description = "Creates the directory structure for a new Multitenancy project."
+    
 
     def add_arguments(self, parser):
         parser.add_argument("project_name", help="Name for your Multitenancy project")
-        parser.add_argument(
-            "dest_dir",
-            nargs="?",
-            help="Destination directory inside which to create the project",
-        )
         parser.add_argument(
             '--sitename',
             help='Human readable name of your organisation or brand, e.g. "Mega Corp Inc."'
@@ -85,8 +54,14 @@ class CreateProject(Command):
             '--port',
             help='The port for your database'
         )
+        super().add_arguments(parser)
 
-    def run(self, project_name=None, dest_dir=None):
+    def handle(self, **options):
+        # pop standard args
+        project_name = options.pop("name")
+        target = options.pop("directory")
+
+
         # Make sure given name is not already in use by another python package/module.
         try:
             __import__(project_name)
@@ -99,50 +74,100 @@ class CreateProject(Command):
                 "name. Please try another name." % project_name
             )
 
-        print(  # noqa
-            "Creating a Multitenancy project called %(project_name)s"
-            % {"project_name": project_name}
-        )  # noqa
+        # Create a random SECRET_KEY to put it in the main settings.
+        options["secret_key"] = get_random_secret_key()
 
-        # Create the project from the Wagtail template using startapp
-
-        # First find the path to Wagtail
+        # Handle custom template logic
         import multitenancy
 
-        multitenancy_path = os.path.dirname(multitenancy.__file__)
-        template_path = os.path.join(multitenancy_path, "project_template")
+        tenants_path = os.path.dirname(multitenancy.__file__)
+        template_path = os.path.join(
+            os.path.join(tenants_path, "project_template")
+        )
 
-        # Call django-admin startproject
-        utility_args = [
-            "django-admin",
-            "startproject",
-            "--template=" + template_path,
-            "--ext=html,rst,txt,md,py",
-            "--name=Dockerfile",
-            project_name,
-        ]
+        # Check if provided template is built-in to coderedcms,
+        # otherwise, do not change it.
+        options['template'] = template_path
 
-        if dest_dir:
-            utility_args.append(dest_dir)
+        # Treat these files as Django templates to render the boilerplate.
+        options["extensions"] = ["py", "md", "txt"]
+        options["files"] = ["Dockerfile"]
 
-        utility = ManagementUtility(utility_args)
-        utility.execute()
+        # Set options
+        message = "Creating a Multitenant project called %(project_name)s"
 
-        print(  # noqa
+        if options.get("sitename"):
+            message += " for %(sitename)s"
+        else:
+            options["sitename"] = project_name
+
+        if options.get("domain"):
+            message += " (%(domain)s)"
+            # Strip protocol out of domain if it is present.
+            options["domain"] = options["domain"].split("://")[-1]
+            # Figure out www logic.
+            if options["domain"].startswith("www."):
+                options["domain_nowww"] = options["domain"].split("www.")[-1]
+            else:
+                options["domain_nowww"] = options["domain"]
+        else:
+            options["domain"] = "localhost"
+            options["domain_nowww"] = options["domain"]
+        
+        if  options.get("database"):
+            message += " (%(database)s)"
+        else:
+            options["database"] = project_name
+
+        if  options.get("password"):
+            message += " (%(password)s)"
+        else:
+            options["password"] = "database password"
+
+        if  options.get("port"):
+            message += " (%(port)s)"
+        else:
+            options["port"] = "5432"
+
+        
+        # Print a friendly message
+        print(
+            message
+            % {
+                "project_name": project_name,
+                "sitename": options.get("sitename"),
+                "domain": options.get("domain"),
+                "database":options.get("database"),
+                "password":options.get("password"),
+                "port":options.get("port"),
+            }
+        )
+
+        # Run command
+        super().handle("project", project_name, target, **options)
+
+        # Be a friend once again.
+        print(
             "Success! %(project_name)s has been created"
             % {"project_name": project_name}
-        )  # noqa
+        )
+
+        nextsteps = """
+Next steps:
+    1. cd %(directory)s/
+    2. python manage.py migrate_schemas
+    3. python manage.py shell
+    4. >> from multitenancy.utils import create_public_tenant
+    5. public_tenant = create_public_tenant("localhost", "adminemail@example.com", "admin password")
+    6. python manage.py runserver
+    7. Go to http://localhost:8000/admin/ and start editing!
+"""
+        print(nextsteps % {"directory": target if target else project_name})
 
 
-
-
-
-
-
-
+    
 COMMANDS = {
     "start": CreateProject(),
-    
 }
 
 
@@ -151,17 +176,18 @@ def prog_name():
 
 
 def help_index():
-    print(  # noqa
-        "Type '%s help <subcommand>' for help on a specific subcommand.\n" % prog_name()
-    )  # NOQA
-    print("Available subcommands:\n")  # NOQA
+    print(
+        "Type '%s help <subcommand>' for help on a specific subcommand.\n"
+        % prog_name()
+    )
+    print("Available subcommands:\n")
     for name, cmd in sorted(COMMANDS.items()):
-        print("    %s%s" % (name.ljust(20), cmd.description))  # NOQA
+        print("    %s%s" % (name.ljust(20), cmd.help))
 
 
 def unknown_command(command):
-    print("Unknown command: '%s'" % command)  # NOQA
-    print("Type '%s help' for usage." % prog_name())  # NOQA
+    print("Unknown command: '%s'" % command)
+    print("Type '%s help' for usage." % prog_name())
     sys.exit(1)
 
 
@@ -185,7 +211,7 @@ def main():
             unknown_command(help_command_name)
             return
 
-        command.print_help(help_command_name)
+        command.print_help(prog_name(), help_command_name)
         return
 
     try:
@@ -194,7 +220,7 @@ def main():
         unknown_command(command_name)
         return
 
-    command.execute(sys.argv)
+    command.run_from_argv(sys.argv)
 
 
 if __name__ == "__main__":

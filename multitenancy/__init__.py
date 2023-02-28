@@ -17,7 +17,7 @@ Maintains version of django-mutlitenancy.
 
 See: https://www.python.org/dev/peps/pep-0440/
 """
-release = ["0", "0", "2", "a", "15"]
+release = ["0", "0", "2", "a", "27"]
 
 
 def _get_version() -> str:
