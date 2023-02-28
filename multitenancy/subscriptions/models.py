@@ -1,5 +1,6 @@
 import datetime
 from django.db import models
+from django.db.models import Q
 from calendar import monthrange
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -25,6 +26,39 @@ class ProductFeature(models.Model):
         ordering= ('-pk',)
 
 
+class PlanQueryset(models.QuerySet):
+
+    def search(self, query):
+        return self.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    def active_plans(self):
+        return self.filter(is_active=True)
+
+    def by_price(self, price):
+        return self.filter(price=price)
+
+    def by_features(self, feature):
+        return self.filter(features=feature)
+
+class PlanManager(models.Manager):
+    def get_queryset(self):
+        return PlanQueryset(self.model, using=self._db)
+
+    def search(self, query):
+        return self.get_queryset().search(query)
+
+    def active_plans(self):
+        return self.get_queryset().active_plans()
+
+    def by_price(self, price):
+        return self.get_queryset().by_price(price)
+
+    def by_features(self, feature):
+        return self.get_queryset().by_features(feature)
+
 class Plan(models.Model):
     name = models.CharField(max_length=250, blank=False, unique=True, null=False, choices=get_plans())
     slug = models.SlugField()
@@ -32,6 +66,7 @@ class Plan(models.Model):
     features = models.ManyToManyField(ProductFeature)
     price = models.DecimalField(default=75,  # type: ignore
                                 max_digits=12, verbose_name="Price", decimal_places=2)
+    objects = PlanManager()
     
     class Meta:
         ordering = ('-price',)
@@ -81,18 +116,56 @@ class ProductType(models.Model):
 
 
 class SubscriptionQueryset(models.QuerySet):
+    def active(self):
+        return self.filter(status="active")
+
+    def inactive(self):
+        return self.filter(status="inactive")
+
+    def cancelled(self):
+        return self.filter(status="cancelled")
+
+    def expired(self):
+        return self.filter(status="expired")
+
+    def weekly(self):
+        return self.filter(cycle=Subscription.Cycles.WEEKLY)
+
+    def monthly(self):
+        return self.filter(cycle=Subscription.Cycles.MONTHLY)
+
+    def quarterly(self):
+        return self.filter(cycle=Subscription.Cycles.QUARTERLY)
+
+    def annually(self):
+        return self.filter(cycle=Subscription.Cycles.ANNUALLY)
+
+    def started_within_week(self):
+        return self.filter(start_date__gte=timezone.now() - timezone.timedelta(days=7))
+
+    def ended_within_week(self):
+        return self.filter(end_date__lte=timezone.now() - timezone.timedelta(days=7))
+
+    def renew_within_week(self):
+        return self.filter(renewal_date__lte=timezone.now() - timezone.timedelta(days=7))
     def get_product_type(self, name):
-        return self.filter(product_type__name=name)
+        return self.filter(product_type__name__exact=name)
 
     def get_status(self, query):
-        return self.filter(status__contains=query)
+        return self.filter(status__exact=query)
 
     def get_active(self):
         return self.filter(status__contains="active")
     
-    def search(self):
-        pass
-    
+    def search(self, query=None):
+        if query is None or query == "":
+            return self.all()
+        return self.filter(
+            Q(reference__icontains=query) |
+            Q(reason__icontains=query) |
+            Q(product_type__name__icontains=query)
+        )
+
     
 
 
@@ -117,6 +190,10 @@ class Subscription(models.Model):
     reason = models.TextField(help_text="Reason for state change, if applicable.")
     status = models.CharField(max_length=10, choices=[('active', 'Active'),('inactive', 'Inactive') ,('cancelled', 'Cancelled'), ('expired', 'Expired')], default="inactive")
     objects = SubscriptionQueryset().as_manager()
+
+
+    def __str__(self) -> str:
+        return f"{self.pk}"
 
     
     class Meta:
@@ -146,10 +223,6 @@ class Subscription(models.Model):
             # active_data[date.strftime("%Y-%m-%d")] = active_count
             # inactive_data[date.strftime("%Y-%m-%d")] = inactive_count
         return data
-
-
-
-    
 
     def start_subscription(self, cycle):
         
