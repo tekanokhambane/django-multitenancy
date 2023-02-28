@@ -23,7 +23,7 @@ The aim of this project is to speed up the process of launch your saas app.
 ## Installation
 1. Clone the repository:
 ```
-git clone git@github.com:tekanokhambane/django-multitenancy.git
+pip install django-multitenancy-manager
 
 ```
 
