@@ -109,6 +109,24 @@ TENANT_TYPES = {
                  ],
         "URLCONF": "tenantscrm.urls",
     },
+    "freemium": {
+        "APPS": [
+            'tenant_users.permissions',
+
+            'rest_framework',
+
+            'storages',
+            # Dango
+            'django.contrib.sites',
+            'django.contrib.auth',
+            'django.contrib.messages',
+            'django.contrib.sitemaps',
+            'django.contrib.staticfiles',
+            'django.contrib.contenttypes',
+                 # type1 apps here
+                 ],
+        "URLCONF": "tenantscrm.freemium_urls",
+    },
     "premium": {
         "APPS": [
                 'rest_framework',
