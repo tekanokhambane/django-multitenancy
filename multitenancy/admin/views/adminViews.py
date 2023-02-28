@@ -11,6 +11,7 @@ from django.forms.models import modelform_factory
 from tenant_users.tenants.utils import (get_tenant_model,
                                         get_tenant_domain_model)
 from multitenancy.admin.decorators import allowed_users
+from multitenancy.admin.models import Admin, Settings
 from multitenancy.order.models import Order
 from multitenancy.profiles.models import Profile
 from tenant_users.tenants.models import InactiveError, ExistsError
@@ -43,8 +44,20 @@ class AdminIndexView(LoginRequiredMixin ,AdminTemplateView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
 
+        app_configs = Admin.app_configs
+        # app_configs = sorted(app_configs, key=lambda x: x.menu_order)
+        groups = {}
+        context['apps'] = app_configs
+
+        # for app_config in app_configs:
+        #     group = groups.get(app_config.group, [])
+        #     group.append(app_config)
+        #     groups[app_config.group] = group
+        #     context['apps'] = group
+
         context['subscriptions'] = get_tenant_model().objects.all().exclude(schema_name='public').exclude(is_template=True)
         context['users'] = TenantUser.objects.all()
+        context['revenue'] = Tenant.total_revenue()
         ProductType.objects.create_defaults()
         context['staff'] = Profile.objects.filter()
         active_date = []
@@ -79,6 +92,3 @@ class TeamsIndexView(LoginRequiredMixin ,AdminTemplateView):
 
 
 
-class OrdersListView(LoginRequiredMixin ,AdminListView):
-    model = Order
-    template_name = 'multitenancy/order/orders_list.html'
