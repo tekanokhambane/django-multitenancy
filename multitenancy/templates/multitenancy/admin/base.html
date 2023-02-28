@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="{% static "plugins/fontawesome/css/all.min.css" %}">
         <!-- Ionicons -->
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <link href="https://unpkg.com/tabulator-tables/dist/css/tabulator.min.css" rel="stylesheet">
+        <link href="{% static "dist/css/tabulator.min.css" %}" rel="stylesheet">
 
         <link rel="stylesheet" href="{% static "plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css"%}">
         <!-- Theme style -->
@@ -132,7 +132,7 @@
      
      <!-- Bootstrap 4 -->
      <script src="{% static "plugins/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
-     <script type="text/javascript" src="https://unpkg.com/tabulator-tables/dist/js/tabulator.min.js"></script>
+     <script type="text/javascript" src="{% static "dist/js/tabulator.min.js" %}"></script>
      <!-- SweetAlert2 -->
      {% load sweetify %}
     {% sweetify %}
