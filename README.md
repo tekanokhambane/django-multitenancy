@@ -16,6 +16,17 @@ The aim of this project is to speed up the process of launch your saas app.
 
 ![django-multitenancy screenshot](https://github.com/tekanokhambane/django-multitenancy/blob/main/.github/dango-multitenancy-screenshot.png)
 
+## Requirements
+- Python 3.6+
+- Django 3.0+
+
+## Installation
+1. Clone the repository:
+```
+git clone git@github.com:tekanokhambane/django-multitenancy.git
+
+```
+
 
 ### 🔥 Features
 
@@ -24,6 +35,7 @@ The aim of this project is to speed up the process of launch your saas app.
 -   Create and manage templates
 -   Automated subscriptions and billing systems
 -   Admin, Staff and Client dashboard
+-   Customizable pricing plans
 -   Manage subscriptions - Activate, suspend, deactivate subscription
 -   Runs on a Raspberry Pi or a multi-datacenter cloud platform
 -   Domain management 
