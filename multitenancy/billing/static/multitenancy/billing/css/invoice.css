@@ -1,0 +1,48 @@
+.date-range-picker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 200px;
+    background: rgb(2, 58, 95);
+    border-radius: 10px;
+    padding: 2px 5px 2px 5px;
+  }
+  
+  .date-range-picker label {
+    /* margin-right: 10px; */
+    font-size: 14px;
+    padding-top: 5px;
+  }
+  
+  .date-range-picker select {
+    
+    font-size: 14px;
+    background: transparent;
+    color: white;
+    border-radius: 0px;
+    outline: none;
+    border: none;
+  }
+  
+  .date-range-picker select option{
+    color: black;
+  }
+
+  .tabulator {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .tabulator-header {
+    background-color: #f2f2f2;
+    font-weight: bold;
+  }
+  
+  .tabulator-row:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  .tabulator-row:hover {
+    background-color: #e6e6e6;
+  }

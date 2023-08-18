@@ -48,3 +48,23 @@ let data = [];
         const data = await response.json();
         table.setData(data)
     });
+
+    function updateDateRange() {
+        var selectBox = document.getElementById("date-range");
+        var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+      
+        if (selectedValue === "") {
+          return;
+        }
+      
+        var endDate = new Date();
+        var startDate = new Date(endDate);
+        startDate.setDate(startDate.getDate() - parseInt(selectedValue));
+      
+        document.getElementById("date-range").value = "";
+        document.getElementById("date-range").blur();
+        alert("Start Date: " + startDate.toDateString() + "\nEnd Date: " + endDate.toDateString());
+      }
+      
+      document.getElementById("date-range").addEventListener("change", updateDateRange);
+      

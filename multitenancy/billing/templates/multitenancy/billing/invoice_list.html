@@ -1,6 +1,9 @@
 {% extends "multitenancy/admin/base.html" %}
 {% load static %}
-
+{% block custom_css %}
+        <link rel="stylesheet" href="{% static "multitenancy/billing/css/invoice.css" %}">
+        
+{% endblock custom_css %}
 {% block page_title %}Manage Invoices{% endblock page_title %}
 {%block breadcrumbs%}
 
@@ -16,24 +19,30 @@
     <div class="container-fluid">
         <!-- /.row -->
         <div class="row">
-            <div class="col-md">
+            <div class="col-sm-4">
                 <div class="mb-5 mr-3">
-                    <form method="get" id="filter-form" class="input-group input-group-md" style="width: 250px;">
+                    <form method="get" id="filter-form" class="input-group input-group-md" >
                         <input type="text" name="q" class="form-control float-right" placeholder="Search invoices">
                         <div class="input-group-append">
-                            <button type="submit" disabled id="" class="btn btn-success"><i
+                            <button type="submit" disabled id="" class="btn bg-navy"><i
                                     class="fas fa-search"></i></button>
                         </div>
-                        <form />
+                    </form>
                 </div>
             </div>
-            <div class="col-md">
-                <div class="mb-5 mr-3">
-                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal" data-target="#modal-lg">
-                    <i class="fas fa-plus"> </i> Create Invoice
-                      </button>
-                    
-                </div>
+            <div class="col-sm-4">
+                <div class="date-range-picker">
+                    <label for="date-range">Timespan:</label>
+                    <select id="date-range">
+                        
+                        <option value="90">Last 90 days</option>
+                      <option value="7">Last 7 days</option>
+                      <option value="14">Last 14 days</option>
+                      <option value="30">Last 30 days</option>
+                      <option value="365">Last 365 days</option>
+                    </select>
+                  </div>
+                  
             </div>
         </div>
         <div id="invoice-table"></div>
@@ -44,5 +53,7 @@
 {% endblock main_content %}
 
 {% block custom_js %}
+<script src="{% static "plugins/moment/moment.min.js" %}"></script>
+
 <script src="{% static "multitenancy/billing/js/invoice.js" %}"></script>
 {% endblock custom_js %}
