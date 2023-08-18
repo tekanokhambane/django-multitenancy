@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block page_title %}Manage Customers{% endblock page_title %}
+{% block custom_css %}
+        <link rel="stylesheet" href="{% static "multitenancy/users/css/customers.css" %}">
+        
+{% endblock custom_css %}
 
 {%block breadcrumbs%}
 
@@ -44,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div id="customers-table"></div>
+        <div id="customers-table" class="table-dark"></div>
 
 
     </div><!-- /.container-fluid -->
