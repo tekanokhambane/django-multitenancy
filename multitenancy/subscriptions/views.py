@@ -114,9 +114,9 @@ class DeletePlanView(LoginRequiredMixin, AdminDeleteView):
     success_url = reverse_lazy("plan_list", urlconf="multitenancy.urls")
 
 
-class UserSubscriptionsListView(LoginRequiredMixin, AdminListView):
+class SubscriptionsListView(LoginRequiredMixin, AdminListView):
     model = Subscription
-    template_name = 'multitenancy/subscriptions/usersubscriptions_list.html'
+    template_name = 'multitenancy/subscriptions/subscriptions_list.html'
 
 
 class PlanViewSet(viewsets.ModelViewSet):

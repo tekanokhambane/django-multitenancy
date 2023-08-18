@@ -1,0 +1,39 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+
+{% block page_title %}Manage User Subscriptions{% endblock page_title %}
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'billing' %}">Billing</a></li>
+<li class="breadcrumb-item active">Subscriptions</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md">
+                <div class="mb-5 mr-3">
+                    <form method="get" id="filter-form" class="input-group input-group-md" style="width: 250px;">
+                        <input type="text" name="q" class="form-control float-right" placeholder="Search by customer id">
+                        <div class="input-group-append">
+                            <button type="submit" disabled id="" class="btn btn-success"><i
+                                    class="fas fa-search"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </div>
+        <div id="subscriptions-table"></div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="{% static "multitenancy/billing/js/subscriptions.js" %}"></script>
+{% endblock custom_js %}
