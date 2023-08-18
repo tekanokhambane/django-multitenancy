@@ -27,7 +27,7 @@ class PlanViewsTestCase(unittest.TestCase):
             )
         
         self.client.force_login(user=self.user)
-        request = self.factory.get('/admin/settings/plans/create/')
+        request = self.factory.get('/admin/billing/plans/create/')
         request.user = self.user
         response = CreatePlanView.as_view()(request)
         self.assertEqual(response.status_code, 200)
@@ -69,7 +69,7 @@ class PlanViewsTestCase(unittest.TestCase):
         self.plan = Plan.objects.create(
             name='enterprise',
         )
-        self.request = self.factory.get(f'/settings/plans/{self.plan}/')
+        self.request = self.factory.get(f'/billing/plans/{self.plan}/')
         self.request.user = self.admin
         view = PlanDetailView.as_view()
         response = view(self.request, pk=self.plan.pk)
