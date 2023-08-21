@@ -45,7 +45,54 @@
                   
             </div>
         </div>
-        <div id="invoice-table"></div>
+        
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card text-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">Invoices</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="invoice-table" class="table table-bordered table-striped  table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <th>Date Created</th>
+                                    <th>Due Date</th>
+                                    <th>End Date</th>
+                                    <th>Invoice Number</th>
+                                    <th>Amount</th>
+                                    <th>Credit Used</th>
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+        
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Subscription</th>
+                                    <th>Date Created</th>
+                                    <th>Due Date</th>
+                                    <th>End Date</th>
+                                    <th>Invoice Number</th>
+                                    <th>Amount</th>
+                                    <th>Credit Used</th>
+                                    
+                                    <th>Payment Method</th>
+                                    <th>Status</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
     </div><!-- /.container-fluid -->
     {% include 'multitenancy/billing/includes/create_invoice_modal.html' %}
 </section>

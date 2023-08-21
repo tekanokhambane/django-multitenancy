@@ -20,7 +20,7 @@ from multitenancy.subscriptions.filters import PlanFilter
 from multitenancy.subscriptions.forms import PlanForm, ProductFeatureForm
 from multitenancy.subscriptions.models import Plan, ProductType, Subscription, ProductFeature
 from multitenancy.apps.models import Tenant
-from multitenancy.subscriptions.serializers import PlanSerialiser, SubscriptionSerializer
+from multitenancy.subscriptions.serializers import PlanSerialiser, ProductTypeSerializer, SubscriptionSerializer
 from multitenancy.admin.views.baseViews import CustomerView
 from multitenancy.admin.views.baseViews import(
     AdminListView,
@@ -156,6 +156,22 @@ class SubscriptionsViewSet(viewsets.ModelViewSet):
     """
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAdminUser]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+
+class ProductTypeViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    queryset = ProductType.objects.all()
+    serializer_class = ProductTypeSerializer
     permission_classes = [permissions.IsAuthenticated,
                           permissions.IsAdminUser]
 

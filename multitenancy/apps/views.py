@@ -159,7 +159,7 @@ class TenantTemplateViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         query = self.request.GET.get("q") 
-        queryset = Tenant.objects.filter(is_template=True).search(query=query)
+        queryset = Tenant.objects.filter(is_template=True).exclude(type="public").search(query=query)
         return queryset
 
     def perform_create(self, serializer):

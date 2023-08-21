@@ -10,7 +10,7 @@ class PlanSerialiser(serializers.ModelSerializer):
     features = ProductFeatureSerializer(many=True)
     class Meta:
         model = Plan
-        fields = ["id","name", "description", "price", "price_weekly", "price_quartely", "price_annually", "features"]
+        fields = ["id","name", "description", "price", "price_weekly", "price_quartely", "price_annually", "features", "slug"]
 
 
 class ProductTypeSerializer(serializers.ModelSerializer):

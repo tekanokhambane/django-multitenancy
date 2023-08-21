@@ -4,12 +4,15 @@ from multitenancy.subscriptions import views as subscriptions_views
 from multitenancy.apps import views as tenant_views
 from multitenancy.users import views as users_views
 from multitenancy.billing import views as billing_views
+from multitenancy.order import  views as orders_views
 
 router = DefaultRouter()
-router.register(r'customers', users_views.CustomerViewSet,basename="customers")
-router.register(r'staff', users_views.StaffViewSet,basename="staff")
+router.register(r'users/customers', users_views.CustomerViewSet,basename="customers")
+router.register(r'users/staff', users_views.StaffViewSet,basename="staff")
 router.register(r'plans', subscriptions_views.PlanViewSet,basename="plans", )
 router.register(r'subscriptions', subscriptions_views.SubscriptionsViewSet,basename="subscriptions")
+router.register(r'product-types', subscriptions_views.ProductTypeViewSet,basename="product_type")
+router.register(r'orders', orders_views.OdersViewSet,basename="orders")
 router.register(r'billing/invoices', billing_views.InvoiceViewSet,basename="invoices")
 router.register(r'billing/refunds', billing_views.RefundViewSet,basename="refunds")
 router.register(r'billing/credits', billing_views.CreditViewSet,basename="credits")

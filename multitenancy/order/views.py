@@ -1,6 +1,16 @@
 from django.shortcuts import render
 from account.mixins import LoginRequiredMixin
 from multitenancy.admin.views.baseViews import AdminTemplateView
+from rest_framework import viewsets
+
+from multitenancy.order.models import Order
+from multitenancy.order.serializers import OrdersSerializer
+
+
+class OdersViewSet(viewsets.ModelViewSet):
+    model = Order
+    serializer_class = OrdersSerializer
+    queryset = Order.objects.all()
 
 
 class OrderIndexView(AdminTemplateView):
