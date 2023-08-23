@@ -1,0 +1,26 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% debug %}
+
+{%block head_title%}{%trans "Page Not Found" %}{%endblock%}
+
+{% block content %}
+<div class="row">
+    <div class="col-md m-0">
+        <div class="login-box login m-0">
+            <div class="logout-card">
+                <div class="image"> 
+                    <img src="{{details.logo.logo.url}}" href="{{details.info.website.url}}" height="200px"  class="" alt="">
+                </div> 
+                <h1>Permission Denied</h1>
+                <a href="{% if self.request.user.type == 'Admin' %}{% url 'admin_dashboard' %}{% elif self.request.user.type == 'Staff' %}{% url 'team_dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}" class="btn btn-primary">Home</a>
+
+                
+            </div>
+        </div>
+    </div>
+    <!-- <div class="col-md-6 bg-dark">
+        {#% include "account/_login_sidebar.html" %#}
+    </div> -->
+</div>
+{%endblock%}
