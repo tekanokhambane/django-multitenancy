@@ -5,6 +5,8 @@ import account.forms
 import account.views
 from django.views.generic import View
 
+from multitenancy.profiles.models import Profile
+
 class pageNotFound(View):
     def get(self, request, *args, **kwargs):
         return render(request, '404.html',
@@ -35,9 +37,14 @@ class LoginView(account.views.LoginView):
         self.login_user(form)
         self.after_login(form)
         if self.request.user.is_authenticated:
+            
             if self.request.user.type == "Admin":  # type: ignore
+                if self.request.user and not Profile.objects.filter(user=self.request.user).exists():
+                    Profile.objects.create(user=self.request.user)
                 return HttpResponseRedirect(reverse("admin_dashboard"))
             elif self.request.user.type == "Staff":  # type: ignore
+                if self.request.user and not Profile.objects.filter(user=self.request.user).exists():
+                    Profile.objects.create(user=self.request.user)
                 return HttpResponseRedirect(reverse("team_dashboard"))
             else:
                 return HttpResponseRedirect(reverse("customer_dashboard"))
