@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import permissions
 from multitenancy.admin.views.baseViews import AdminTemplateView
 from multitenancy.billing.forms import InvoiceForm
-from multitenancy.billing.serializers import CreditSerializer, InvoiceSerializer, RefundSerializer
+from multitenancy.billing.serializers import CreditSerializer, InvoiceSerializer, PaymentGatewaySerializer, PaymentSerializer, RefundSerializer
 
 from .models import (
     Invoice,
@@ -34,6 +34,14 @@ class CreditsListView(AdminTemplateView):
 
 class RefundsListView(AdminTemplateView):
     template_name = "multitenancy/billing/refunds_list.html"
+
+
+class PaymentGatewaysView(AdminTemplateView):
+    template_name = "multitenancy/billing/payment_gateways_list.html"
+
+class PaymentView(AdminTemplateView):
+    template_name = "multitenancy/billing/payments.html"
+
 
 class InvoiceViewSet(viewsets.ModelViewSet):
     """
@@ -94,3 +102,30 @@ class CreditViewSet(viewsets.ModelViewSet):
         queryset = Credit.objects.filter().get_customer_credit(customer_id=query)
         return queryset
 
+
+class PaymentGateWayViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    model = PaymentGateWay
+    queryset = PaymentGateWay.objects.all()
+    serializer_class = PaymentGatewaySerializer
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAdminUser]
+    
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    """
+    This viewset automatically provides `list`, `create`, `retrieve`,
+    `update` and `destroy` actions.
+
+    Additionally we also provide an extra `highlight` action.
+    """
+    model = Payment
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    permission_classes = [permissions.IsAuthenticated,
+                          permissions.IsAdminUser]

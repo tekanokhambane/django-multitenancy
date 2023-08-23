@@ -1,0 +1,57 @@
+{% extends "multitenancy/admin/base.html" %}
+{% load static %}
+
+{% block page_title %}Manage Customer Payments{% endblock page_title %}
+{%block breadcrumbs%}
+
+<li class="breadcrumb-item "><a href="{% url 'billing' %}">Billing</a></li>
+
+<li class="breadcrumb-item active">Payments</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <!-- /.row -->
+        
+        <div class="row">
+            <div class="col-12">
+
+                <div class="card text-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">Payments</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="payments-table" class="table table-bordered table-striped  table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Subscriber</th>
+                                    <th>Amount</th>
+                                    <th>Gateway</th>
+                                    <th>Status</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{% block custom_js %}
+<script src="{% static "multitenancy/billing/js/payments.js" %}"></script>
+{% endblock custom_js %}

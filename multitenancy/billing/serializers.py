@@ -1,8 +1,23 @@
 from rest_framework import serializers
 
 from multitenancy.users.models import TenantUser
-from .models import Invoice, Credit, Refund
+from multitenancy.users.serializers import UserSerializer
+from .models import Invoice, Credit, Payment, Refund, PaymentGateWay
 from multitenancy.subscriptions.serializers import SubscriptionSerializer
+
+
+class PaymentGatewaySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentGateWay
+        fields = '__all__'
+
+
+class PaymentSerializer(serializers.ModelSerializer):
+    subscriber = UserSerializer(many=False)
+    gateway = PaymentGatewaySerializer(many=False)
+    class Meta:
+        model = Payment
+        fields = '__all__'
 
 class InvoiceSerializer(serializers.ModelSerializer):
     subscription = SubscriptionSerializer(many=False)
@@ -15,7 +30,7 @@ class InvoiceSerializer(serializers.ModelSerializer):
 class RefundSerializer(serializers.ModelSerializer):
     invoice = InvoiceSerializer(many=False)
     class Meta:
-        model = Credit
+        model = Refund
         fields = "__all__"
 
 
