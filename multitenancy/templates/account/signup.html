@@ -13,19 +13,21 @@
                 <div class="image"> 
                     <img src="{{details.logo.logo.url}}" href="{{details.info.website.url}}" height="100px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
                 </div> 
-                <form method="POST" action="{% url "accounts_login" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+                <form method="POST" action="{% url "account_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
                     <legend class="">{% trans "Log in to an existing account" %}</legend>
 
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-                    {% if redirect_field_value %}
-                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                {% endif %}
-                <button type="submit" class="btn btn-primary">{% trans "Sign up" %}</button>
+                    <div class="" style="display: grid; grid-template-columns: repeat(2,1fr);gap: 20px;">
+                        {% csrf_token %}
+                        {% bootstrap_form form layout="inline" %}
+                        {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-info">{% trans "Sign up" %}</button>
                 </form>
                 <p class="login-signup">
                     <small>
-                        {% trans "Already have an account?" %}  <strong><a href="{% urlnext 'accounts_login' %}">{% trans "Log in" %}</a></strong>
+                        {% trans "Already have an account?" %}  <strong><a href="{% urlnext 'accounts_login' %}" class="text-white">{% trans "Log in" %}</a></strong>
                     </small>
                 </p>
             </div>
