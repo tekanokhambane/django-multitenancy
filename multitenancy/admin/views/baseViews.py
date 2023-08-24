@@ -16,8 +16,9 @@ class AdminView(UserPassesTestMixin, View):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class AdminCreateView(UserPassesTestMixin, CreateView):
@@ -26,8 +27,9 @@ class AdminCreateView(UserPassesTestMixin, CreateView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class AdminDetailView(UserPassesTestMixin, DetailView):
@@ -36,11 +38,10 @@ class AdminDetailView(UserPassesTestMixin, DetailView):
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
-
-    
 
 
 class AdminUpdateView(UserPassesTestMixin, UpdateView):
@@ -49,14 +50,14 @@ class AdminUpdateView(UserPassesTestMixin, UpdateView):
         return self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
     
     def get(self, request, *args, **kwargs):
         self.object = None
         return super().get(request, *args, **kwargs)
-
 
 
 class AdminDeleteView(UserPassesTestMixin, DeleteView):
@@ -65,8 +66,9 @@ class AdminDeleteView(UserPassesTestMixin, DeleteView):
         return self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
     def get(self, request, *args, **kwargs):
@@ -81,22 +83,25 @@ class AdminListView(UserPassesTestMixin, ListView):
         return self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
     
 
 
 class AdminTemplateView(UserPassesTestMixin, TemplateView):
     redirect_field_name = 'next'
+
     def test_func(self):
         return self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
-        
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
+
 
 class StaffCreateView(UserPassesTestMixin, CreateView):
     redirect_field_name = 'next'
@@ -104,8 +109,9 @@ class StaffCreateView(UserPassesTestMixin, CreateView):
         return self.request.user.is_authenticated and self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -115,8 +121,9 @@ class StaffUpdateView(UserPassesTestMixin, UpdateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -126,8 +133,9 @@ class StaffDeleteView(UserPassesTestMixin, DeleteView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -137,8 +145,9 @@ class StaffListView(UserPassesTestMixin, ListView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class StaffTemplateView(UserPassesTestMixin, TemplateView):
@@ -147,8 +156,9 @@ class StaffTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -158,8 +168,9 @@ class TeamDetailView(UserPassesTestMixin, DetailView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -169,8 +180,9 @@ class TeamCreateView(UserPassesTestMixin, CreateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -180,8 +192,9 @@ class TeamUpdateView(UserPassesTestMixin, UpdateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -191,8 +204,9 @@ class TeamDeleteView(UserPassesTestMixin, DeleteView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 
@@ -202,8 +216,9 @@ class TeamListView(UserPassesTestMixin, ListView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class TeamTemplateView(UserPassesTestMixin, TemplateView):
@@ -212,8 +227,9 @@ class TeamTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Staff' or self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
     
 
@@ -223,8 +239,9 @@ class CustomerView(UserPassesTestMixin, View):
         return self.request.user.is_authenticated and self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class CustomerTemplateView(UserPassesTestMixin, TemplateView):
@@ -233,8 +250,9 @@ class CustomerTemplateView(UserPassesTestMixin, TemplateView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
     
 class CustomerListView(UserPassesTestMixin, ListView):
@@ -243,8 +261,9 @@ class CustomerListView(UserPassesTestMixin, ListView):
         return  self.request.user.is_authenticated and self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
 
 class CustomerDetailView(UserPassesTestMixin, DetailView):
@@ -253,6 +272,7 @@ class CustomerDetailView(UserPassesTestMixin, DetailView):
         return self.request.user.is_authenticated and self.request.user.type == 'Customer'
     
     def handle_no_permission(self):
+        context = {'user': self.request.user}
         template = get_template('permission_denied.html')
-        html = template.render()
+        html = template.render(context, request=self.request)
         return HttpResponseForbidden(html)
