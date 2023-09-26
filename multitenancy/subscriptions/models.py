@@ -166,6 +166,54 @@ class SubscriptionQueryset(models.QuerySet):
             Q(product_type__name__icontains=query)
         )
 
+class SubscriptionManager(models.Manager):
+    def get_queryset(self):
+        return SubscriptionQueryset(self.model, using=self._db)
+
+    def active(self):
+        return self.get_queryset().active()
+
+    def inactive(self):
+        return self.get_queryset().inactive()
+
+    def cancelled(self):
+        return self.get_queryset().cancelled()
+
+    def expired(self):
+        return self.get_queryset().expired()
+
+    def weekly(self):
+        return self.get_queryset().weekly()
+
+    def monthly(self):
+        return self.get_queryset().monthly()
+
+    def quarterly(self):
+        return self.get_queryset().quarterly()
+
+    def annually(self):
+        return self.get_queryset().annually()
+
+    def started_within_week(self):
+        return self.get_queryset().started_within_week()
+
+    def ended_within_week(self):
+        return self.get_queryset().ended_within_week()
+
+    def renew_within_week(self):
+        return self.get_queryset().renew_within_week()
+
+    def get_product_type(self, name):
+        return self.get_queryset().get_product_type(name)
+
+    def get_status(self, query):
+        return self.get_queryset().get_status(query)
+
+    def get_active(self):
+        return self.get_queryset().get_active()
+
+    def search(self, query=None):
+        return self.get_queryset().search(query)
     
 
 
@@ -189,7 +237,7 @@ class Subscription(models.Model):
     product_type = models.ForeignKey(ProductType,null=True, on_delete=models.CASCADE, related_name="subscriptions")
     reason = models.TextField(help_text="Reason for state change, if applicable.")
     status = models.CharField(max_length=10, choices=[('active', 'Active'),('inactive', 'Inactive') ,('cancelled', 'Cancelled'), ('expired', 'Expired')], default="inactive")
-    objects = SubscriptionQueryset().as_manager()
+    objects = SubscriptionManager()
 
 
     def __str__(self) -> str:
