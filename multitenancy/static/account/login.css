@@ -5,21 +5,21 @@
 
 .login-container{
     width: 100%;
+    height: 100vh;
     margin: 0;
     top: 0;
     align-items: center;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     background-color: darkcyan;
 }
 
 .login{
     width: 100%;
-    height: 100vh;
     margin: 10px;
     padding: 20px;
-    align-items: center;
-    justify-content: space-between;
+
     
 }
 
@@ -30,6 +30,12 @@
     padding: 20px;
     align-items: center;
     justify-content: space-between;
+}
+
+.card-bg-logo{
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 250px;
 }
 
 .login-card form{

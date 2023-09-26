@@ -1,26 +1,36 @@
 {% extends "account/base.html" %}
 {% load i18n %}
 {% debug %}
+{% load account_tags %}
 
 {%block head_title%}{%trans "Page Not Found" %}{%endblock%}
 
 {% block content %}
-<div class="row">
-    <div class="col-md m-0">
-        <div class="login-box login m-0">
-            <div class="logout-card">
-                <div class="image"> 
-                    <img src="{{details.logo.logo.url}}" href="{{details.info.website.url}}" height="200px"  class="" alt="">
-                </div> 
-                <h1>Permission Denied</h1>
-                <a href="{% if self.request.user.type == 'Admin' %}{% url 'admin_dashboard' %}{% elif self.request.user.type == 'Staff' %}{% url 'team_dashboard' %}{% else %}{% url 'customer_dashboard' %}{% endif %}" class="btn btn-primary">Home</a>
-
-                
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-5">
+            <div class="card-header  text-dark">
+                Permission Denied
+            </div>
+            <div class="card-body">
+                <p class="card-text  text-dark text-center">
+                    {% if user.is_authenticated %}
+                        Hi, {{ user.username }}! You don't have permission to access this page.
+                    {% else %}
+                        You don't have permission to access this page.
+                    {% endif %}
+                </p>
+            </div>
+            <div class="card-footer text-muted text-center">
+                {% if user.type == 'Admin' %}
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-primary">Home</a>
+                {% elif user.type == 'Staff' %}
+                <a href="{% url 'team_dashboard' %}" class="btn btn-primary">Home</a>
+                {%else%}
+                <a href="{% url 'customer_dashboard' %}" class="btn btn-primary">Home</a>
+                {% endif%}
             </div>
         </div>
     </div>
-    <!-- <div class="col-md-6 bg-dark">
-        {#% include "account/_login_sidebar.html" %#}
-    </div> -->
 </div>
 {%endblock%}
