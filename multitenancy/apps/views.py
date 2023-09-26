@@ -64,12 +64,10 @@ class CreateTemplateView(LoginRequiredMixin, AdminCreateView):
             domain = None
             tenant = None
             try:
-                subscription = Subscription.objects.create()
 
                 tenant = Tenant.objects.create(name=name,
                                                slug=tenant_slug,
                                                schema_name=schema_name,
-                                               subscription=subscription,
                                                owner=user,
                                                is_template=True,
                                                type=type)

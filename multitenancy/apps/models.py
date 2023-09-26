@@ -1,3 +1,6 @@
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
 from django.conf import settings
 from django.db import models, transaction
 
@@ -47,6 +50,12 @@ class TenantManager(models.Manager):
     def active(self):
         return self.get_queryset().active()
 
+DEFAULT_TYPE = 'default'
+
+
+
+
+
 class Tenant(TenantBase):
     id = models.AutoField(primary_key=True, auto_created=True)
     type = models.CharField(max_length=200, default=DEFAULT_TYPE, choices=get_types())
@@ -54,7 +63,7 @@ class Tenant(TenantBase):
     is_template = models.BooleanField(default=True)
     plan = models.ForeignKey(Plan, null=True, on_delete=models.PROTECT, related_name="tenants")
     description = models.TextField(max_length=200)
-    subscription = models.OneToOneField(Subscription,  blank=True,on_delete=models.CASCADE, related_name="tenants")
+    subscription = models.OneToOneField(Subscription, blank=True, null=True, on_delete=models.CASCADE, related_name="tenants")
     # paid_until = models.DateField()
     trail_duration = models.IntegerField(default=0)
     on_trial = models.BooleanField(default=False)
@@ -69,56 +78,37 @@ class Tenant(TenantBase):
         unique_together = ['id', 'name']
         verbose_name = settings.TENANT_DISPLAY_NAME
         verbose_name_plural = settings.TENANT_DISPLAY_NAME_PLURAL
-    
 
     @classmethod
     def create_tenant(cls, name, type, is_template, description, trail_duration, owner, subscription_plan):
         subscription = Subscription.objects.create(plan=subscription_plan, owner=owner)
-        tenant = cls.objects.create(name=name, type=type, is_template=is_template, description=description, trail_duration=trail_duration, subscription=subscription, owner=owner)
+        tenant = cls.objects.create(name=name, type=type, is_template=is_template, description=description,
+                                    trail_duration=trail_duration, subscription=subscription, owner=owner)
         return tenant
-    
+
     @transaction.atomic
     def create_tenant_with_subscription(self, plan, **kwargs):
         subscription = Subscription.objects.create(plan=plan)
         kwargs['subscription'] = subscription
         tenant = Tenant.objects.create(**kwargs)
         return tenant
-    
+
+
     @classmethod
     def total_revenue(cls):
-        revenue = cls.objects.aggregate(Sum('plan__price'))['plan__price__sum']
-        if revenue is None:
-            return 0
-        return revenue
-
-    def start_trail(self):
-        """
-        if the user has no active or inactive tenants than start trail
-        """
-        
-        if self.owner.tenants.count() > 2:
-            self.on_trial = False
-            self.trail_duration = 0
-            self.subscription.start_subscription("monthly")
-            self.save()
-        else:
-            self.on_trial = True
-            self.trail_duration = 30
-            self.subscription.start_subscription("monthly")
-            self.save()
+        revenue = cls.objects.aggregate(total_revenue=Sum('plan__price'))['total_revenue']
+        return revenue or 0
 
     def end_trail(self):
         """
         End trail when the trail duration is reached
         """
-        if self.on_trial == True:
+        if self.on_trial:
+            self.subscription.update(trail_duration=None)
             self.on_trial = False
-            self.trail_duration = None
             self.deactivate()
-            self.save()            
-    
+            self.save()
 
-    
     def trail_days_left(self):
         """
         Calculate the number of days left for the trail to end
@@ -127,10 +117,9 @@ class Tenant(TenantBase):
             trail_end_date = self.created + timedelta(days=self.trail_duration)
             days_left = (trail_end_date - datetime.now().date()).days
             # update the duration
-            self.trail_duration = days_left
-            self.save()
+            self.update(trail_duration=days_left)
             # update duration and end trail then deactivate service
-            if self.trail_duration == 0:
+            if days_left == 0:
                 self.on_trial = False
                 self.deactivate()
                 self.save()
@@ -150,7 +139,7 @@ class Tenant(TenantBase):
         Downgrade plan
         """
         pass
-    
+
     def add_subscription(self):
         """
         if user upgrades service from trail create a subscription
@@ -159,6 +148,22 @@ class Tenant(TenantBase):
             subscription = self.subscription.objects.create()
             self.subscription.get_product_type("tenant")
             self.save()
+
+
+@receiver(post_save, sender=Tenant)
+def start_trial(sender, instance, created, **kwargs):
+    """
+    Automatically start a trial when a tenant is created
+    """
+    if created:
+        if instance.owner.tenants.count() > 1:
+            instance.on_trial = False
+            instance.trail_duration = 0
+        else:
+            instance.on_trial = True
+            instance.trail_duration = 30
+        instance.subscription.update(status="active", cycle="monthly", subscription_duration=instance.trail_duration)
+        instance.save()
         
     
 
