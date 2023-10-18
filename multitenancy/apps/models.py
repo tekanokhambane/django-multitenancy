@@ -194,10 +194,12 @@ def start_trial(sender, instance, created, **kwargs):
         else:
             instance.on_trial = True
             instance.trail_duration = 30
-        instance.subscription.status = "active"
-        instance.subscription.cycle = "monthly"
-        instance.subscription.subscription_duration = instance.trail_duration
-        instance.subscription.save()
+        if instance.subscription:
+        
+            instance.subscription.status = "active"
+            instance.subscription.cycle = "monthly"
+            instance.subscription.subscription_duration = instance.trail_duration
+            instance.subscription.save()
         instance.save()
 
 
