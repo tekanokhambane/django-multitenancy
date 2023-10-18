@@ -498,7 +498,8 @@ class TestSubscription(unittest.TestCase):
 
         # Test search with empty query
         result = Subscription.objects.search()
-        self.assertEqual(len(result), 3)
+        all_subscriptions = Subscription.objects.count()
+        self.assertEqual(len(result), all_subscriptions)
         self.assertIn(subscription1, result)
         self.assertIn(subscription2, result)
         self.assertIn(subscription3, result)
