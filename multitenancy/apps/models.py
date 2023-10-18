@@ -15,45 +15,51 @@ from multitenancy.subscriptions.models import Plan, Subscription
 
 DEFAULT_TYPE = "personal"
 
+
 def get_types():
-    #remove the plublic tenant type from list
+    # remove the plublic tenant type from list
     items = get_tenant_type_choices()
-    items.pop(0) 
+    items.pop(0)
     return items
+
 
 class TenantQuerySet(models.QuerySet):
     def search(self, query=None):
-        if query is None or query =="":
+        if query is None or query == "":
             return self.all()
-        lookups = Q(name__icontains=query ) | Q(id__contains=query) | Q(type__iexact=query)| Q(owner__id__icontains=query)| Q(owner__email__icontains=query)| Q(owner__username__icontains=query)
+        lookups = (
+            Q(name__icontains=query)
+            | Q(id__contains=query)
+            | Q(type__iexact=query)
+            | Q(owner__id__icontains=query)
+            | Q(owner__email__icontains=query)
+            | Q(owner__username__icontains=query)
+        )
         return self.filter(lookups)
-    
+
     def filter_by_plan(self, plan):
         filter = self.filter(type=plan)
         return filter
 
     def active(self):
         return self.filter(subscription__is_active=True)
-    
-    
+
 
 class TenantManager(models.Manager):
     def get_queryset(self):
         return TenantQuerySet(self.model, using=self._db)
-    
+
     def search(self, query=None):
         return self.get_queryset().search(query=query)
-    
+
     def filter_by_plan(self, plan):
         return self.get_queryset().filter_by_plan(plan=plan)
-    
+
     def active(self):
         return self.get_queryset().active()
 
-DEFAULT_TYPE = 'default'
 
-
-
+DEFAULT_TYPE = "default"
 
 
 class Tenant(TenantBase):
@@ -61,9 +67,17 @@ class Tenant(TenantBase):
     type = models.CharField(max_length=200, default=DEFAULT_TYPE, choices=get_types())
     name = models.CharField(max_length=100)
     is_template = models.BooleanField(default=True)
-    plan = models.ForeignKey(Plan, null=True, on_delete=models.PROTECT, related_name="tenants")
+    plan = models.ForeignKey(
+        Plan, null=True, on_delete=models.PROTECT, related_name="tenants"
+    )
     description = models.TextField(max_length=200)
-    subscription = models.OneToOneField(Subscription, blank=True, null=True, on_delete=models.CASCADE, related_name="tenants")
+    subscription = models.OneToOneField(
+        Subscription,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="tenants",
+    )
     # paid_until = models.DateField()
     trail_duration = models.IntegerField(default=0)
     on_trial = models.BooleanField(default=False)
@@ -75,28 +89,45 @@ class Tenant(TenantBase):
         return self.name
 
     class Meta:
-        unique_together = ['id', 'name']
+        unique_together = ["id", "name"]
         verbose_name = settings.TENANT_DISPLAY_NAME
         verbose_name_plural = settings.TENANT_DISPLAY_NAME_PLURAL
 
     @classmethod
-    def create_tenant(cls, name, type, is_template, description, trail_duration, owner, subscription_plan):
+    def create_tenant(
+        cls,
+        name,
+        type,
+        is_template,
+        description,
+        trail_duration,
+        owner,
+        subscription_plan,
+    ):
         subscription = Subscription.objects.create(plan=subscription_plan, owner=owner)
-        tenant = cls.objects.create(name=name, type=type, is_template=is_template, description=description,
-                                    trail_duration=trail_duration, subscription=subscription, owner=owner)
+        tenant = cls.objects.create(
+            name=name,
+            type=type,
+            is_template=is_template,
+            description=description,
+            trail_duration=trail_duration,
+            subscription=subscription,
+            owner=owner,
+        )
         return tenant
 
     @transaction.atomic
     def create_tenant_with_subscription(self, plan, **kwargs):
         subscription = Subscription.objects.create(plan=plan)
-        kwargs['subscription'] = subscription
+        kwargs["subscription"] = subscription
         tenant = Tenant.objects.create(**kwargs)
         return tenant
 
-
     @classmethod
     def total_revenue(cls):
-        revenue = cls.objects.aggregate(total_revenue=Sum('plan__price'))['total_revenue']
+        revenue = cls.objects.aggregate(total_revenue=Sum("plan__price"))[
+            "total_revenue"
+        ]
         return revenue or 0
 
     def end_trail(self):
@@ -162,15 +193,16 @@ def start_trial(sender, instance, created, **kwargs):
         else:
             instance.on_trial = True
             instance.trail_duration = 30
-        instance.subscription.update(status="active", cycle="monthly", subscription_duration=instance.trail_duration)
+        instance.subscription.status = "active"
+        instance.subscription.cycle = "monthly"
+        instance.subscription.subscription_duration = instance.trail_duration
+        instance.subscription.save()
         instance.save()
-        
-    
-
 
 
 class DomainManager(models.Manager):
     pass
+
 
 class Domain(DomainMixin):
     is_custom = models.BooleanField(default=False)
