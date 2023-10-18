@@ -135,7 +135,8 @@ class Tenant(TenantBase):
         End trail when the trail duration is reached
         """
         if self.on_trial:
-            self.subscription.update(trail_duration=None)
+            self.subscription.trail_duration = None
+            self.subscription.save()
             self.on_trial = False
             self.deactivate()
             self.save()
@@ -148,7 +149,7 @@ class Tenant(TenantBase):
             trail_end_date = self.created + timedelta(days=self.trail_duration)
             days_left = (trail_end_date - datetime.now().date()).days
             # update the duration
-            self.update(trail_duration=days_left)
+            self.trail_duration=days_left
             # update duration and end trail then deactivate service
             if days_left == 0:
                 self.on_trial = False
