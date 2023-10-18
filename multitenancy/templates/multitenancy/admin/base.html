@@ -30,6 +30,7 @@
     
 
     <link rel="stylesheet" href="{% static "plugins/datatables-responsive/css/responsive.bootstrap4.min.css" %}">
+    <link rel="stylesheet" href="{% static "plugins/sweetalert2/sweetalert2.min.css" %}">
     <link rel="stylesheet" href="{% static "admin/css/styles.css" %}">
 
 
@@ -145,10 +146,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 
-    <!-- SweetAlert2 -->
-    {% load sweetify %}
-    {% sweetify %}
-    <!-- DataTables -->
+   
     
     <script src="{% static "plugins/datatables/jquery.dataTables.min.js" %}"></script>
     
@@ -158,7 +156,10 @@
     <script src="{% static "dist/js/adminlte.min.js" %}"></script>
     <script src="{% static "plugins/sweetalert2/sweetalert2.all.min.js" %}"></script>
 
-
+     <!-- SweetAlert2 -->
+     {% load sweetify %}
+     {% sweetify %}
+     <!-- DataTables -->
 
     {% block custom_js %}
     {% endblock custom_js %}
