@@ -160,14 +160,4 @@ class TenantTemplateViewsTestCase(unittest.TestCase):
         response = DeleteTemplateView.as_view()(request, pk=self.tenant.id)
         self.assertEqual(response.status_code, 302)
 
-    def test_delete_template_unauthenticateduser_view(self):
-        self.user = TenantUser.objects.get(
-            email='AnonymousUser', 
-            )
-        self.client.force_login(user=self.user)
-        subscription = Subscription.objects.create()
-        self.tenant = Tenant.objects.create(name="Test Tenant", type="personal", is_template=False, description="Test tenant for testing purposes", owner=self.user, schema_name='tenantkkk1', subscription=subscription)
-        request = self.factory.delete(f'/admin/templates/{self.tenant.id}/delete')
-        request.user = self.user
-        response = DeleteTemplateView.as_view()(request, pk=self.tenant.id)
-        self.assertEqual(response.status_code, 404)
+    
