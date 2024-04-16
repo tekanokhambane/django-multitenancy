@@ -82,7 +82,7 @@ class CustomerViewsTestCase(unittest.TestCase):
         self.client.force_login(user=self.user)
         request = self.factory.get("/admin/customers/create/")
         request.user = self.user
-        response = AdminIndexView.as_view()(request)
+        response = CreateCustomerView.as_view()(request)
 
         self.assertEqual(response.status_code, 404)
 
