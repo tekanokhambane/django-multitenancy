@@ -331,7 +331,7 @@ class StaffViewsTestCase(TestCase):
         response = CreateStaffView.as_view()(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_get_create_staff_view_authenticated(self):
+    def test_get_create_staff_view_unauthenticated(self):
         self.user = TenantUser.objects.get(
             email="AnonymousUser",
         )
@@ -339,9 +339,8 @@ class StaffViewsTestCase(TestCase):
         self.client.force_login(user=self.user)
         request = self.factory.get("/admin/staff/create/")
         request.user = self.user
-        response = AdminIndexView.as_view()(request)
-
-        self.assertEqual(response.status_code, 404)
+        response = CreateStaffView.as_view()(request)
+        self.assertEqual(response.status_code, 403)
 
 
 #     def test_update_staff_view(self):
