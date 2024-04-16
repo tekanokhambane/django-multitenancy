@@ -42,7 +42,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             username="admin",
             password="password",
             first_name="abc123",
-            last_name="khamban",
+            last_name="opdidid",
             email="abc123@email.com",
             type="Admin",
             is_active=True,
@@ -61,7 +61,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             username="admin",
             password="password",
             first_name="abc123",
-            last_name="khamban",
+            last_name="kdidid",
             email="abc123897w@email.com",
             type="Admin",
             is_active=True,
@@ -75,16 +75,21 @@ class CustomerViewsTestCase(unittest.TestCase):
         self.assertIn("_auth_user_id", self.client.session)
 
     def test_get_create_customer_view_authenticated(self):
-        self.user = TenantUser.objects.get(
-            email="AnonymousUser",
+        self.user = TenantUser.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="houtken",
+            email="abc1ppdo23@email.com",
+            type="Admin",
+            is_active=True,
         )
-
         self.client.force_login(user=self.user)
         request = self.factory.get("/admin/customers/create/")
         request.user = self.user
         response = CreateCustomerView.as_view()(request)
-
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.client.session.get("_auth_user_id"))
 
 
 #     def test_update_customer_view(self):
