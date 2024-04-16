@@ -201,8 +201,8 @@ class CustomerViewsTestCase(unittest.TestCase):
             username="customer",
             password="password",
             first_name="abc123",
-            last_name="khamban",
-            email="customer12345@email.com",
+            last_name="lauud",
+            email="customer123odi45@email.com",
         )
         request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
         request.user = self.user
@@ -219,8 +219,8 @@ class CustomerViewsTestCase(unittest.TestCase):
             username="customer",
             password="password",
             first_name="abc123",
-            last_name="khamban",
-            email="customer1234@email.com",
+            last_name="oiute",
+            email="customer123posie4@email.com",
         )
         request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
         request.user = self.user
@@ -232,8 +232,8 @@ class CustomerViewsTestCase(unittest.TestCase):
             username="admin",
             password="password",
             first_name="abc123",
-            last_name="khamban",
-            email="abc123@email.com",
+            last_name="opdue",
+            email="abc12kdoid3@email.com",
             type="Admin",
             is_active=True,
         )
