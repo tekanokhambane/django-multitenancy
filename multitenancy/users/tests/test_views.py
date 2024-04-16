@@ -27,35 +27,46 @@ class CustomerViewsTestCase(TestCase):
             "last_name": "test",
             "username": "tcustomer",
             "password": "password1234",
-            "email": "customer2@example.com",
+            "email": "customer@example.com",
         }
         self.new_customer_data = {
-            "first_name": "customernew",
+            "first_name": "customer1",
             "username": "testcustomer",
         }
         self.customer_obj = Customer.objects.first()
 
-        self.staff_data = {
-            "first_name": "staff",
-            "last_name": "test",
-            "username": "tstaff",
-            "password": "password1234",
-            "email": "staff2@example.com",
-        }
-        self.staff_obj = Staff.objects.first()
+    def test_get_create_customer_view(self):
+        self.user = TenantUser.objects.get(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="abc123@email.com",
+            type="Admin",
+            is_active=True,
+        )
 
-    def test_create_customer_view(self):
-        # create a new admin
-        admin = Admin.objects.create(
-            first_name="admin",
-            last_name="test",
-            username="tadmin",
-            password="password1234",
-            email="admin2@example.com",
-        )
-        self.client.force_login(admin)
-        response = self.client.post(
-            "/admin/customers/create/", self.customer_data, follow=True
-        )
+        self.client.force_login(user=self.user)
+        request = self.factory.get("/admin/customers/create/")
+        request.user = self.user
+        response = CreateCustomerView.as_view()(request)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "multitenancy/users/created_customer.html")
+        self.assertTrue(self.client.session.get("_auth_user_id"))
+        self.assertIn("_auth_user_id", self.client.session)
+        self.assertTemplateUsed(response, "admin/customers/create.html")
+
+    def test_post_create_customer_view(self):
+        self.user = TenantUser.objects.get(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="abc123@email.com",
+            type="Admin",
+            is_active=True,
+        )
+        self.client.force_login(user=self.user)
+        request = self.factory.post("/admin/customers/create/", data=self.customer_data)
+        request.user = self.user
+        response = CreateCustomerView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
