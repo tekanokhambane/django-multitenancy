@@ -279,7 +279,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             print(f"Exception raised: {str(e)}")
 
 
-class StaffViewsTestCase(unittest.TestCase):
+class StaffViewsTestCase(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -298,19 +298,19 @@ class StaffViewsTestCase(unittest.TestCase):
         self.staff_obj = Staff.objects.first()
 
     def test_get_create_staff_view(self):
-        user = TenantUser.objects.create(
+        self.user = TenantUser.objects.create(
             username="admin",
             password="password",
             first_name="abc123",
-            last_name="khamban",
+            last_name="pooemd",
             email="abc1eoirj23@email.com",
             type="Admin",
             is_active=True,
         )
 
-        self.client.force_login(user=user)
+        self.client.force_login(user=self.user)
         request = self.factory.get("/admin/staff/create/")
-        request.user = user
+        request.user = self.user
         response = CreateStaffView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.client.session.get("_auth_user_id"))
