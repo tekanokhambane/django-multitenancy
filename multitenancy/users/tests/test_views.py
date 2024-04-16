@@ -255,14 +255,12 @@ class CustomerViewsTestCase(unittest.TestCase):
         self.assertTrue(self.client.session.get("_auth_user_id"))
         self.assertIn("_auth_user_id", self.client.session)
 
-    def test_customerlist_index_view_authenticated(self):
-        self.user = TenantUser.objects.get(
-            email="AnonymousUser",
-        )
+    def test_customerlist_index_view_unauthenticated(self):
+        user, _ = TenantUser.objects.get_or_create(email="anonymous_user@email.com")
 
-        self.client.force_login(user=self.user)
+        self.client.force_login(user=user)
         request = self.factory.get("/admin/customers/")
-        request.user = self.user
+        request.user = user
         response = CustomerListView.as_view()(request)
 
         self.assertEqual(response.status_code, 404)
