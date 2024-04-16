@@ -10,16 +10,17 @@ https://docs.djangoproject.com/en/{{ docs_version }}/ref/settings/
 import os
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 import sys
+
 sys.setrecursionlimit(10000)
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-
 import environ
- 
+
 env = environ.Env()
 TENANT_APPS_DIR = os.path.join(PROJECT_DIR, os.pardir)
 sys.path.insert(0, TENANT_APPS_DIR)
@@ -34,154 +35,144 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 SITE_ID = 1
 
 # Application definition
 
 HAS_MULTI_TYPE_TENANTS = True
-MULTI_TYPE_DATABASE_FIELD = 'type'  # or whatever the name you call the database field
+MULTI_TYPE_DATABASE_FIELD = "type"  # or whatever the name you call the database field
 
 TENANT_TYPES = {
     "public": {  # this is the name of the public schema from get_public_schema_name
         "APPS": [
             # mandatory
-            'django_tenants',
-            'tenant_users.permissions', # Defined in both shared apps and tenant apps
-            'tenant_users.tenants.apps.TenantsConfig', # defined only in shared apps
-            
+            "django_tenants",
+            "tenant_users.permissions",  # Defined in both shared apps and tenant apps
+            "tenant_users.tenants.apps.TenantsConfig",  # defined only in shared apps
             # multitenancy
-            'multitenancy.users',
-            'multitenancy.core',
-            'multitenancy.apps',
-            'multitenancy.admin',
-            'multitenancy.group.apps.GroupConfig',
-            'multitenancy.profiles',
-            'multitenancy.subscriptions',
-            'multitenancy.billing',
-            'multitenancy.order',
-            'multitenancy.address',
-            'multitenancy.settings',
-
+            "multitenancy.users",
+            "multitenancy.core",
+            "multitenancy.apps",
+            "multitenancy.admin",
+            "multitenancy.group.apps.GroupConfig",
+            "multitenancy.profiles",
+            "multitenancy.subscriptions",
+            "multitenancy.billing",
+            "multitenancy.order",
+            "multitenancy.address",
+            "multitenancy.settings",
             # 3rd party apps
-            'rest_framework',
-            'reversion',
-            'django_countries',
+            "rest_framework",
+            "reversion",
+            "django_countries",
             "phonenumber_field",
-            'django_crontab',
-            'django_redis',
-            'django_select2',
+            "django_crontab",
+            "django_redis",
+            "django_select2",
             "bootstrap4",
-            'formtools',
-            'sweetify',
-            'widget_tweaks',
-            'django_extensions',
-            'guardian',
-            'groups_manager',
-            'account',
-            'pinax.teams',
-            'pinax.invitations',
-            'django.contrib.humanize',  # Required for elapsed time formatting
-            'markdown_deux',  # Required for Knowledgebase item formatting
-            'bootstrap4form', # Required for nicer formatting of forms with the default templates
-            'helpdesk', # Required for helpdesk
+            "formtools",
+            "sweetify",
+            "widget_tweaks",
+            "django_extensions",
+            "guardian",
+            "groups_manager",
+            "account",
+            "pinax.teams",
+            "pinax.invitations",
+            "django.contrib.humanize",  # Required for elapsed time formatting
+            "markdown_deux",  # Required for Knowledgebase item formatting
+            "bootstrap4form",  # Required for nicer formatting of forms with the default templates
+            "helpdesk",  # Required for helpdesk
             # Django
-            'django.contrib.sites',
-            'django.contrib.admin',
-            'django.contrib.sessions',
-            'django.contrib.messages',
-            'django.contrib.sitemaps',
-            'django.contrib.auth',
-            'django.contrib.staticfiles',
-            'django.contrib.contenttypes',
-                  # shared apps here
-                  ],
-        "URLCONF": "{{ project_name }}.public_urls", # url for the public type here
+            "django.contrib.sites",
+            "django.contrib.admin",
+            "django.contrib.sessions",
+            "django.contrib.messages",
+            "django.contrib.sitemaps",
+            "django.contrib.auth",
+            "django.contrib.staticfiles",
+            "django.contrib.contenttypes",
+            # shared apps here
+        ],
+        "URLCONF": "{{ project_name }}.public_urls",  # url for the public type here
     },
     "basic": {
         "APPS": [
-            'tenant_users.permissions',
-
-            'rest_framework',
-
-            'storages',
+            "tenant_users.permissions",
+            "rest_framework",
+            "storages",
             # Dango
-            'django.contrib.sites',
-            'django.contrib.auth',
-            'django.contrib.messages',
-            'django.contrib.sitemaps',
-            'django.contrib.staticfiles',
-            'django.contrib.contenttypes',
-                 # type1 apps here
-                 ],
+            "django.contrib.sites",
+            "django.contrib.auth",
+            "django.contrib.messages",
+            "django.contrib.sitemaps",
+            "django.contrib.staticfiles",
+            "django.contrib.contenttypes",
+            # type1 apps here
+        ],
         "URLCONF": "{{project_name}}.urls_basic",
     },
     "premium": {
         "APPS": [
-                'rest_framework',
-                'tenant_users.permissions',
-
-
-                
-
-                # Dango
-                'django.contrib.sites',
-                'django.contrib.auth',
-                'django.contrib.messages',
-                'django.contrib.sitemaps',
-                'django.contrib.staticfiles',
-                'django.contrib.contenttypes',
-                 # type1 apps here
-                 ],
+            "rest_framework",
+            "tenant_users.permissions",
+            # Dango
+            "django.contrib.sites",
+            "django.contrib.auth",
+            "django.contrib.messages",
+            "django.contrib.sitemaps",
+            "django.contrib.staticfiles",
+            "django.contrib.contenttypes",
+            # type1 apps here
+        ],
         "URLCONF": "{{project_name}}.urls_premium",
     },
     "business": {
         "APPS": [
-                'rest_framework',
-                'tenant_users.permissions',
-
-
-
-
-                # Dango
-                'django.contrib.sites',
-                'django.contrib.auth',
-                'django.contrib.messages',
-                'django.contrib.sitemaps',
-                'django.contrib.staticfiles',
-                'django.contrib.contenttypes',
-                 # type1 apps here
-                 ],
+            "rest_framework",
+            "tenant_users.permissions",
+            # Dango
+            "django.contrib.sites",
+            "django.contrib.auth",
+            "django.contrib.messages",
+            "django.contrib.sitemaps",
+            "django.contrib.staticfiles",
+            "django.contrib.contenttypes",
+            # type1 apps here
+        ],
         "URLCONF": "{{project_name}}.urls_business",
-    }
+    },
 }
 
 
 INSTALLED_APPS = []
 for schema in TENANT_TYPES:
-    INSTALLED_APPS += [app for app in TENANT_TYPES[schema]["APPS"] if app not in INSTALLED_APPS]
+    INSTALLED_APPS += [
+        app for app in TENANT_TYPES[schema]["APPS"] if app not in INSTALLED_APPS
+    ]
 
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    "django_tenants.middleware.main.TenantMainMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "multitenancy.settings.middleware.TeamMiddleware",
-
+    "account.middleware.LocaleMiddleware",
+    "account.middleware.TimezoneMiddleware",
 ]
 
 MIDDLEWARE_CLASSES = [
-#    "account.middleware.ExpiredPasswordMiddleware",
+    #    "account.middleware.ExpiredPasswordMiddleware",
     "account.middleware.ExpiredPasswordMiddleware",
     "account.middleware.LocaleMiddleware",
     "account.middleware.TimezoneMiddleware",
-
 ]
 
 ACCOUNT_EMAIL_UNIQUE = False
@@ -189,103 +180,96 @@ ACCOUNT_EMAIL_CONFIRMATION_REQUIRED = False
 
 
 LOGIN_URL = "accounts_login"
-LOGIN_REDIRECT_URL="accounts_login"
+ACCOUNT_LOGIN_URL = "accounts_login"
+ACCOUNT_LOGOUT_URL = "accounts_logout"
+
+LOGIN_REDIRECT_URL = "accounts_login"
 ACCOUNT_LOGOUT_REDIRECT_URL = "accounts_login"
 
 
-
-DATABASE_ROUTERS = (
-    'django_tenants.routers.TenantSyncRouter',
-)
+DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
 
 TENANT_MODEL = "apps.Tenant"  # app.Model
 
 TENANT_DOMAIN_MODEL = "apps.Domain"  # app.Model
 
-AUTH_USER_MODEL = 'users.TenantUser'
+AUTH_USER_MODEL = "users.TenantUser"
 
 AUTHENTICATION_BACKENDS = (
-    'tenant_users.permissions.backend.UserBackend',
-    'account.auth_backends.EmailAuthenticationBackend',
-    'guardian.backends.ObjectPermissionBackend',
-
+    "tenant_users.permissions.backend.UserBackend",
+    "account.auth_backends.EmailAuthenticationBackend",
+    "guardian.backends.ObjectPermissionBackend",
 )
-ROOT_URLCONF = '{{project_name}}.urls'
-
+ROOT_URLCONF = "{{project_name}}.urls"
 
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS':[os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
                 "account.context_processors.account",
             ],
-            
         },
     },
 ]
 
 
 GROUPS_MANAGER = {
-    'AUTH_MODELS_SYNC': True,
+    "AUTH_MODELS_SYNC": True,
 }
 
-ACCOUNT_LOGIN_REDIRECT_URL = 'account_login'
 
-ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_EMAIL_REQUIRED = True
 
-DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 TENANT_LIMIT_SET_CALLS = True
 
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-LANGUAGES = [
-    ('en-us', _('English'))
-]
+LANGUAGES = [("en-us", _("English"))]
 
-WSGI_APPLICATION = '{{project_name}}.wsgi.application'
+WSGI_APPLICATION = "{{project_name}}.wsgi.application"
 
 GROUPS_MANAGER = {
-'AUTH_MODELS_SYNC': True,
+    "AUTH_MODELS_SYNC": True,
 }
 
 CACHES = {
     # … default cache config and others
     "default": {
-                "BACKEND": "django_redis.cache.RedisCache",
-                "LOCATION": "redis://127.0.0.1:6379/1",
-                "OPTIONS": {
-                    "CLIENT_CLASS": "django_redis.client.DefaultClient",
-                }
-            },
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
     "select2": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://127.0.0.1:6379/2",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        }
-    }
+        },
+    },
 }
 
 # Tell select2 which cache configuration to use:
 SELECT2_CACHE_BACKEND = "select2"
 SELECT2_JS = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"
-SELECT2_CSS = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css"
+SELECT2_CSS = (
+    "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css"
+)
 SELECT2_I18N_PATH = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/i18n"
 # Database
- # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
 # Password validation
@@ -293,27 +277,26 @@ SELECT2_I18N_PATH = "https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/i1
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
-
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -325,14 +308,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-MEDIA_ROOT=os.path.join(PROJECT_DIR,'media/')
+MEDIA_ROOT = os.path.join(PROJECT_DIR, "media/")
 
 
+MEDIA_URL = "/media/"
 
-MEDIA_URL= '/media/'
-
-STATIC_URL="/static/"
-STATIC_ROOT=os.path.join(PROJECT_DIR,"static")
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(PROJECT_DIR, "static")
 
 STATICFILES_FINDERS = [
     "django_tenants.staticfiles.finders.TenantFileSystemFinder",  # Must be first
@@ -343,7 +325,7 @@ STATICFILES_FINDERS = [
 
 
 MULTITENANT_STATICFILES_DIRS = [
-    os.path.join( PROJECT_DIR, "tenants/%s/static" ),
+    os.path.join(PROJECT_DIR, "tenants/%s/static"),
 ]
 
 STATICFILES_STORAGE = "django_tenants.staticfiles.storage.TenantStaticFilesStorage"
@@ -353,8 +335,7 @@ MULTITENANT_RELATIVE_STATIC_ROOT = ""  # (default: create sub-directory for each
 MULTITENANT_RELATIVE_MEDIA_ROOT = ""
 
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 TAGGIT_CASE_INSENSITIVE = True
