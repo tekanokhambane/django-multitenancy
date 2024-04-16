@@ -256,7 +256,7 @@ class CustomerViewsTestCase(unittest.TestCase):
         self.assertIn("_auth_user_id", self.client.session)
 
     def test_customerlist_index_view_unauthenticated(self):
-        user, _ = TenantUser.objects.get_or_create(email="anonymous_user@email.com")
+        user, _ = TenantUser.objects.get_or_create(email="AnonymousUser")
 
         self.client.force_login(user=user)
         request = self.factory.get("/admin/customers/")
@@ -285,12 +285,12 @@ class StaffViewsTestCase(unittest.TestCase):
         self.staff_obj = Staff.objects.first()
 
     def test_get_create_staff_view(self):
-        self.user = TenantUser.objects.get(
+        self.user = TenantUser.objects.get_or_create(
             username="admin",
             password="password",
             first_name="abc123",
             last_name="khamban",
-            email="abc123@email.com",
+            email="abc1eoirj23@email.com",
             type="Admin",
             is_active=True,
         )
