@@ -298,7 +298,7 @@ class StaffViewsTestCase(unittest.TestCase):
         self.staff_obj = Staff.objects.first()
 
     def test_get_create_staff_view(self):
-        self.user = TenantUser.objects.get_or_create(
+        user = TenantUser.objects.create(
             username="admin",
             password="password",
             first_name="abc123",
@@ -308,7 +308,7 @@ class StaffViewsTestCase(unittest.TestCase):
             is_active=True,
         )
 
-        self.client.force_login(user=self.user)
+        self.client.force_login(user=user)
         request = self.factory.get("/admin/staff/create/")
         request.user = self.user
         response = CreateStaffView.as_view()(request)
