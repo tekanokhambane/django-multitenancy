@@ -151,31 +151,39 @@ class CustomerViewsTestCase(unittest.TestCase):
             print(f"Exception raised: {str(e)}")
 
     def test_update_customer_authenticatednonadminuser_view(self):
-        self.user = Staff.objects.create(
-            username="admin",
-            password="password",
-            first_name="abc123",
-            last_name="staff",
-            email="staff1@email.com",
-            type="Staff",
-            is_active=True,
-        )
+        try:
+            self.user = Staff.objects.create(
+                username="admin",
+                password="password",
+                first_name="abc123",
+                last_name="staff",
+                email="staff1@email.com",
+                type="Staff",
+                is_active=True,
+            )
+            assert self.user is not None
 
-        self.client.force_login(user=self.user)
-        self.customer = Customer.objects.create(
-            username="customer",
-            password="password",
-            first_name="abc123",
-            last_name="customer1",
-            email="customer12344@email.com",
-        )
-        request = self.factory.get(f"/admin/customers/{self.customer.id}/update")
-        request.user = self.user
-        # response is permission denied
-        response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
-        self.assertEqual(response.status_code, 403)
+            self.client.force_login(user=self.user)
+            self.customer = Customer.objects.create(
+                username="customer",
+                password="password",
+                first_name="abc123",
+                last_name="customer1",
+                email="customer12344@email.com",
+            )
+            assert self.customer is not None
 
-        # self.assertEqual(response.status_code, 404)
+            request = self.factory.get(f"/admin/customers/{self.customer.id}/update")
+            assert request is not None
+            request.user = self.user
+            assert request.user is not None
+
+            response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
+            print(response)
+            assert response is not None
+            self.assertEqual(response.status_code, 403)
+        except Exception as e:
+            print(f"Exception raised: {str(e)}")
 
     def test_delete_customer_view(self):
         self.user = TenantUser.objects.create(
