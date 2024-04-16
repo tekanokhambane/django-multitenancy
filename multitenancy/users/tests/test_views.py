@@ -169,9 +169,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             last_name="customer1",
             email="customer12344@email.com",
         )
-        request = self.factory.post(
-            f"/admin/customers/{self.customer.id}/update", data=self.new_customer_data
-        )
+        request = self.factory.get(f"/admin/customers/{self.customer.id}/update")
         request.user = self.user
         # response is permission denied
         response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
