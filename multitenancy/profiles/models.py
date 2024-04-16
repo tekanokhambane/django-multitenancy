@@ -19,7 +19,6 @@ class Skills(models.Model):
 
 
 class Profile(models.Model):
-
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="profile", on_delete=models.PROTECT)  # type: ignore
     name = models.CharField(max_length=75, blank=True)
     job_title = models.CharField(max_length=75, blank=True)

@@ -90,9 +90,7 @@ class TenantTemplateViewsTestCase(unittest.TestCase):
         self.client.force_login(user=self.user)
         request = self.factory.post('/admin/template/create/', data=self.tenant_data)
         request.user = self.user
-        request.session = {}
         response = CreateTemplateView.as_view()(request)
-        print(response)
         self.assertEqual(response, '/admin/templates/')
 
     def test_get_create_template_view_authenticated(self):

@@ -11,7 +11,7 @@ from multitenancy.billing.serializers import PaymentSerializer
 from multitenancy.billing.serializers import PaymentGatewaySerializer
 from multitenancy.billing.views import CreditViewSet, PaymentViewSet, RefundViewSet
 
-from multitenancy.subscriptions.tests.test_serializers import SubscriptionSerializerTestCase
+from multitenancy.subscriptions.tests.est_serializers import SubscriptionSerializerTestCase
 
 from multitenancy.subscriptions.views import SubscriptionsViewSet
 

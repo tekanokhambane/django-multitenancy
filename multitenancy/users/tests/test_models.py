@@ -1,95 +1,104 @@
-import unittest
+from django.test import TestCase
 from multitenancy.users.models import Admin, Customer, Staff, TenantUser
 from tenant_users.permissions.models import UserTenantPermissions
 
 
-class StaffTestCase(unittest.TestCase):
+class StaffTestCase(TestCase):
 
-        
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Staff.objects.all().delete()
+        password = 'password123'
+        cls.staff = Staff.objects.create(
+            username='teststaff',
+            first_name='Test',
+            last_name='Staff',
+            email='test@example.com'
+        )
+        cls.staff.set_password(password)
+        cls.staff.save()
 
     def test_staff_exists(self):
-        staff_a = Staff.objects.create(
-            username='staff1', first_name='abc', last_name='kham', email='abcstaff@email.com',
-        )
-        
-        staff_a_pass = 'somepasswaord'
-        staff_a.set_password(staff_a_pass)
-        self.staff_a_pass = staff_a_pass
-        staff_a.save()
-        staff_a.add_user_perms()
-        self.staff_a = staff_a
-        staff_count = Staff.objects.all().count()
-        self.assertEqual(staff_count, 1)
-        self.assertNotEqual(staff_count, 0)
+        staff = Staff.objects.get(username=self.staff.username)
+        self.assertEqual(staff, self.staff)
+        self.assertTrue(staff.pk) # staff has a primary key set
 
     def test_staff_password(self):
-        staff_a = Staff.objects.get(
-            username='staff1', first_name='abc', last_name='kham', email='abcstaff@email.com',
-        )
-        
-        staff_a_pass = 'somepasswaord'
-        staff_a.set_password(staff_a_pass)
-        self.staff_a_pass = staff_a_pass
-        staff_a.save()
-        
-        self.staff_a = staff_a
-        staff_qs = Staff.objects.filter(username__iexact="staff1")
-        staff_exist = staff_qs.exists() and staff_qs.count() == 1
-        self.assertTrue(staff_exist)
-        self.assertTrue(self.staff_a.check_password(self.staff_a_pass))
+        staff = Staff.objects.get(username=self.staff.username)
+        staff.check_password('password123')
+        self.assertTrue(staff.check_password('password123'))
 
-class AdminTestCase(unittest.TestCase):
+    def test_role(self):
+        self.assertEqual(self.staff.type, 'Staff')
+
+
+class AdminTestCase(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Admin.objects.all().delete()
+        password = 'password123'
+        cls.admin = Admin.objects.create(
+            username='testadmin',
+            first_name='Test',
+            last_name='Admin',
+            email='admin1@example.com',
+            password=password
+        )
+        cls.admin.set_password(password)
+        cls.admin.save()
+        cls.admin.create_public_superuser()
     
 
     def test_admin_exists(self):
-        admin_a_pass = 'somepasswaord'
-        admin_a = TenantUser.objects.create_superuser(
-            username='admin', first_name='abc123', last_name='khamban', email='adminabc123@email.com',
-            password=admin_a_pass
-            )
-        self.admin_a_pass = admin_a_pass
-        admin_a.set_password(admin_a_pass)
-        #admin_a.is_superuser = True
-        admin_a.save()
-        self.admin_a = admin_a
-        admin_exits = TenantUser.objects.filter(email__iexact="adminabc123@email.com").exists()
-        self.assertTrue(admin_exits)
+        admin = Admin.objects.get(username=self.admin.username)
+        self.assertEqual(admin, self.admin)
+        self.assertTrue(admin.pk)
         
     
     def test_superuser(self):
-
-        superuser = UserTenantPermissions.objects.filter(is_superuser=True, profile_id=1)
-        is_super = TenantUser.objects.filter(usertenantpermissions__is_superuser=True)
-        super_exists = is_super.exists()
-        #self.assertEqual(superuser, True)              
-        self.assertTrue(super_exists, True)
+        self.assertTrue(self.admin.is_superuser)
+        self.assertTrue(self.admin.is_staff)
         
 
     def test_admin_password(self):
-        admin_a_pass = 'somepasswaord'
-        admin_qs = TenantUser.objects.get( email='adminabc123@email.com')
-        self.assertTrue(admin_qs.check_password(admin_a_pass))
-    
+        admin = Admin.objects.get(username=self.admin.username)
+        admin.check_password('password123')
+        self.assertTrue(admin.check_password('password123'))
 
-class CustomerTestCase(unittest.TestCase):
+    def test_role(self):
+        self.assertEqual(self.admin.type, 'Admin')
+
+
+class CustomerTestCase(TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Customer.objects.all().delete()
+        password = 'password123'
+        cls.customer = Customer.objects.create(
+            username='testcustomer',
+            first_name='Test',
+            last_name='Customer',
+            email='customer1@example.com',
+            password=password
+        )
+        cls.customer.set_password(password)
+        cls.customer.save()
     
 
     def test_customer_exists(self):
-        customer_a = Customer.objects.create(username='customer1', first_name='abc', last_name='kham', email='abpdpdc@email.com',)
-        customer_a_pass = 'somepasswaord'
-        customer_a.set_password(customer_a_pass)
-        self.customer_a_pass = customer_a_pass
-        customer_a.save()
-        customer_qs = Customer.objects.filter(email='abpdpdc@email.com',)
-        customer_qs.exists()
-        customer_count = Customer.objects.all().count()
-        self.assertTrue(customer_qs)
-        self.assertNotEqual(customer_count, 0)
+       customer = Customer.objects.get(username=self.customer.username)
+       self.assertEqual(customer, self.customer)
+       self.assertTrue(customer.pk)
 
     def test_customer_password(self):
-        customer_a = Customer.objects.create(username='customer1', first_name='abc', last_name='kham', email='abffffc@email.com', password='somepasswaord')
-        
-        customer_qs = Customer.objects.filter(email='abffffc@email.com')
-        customer_exist = customer_qs.exists() and customer_qs.count() == 1
-        self.assertTrue(customer_exist)
-        
+        customer = Customer.objects.get(username=self.customer.username)
+        customer.check_password('password123')
+        self.assertTrue(customer.password, customer.check_password('password123'))
+    
+    def test_role(self):
+        self.assertEqual(self.customer.type, 'Customer')

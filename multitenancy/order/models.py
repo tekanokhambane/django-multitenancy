@@ -4,6 +4,8 @@ from django.db import models
 from django.conf import settings
 from multitenancy.subscriptions.models import Subscription
 from multitenancy.address.models import Address
+
+
 class Coupon(models.Model):
     """
     Represents a model for a coupon in a Django application.
@@ -19,23 +21,54 @@ class Coupon(models.Model):
     """
 
     code = models.CharField(max_length=15, unique=True, help_text="Coupon code")
-    discount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], help_text="Discount amount")
-    start_date = models.DateField(default=datetime.date.today, help_text="Start date of coupon validity")
-    end_date = models.DateField(default=datetime.date.today, help_text="End date of coupon validity")
-    usage_limit = models.PositiveIntegerField(validators=[MinValueValidator(0)], help_text="Maximum number of times coupon can be used")
-    is_active = models.BooleanField(default=True, help_text="Whether the coupon is currently active")
-    minimum_order_amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[MinValueValidator(0)], help_text="Minimum order amount required to use the coupon")
-    redeem_by = models.DateField(default=datetime.date.today, help_text="Date by which the coupon must be redeemed")
-    usage_count = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0)], help_text="Number of times the coupon has been used")
+    discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        help_text="Discount amount",
+    )
+    start_date = models.DateField(
+        default=datetime.date.today, help_text="Start date of coupon validity"
+    )
+    end_date = models.DateField(
+        default=datetime.date.today, help_text="End date of coupon validity"
+    )
+    usage_limit = models.PositiveIntegerField(
+        validators=[MinValueValidator(0)],
+        help_text="Maximum number of times coupon can be used",
+    )
+    is_active = models.BooleanField(
+        default=True, help_text="Whether the coupon is currently active"
+    )
+    minimum_order_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+        help_text="Minimum order amount required to use the coupon",
+    )
+    redeem_by = models.DateField(
+        default=datetime.date.today,
+        help_text="Date by which the coupon must be redeemed",
+    )
+    usage_count = models.PositiveIntegerField(
+        default=0,
+        validators=[MinValueValidator(0)],
+        help_text="Number of times the coupon has been used",
+    )
     # the valid_for field will have to be connected to a Product model
-    # valid_for = models.ForeignKey(Subscription, on_delete=models.SET_NULL, null=True, blank=True) 
+    # valid_for = models.ForeignKey(Subscription, on_delete=models.SET_NULL, null=True, blank=True)
+
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE
+    )
     date_created = models.DateField(auto_now_add=True)
     order_number = models.CharField(max_length=100)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=10, choices=[("completed", "Completed"), ("failed", "Failed")])
+    status = models.CharField(
+        max_length=10, choices=[("completed", "Completed"), ("failed", "Failed")]
+    )
     payment_method = models.CharField(max_length=50)
     billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
@@ -47,7 +80,6 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_number
-
 
     def get_total_amount(self):
         """

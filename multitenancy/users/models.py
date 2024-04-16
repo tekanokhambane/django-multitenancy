@@ -41,7 +41,7 @@ class TenantUserManager(UserProfileManager):
         return self.get_queryset().filter_by_id(query=query)
     
     
-# Create your models here.
+
 class TenantUser(UserProfile):
     class Types(models.TextChoices):
         ADMIN = "Admin", "Admin"

@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework import permissions
+from account.mixins import LoginRequiredMixin
 from multitenancy.admin.views.baseViews import AdminTemplateView
 from multitenancy.billing.forms import InvoiceForm
 from multitenancy.billing.serializers import CreditSerializer, InvoiceSerializer, PaymentGatewaySerializer, PaymentSerializer, RefundSerializer
@@ -16,10 +17,10 @@ from .models import (
     Credit
     )
 
-class BillingIndexView(AdminTemplateView):
+class BillingIndexView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/billing.html"
 
-class InvoiceListView(AdminTemplateView):
+class InvoiceListView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/invoice_list.html"
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -29,17 +30,17 @@ class InvoiceListView(AdminTemplateView):
         return context
 
 
-class CreditsListView(AdminTemplateView):
+class CreditsListView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/credits_list.html"
 
-class RefundsListView(AdminTemplateView):
+class RefundsListView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/refunds_list.html"
 
 
-class PaymentGatewaysView(AdminTemplateView):
+class PaymentGatewaysView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/payment_gateways_list.html"
 
-class PaymentView(AdminTemplateView):
+class PaymentView(LoginRequiredMixin, AdminTemplateView):
     template_name = "multitenancy/billing/payments.html"
 
 

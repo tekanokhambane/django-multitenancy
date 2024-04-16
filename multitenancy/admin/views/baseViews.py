@@ -13,6 +13,9 @@ from multitenancy.admin.decorators import allowed_users
 class AdminView(UserPassesTestMixin, View):
     redirect_field_name = 'next'
     def test_func(self):
+        """
+        Checks if the user type is 'Admin'.
+        """
         return self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
@@ -35,7 +38,7 @@ class AdminCreateView(UserPassesTestMixin, CreateView):
 class AdminDetailView(UserPassesTestMixin, DetailView):
     redirect_field_name = 'next'
     def test_func(self):
-        return self.request.user.type == 'Admin'
+        return self.request.user.is_authenticated and self.request.user.type == 'Admin'
     
     def handle_no_permission(self):
         context = {'user': self.request.user}

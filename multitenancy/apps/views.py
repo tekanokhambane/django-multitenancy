@@ -115,7 +115,7 @@ class DeleteTemplateView(LoginRequiredMixin, AdminDeleteView):
         tenant = Tenant.objects.filter(id=tenant_id)
         tenant.delete()
         sweetify.success(
-                self.request, "Successfully Delete Tenant!", icon="success", timer=5000
+                request, "Successfully Delete Tenant!", icon="success", timer=5000
             )
         return HttpResponseRedirect(reverse("tenant_list", urlconf="multitenancy.urls"))
 
