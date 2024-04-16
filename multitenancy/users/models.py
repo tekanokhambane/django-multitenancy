@@ -201,11 +201,9 @@ class Customer(TenantUser):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         if instance.type == TenantUser.Types.ADMIN:
-            Admin.objects.create(user=instance)
+            Profile.objects.create(user=instance)
         elif instance.type == TenantUser.Types.STAFF:
-            Staff.objects.create(user=instance)
-        elif instance.type == TenantUser.Types.CUSTOMER:
-            Customer.objects.create(user=instance)
+            Profile.objects.create(user=instance)
 
 
 post_save.connect(create_user_profile, sender=TenantUser)
