@@ -3,26 +3,27 @@ from multitenancy.users.models import Admin, Customer, Staff, TenantUser
 from tenant_users.permissions.models import UserTenantPermissions
 
 
-# class StaffTestCase(TestCase):
+class StaffTestCase(TestCase):
 
-#     @classmethod
-#     def setUpClass(cls):
-#         super().setUpClass()
-#         Staff.objects.all().delete()
-#         password = 'password123'
-#         cls.staff = Staff.objects.create(
-#             username='teststaff',
-#             first_name='Test',
-#             last_name='Staff',
-#             email='test@example.com'
-#         )
-#         cls.staff.set_password(password)
-#         cls.staff.save()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        Staff.objects.all().delete()
+        password = "password123"
+        cls.staff = Staff.objects.create(
+            username="teststaff",
+            first_name="Test",
+            last_name="Staff",
+            email="test@example.com",
+        )
+        cls.staff.set_password(password)
+        cls.staff.save()
 
-#     def test_staff_exists(self):
-#         staff = Staff.objects.get(username=self.staff.username)
-#         self.assertEqual(staff, self.staff)
-#         self.assertTrue(staff.pk) # staff has a primary key set
+    def test_staff_exists(self):
+        staff = Staff.objects.get(pk=self.staff.id)
+        self.assertEqual(staff, self.staff)
+        self.assertTrue(staff.pk)  # staff has a primary key set
+
 
 #     def test_staff_password(self):
 #         staff = Staff.objects.get(username=self.staff.username)
