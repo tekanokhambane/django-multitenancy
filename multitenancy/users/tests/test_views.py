@@ -310,7 +310,7 @@ class StaffViewsTestCase(unittest.TestCase):
 
         self.client.force_login(user=user)
         request = self.factory.get("/admin/staff/create/")
-        request.user = self.user
+        request.user = user
         response = CreateStaffView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(self.client.session.get("_auth_user_id"))
