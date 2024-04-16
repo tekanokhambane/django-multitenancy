@@ -1,7 +1,7 @@
 import unittest
 from urllib import response
 from django.test import RequestFactory, TestCase, Client
-from tenant_users.permissions.models import UserTenantPermissions
+from multitenancy.utils import create_public_tenant
 from multitenancy.admin.views.adminViews import (
     AdminIndexView,
 )
@@ -299,23 +299,21 @@ class StaffViewsTestCase(TestCase):
         self.staff_obj = Staff.objects.first()
 
     def test_get_create_staff_view(self):
-        self.user = Admin.objects.create(
-            username="admin",
-            password="password",
-            first_name="abc123",
-            last_name="pooemd",
-            email="abc1eoirj23@email.com",
-            type="Admin",
-            is_active=True,
+        # self.user = Admin.objects.create(
+        #     username="admin",
+        #     password="password",
+        #     first_name="abc123",
+        #     last_name="pooemd",
+        #     email="abc1eoirj23@email.com",
+        #     type="Admin",
+        #     is_active=True,
+        # )
+        self.tenant = create_public_tenant(
+            "localhost",
+            "abc1eoirj23@email.com",
+            "password",
         )
-        user_permission = UserTenantPermissions.objects.create(
-            profile_id=self.user.pk, is_staff=True, is_superuser=True
-        )
-        user_permission.save()
-        assert self.user is not None
-        assert user_permission is not None
-        assert user_permission.is_staff is True
-        assert user_permission.is_superuser is False
+        self.user = Admin.objects.get(email="abc1eoirj23@email.com")
 
         self.client.force_login(user=self.user)
         request = self.factory.get("/admin/staff/create/")
