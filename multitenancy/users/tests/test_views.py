@@ -122,7 +122,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             email="AnonymousUser",
         )
 
-        self.client.force_login(user=self.user)
+        # self.client.force_login(user=self.user)
         self.customer = Customer.objects.create(
             username="customer",
             password="password",
