@@ -4,6 +4,9 @@ from django.db import models
 from django.db.models import Q
 from tenant_users.tenants.models import UserProfile, UserProfileManager
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
 from django.contrib.auth.models import Group
 from tenant_users.permissions.models import UserTenantPermissions
 from multitenancy.profiles.models import Profile
@@ -12,48 +15,57 @@ from multitenancy.profiles.models import Profile
 def upload_avatar_to(instance, filename):
     filename, ext = os.path.splitext(filename)
     return os.path.join(
-        'avatar_images',
-        'avatar_{uuid}_{filename}{ext}'.format(
-            uuid=uuid.uuid4(), filename=filename, ext=ext)
+        "avatar_images",
+        "avatar_{uuid}_{filename}{ext}".format(
+            uuid=uuid.uuid4(), filename=filename, ext=ext
+        ),
     )
 
 
 class TenantUserQuerySet(models.QuerySet):
-        def search(self, query=None):
-            if query is None or query =="":
-                return self.all()
-            lookups = Q(first_name__icontains=query ) | Q(last_name__icontains=query ) | Q(email__icontains=query) | Q(username__icontains=query)
-            return self.filter(lookups)
-        
-        def filter_by_id(self, query=None):
-            if query is None or query =="":
-                return self.all()
-            return self.filter(id__exact=query)
-        
+    def search(self, query=None):
+        if query is None or query == "":
+            return self.all()
+        lookups = (
+            Q(first_name__icontains=query)
+            | Q(last_name__icontains=query)
+            | Q(email__icontains=query)
+            | Q(username__icontains=query)
+        )
+        return self.filter(lookups)
+
+    def filter_by_id(self, query=None):
+        if query is None or query == "":
+            return self.all()
+        return self.filter(id__exact=query)
+
+
 class TenantUserManager(UserProfileManager):
     def get_queryset(self):
         return TenantUserQuerySet(self.model, using=self._db)
-    
+
     def search(self, query=None):
         return self.get_queryset().search(query=query)
-    
+
     def filter_by_id(self, query=None):
         return self.get_queryset().filter_by_id(query=query)
-    
-    
+
 
 class TenantUser(UserProfile):
     class Types(models.TextChoices):
         ADMIN = "Admin", "Admin"
         STAFF = "Staff", "Staff"
         CUSTOMER = "Customer", "Customer"
+
     avatar = models.ImageField(
-        verbose_name=_('profile picture'),
+        verbose_name=_("profile picture"),
         upload_to=upload_avatar_to,
         blank=True,
     )
 
-    type = models.CharField(_('Type'), max_length=255, choices=Types.choices, default=Types.CUSTOMER)
+    type = models.CharField(
+        _("Type"), max_length=255, choices=Types.choices, default=Types.CUSTOMER
+    )
     first_name = models.CharField(max_length=300, blank=True, null=True)
     last_name = models.CharField(max_length=300, blank=True, null=True)
     username = models.CharField(max_length=250, blank=True, null=True)
@@ -76,8 +88,8 @@ class TenantUser(UserProfile):
             return self.email
 
     class Meta:
-        verbose_name = _('user profile')
-        verbose_name_plural = _('user profiles')
+        verbose_name = _("user profile")
+        verbose_name_plural = _("user profiles")
 
     @property
     def is_superuser(self):
@@ -85,20 +97,19 @@ class TenantUser(UserProfile):
             return True
         else:
             return False
+
     def get_username(self) -> str:
         uname = self.username
         return uname
-    
+
     def add_role(self, role):
         if role not in self.roles:
             self.roles.append(role)
-            
+
     def remove_role(self, role):
         if role in self.roles:
             self.roles.remove(role)
 
-    
-    
 
 class AdminManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -112,7 +123,9 @@ class StaffManager(models.Manager):
 
 class CustomerManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
-        return super().get_queryset(*args, **kwargs).filter(type=TenantUser.Types.CUSTOMER)
+        return (
+            super().get_queryset(*args, **kwargs).filter(type=TenantUser.Types.CUSTOMER)
+        )
 
 
 class Admin(TenantUser):
@@ -123,9 +136,10 @@ class Admin(TenantUser):
         profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
         return profile
 
-    
     def create_public_superuser(self, *args, **kwargs):
-        UserTenantPermissions.objects.create(profile_id=self.pk, is_staff=True, is_superuser=True)
+        UserTenantPermissions.objects.create(
+            profile_id=self.pk, is_staff=True, is_superuser=True
+        )
 
     class Meta:
         proxy = True
@@ -147,9 +161,11 @@ class Staff(TenantUser):
     @property
     def account(self):
         return self.account
-    
+
     def add_user_perms(self, *args, **kwargs):
-        UserTenantPermissions.objects.create(profile_id=self.pk, is_staff=True, is_superuser=False)
+        UserTenantPermissions.objects.create(
+            profile_id=self.pk, is_staff=True, is_superuser=False
+        )
 
     @property
     def get_profile(self):
@@ -179,3 +195,17 @@ class Customer(TenantUser):
         if not self.pk:
             self.type = TenantUser.Types.CUSTOMER
         return super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=TenantUser)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        if instance.type == TenantUser.Types.ADMIN:
+            Admin.objects.create(user=instance)
+        elif instance.type == TenantUser.Types.STAFF:
+            Staff.objects.create(user=instance)
+        elif instance.type == TenantUser.Types.CUSTOMER:
+            Customer.objects.create(user=instance)
+
+
+post_save.connect(create_user_profile, sender=TenantUser)

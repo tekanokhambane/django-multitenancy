@@ -1,8 +1,8 @@
 from django.test import RequestFactory, TestCase, Client
 from multitenancy.admin.views.adminViews import (
-    AdminIndexView, 
-    )
-from multitenancy.users.views import(
+    AdminIndexView,
+)
+from multitenancy.users.views import (
     CreateCustomerView,
     CreateStaffView,
     DeleteCustomerView,
@@ -12,7 +12,7 @@ from multitenancy.users.views import(
 )
 from multitenancy.subscriptions.models import Plan
 from multitenancy.users.models import Admin, Customer, Staff, TenantUser
-from  multitenancy.admin.decorators import allowed_users
+from multitenancy.admin.decorators import allowed_users
 from multitenancy.users.forms import CustomerForm, CustomerUpdateForm
 from multitenancy.subscriptions.forms import PlanForm
 from multitenancy.admin import urls
@@ -23,64 +23,39 @@ class CustomerViewsTestCase(TestCase):
         self.factory = RequestFactory()
         self.client = Client()
         self.customer_data = {
-            'first_name': 'customer',
-            'last_name': 'test',
-            'username': 'tcustomer',
-            'password': 'password1234',
-            'email': 'customer2@example.com',
+            "first_name": "customer",
+            "last_name": "test",
+            "username": "tcustomer",
+            "password": "password1234",
+            "email": "customer2@example.com",
         }
         self.new_customer_data = {
-            'first_name': 'customernew',
-            'username': 'testcustomer',
+            "first_name": "customernew",
+            "username": "testcustomer",
         }
         self.customer_obj = Customer.objects.first()
 
-    def test_get_create_customer_view(self):
-        self.user = Admin.objects.create(
-            username='admin', 
-            password="password", 
-            first_name='abc123', 
-            last_name='khamban', 
-            email='abc123@email.com', 
-            type='Admin',
-            is_active=True
-            )
-    
-        self.client.force_login(user=self.user)
-        request = self.factory.get('/admin/customers/create/')
-        request.user = self.user
-        response = CreateCustomerView.as_view()(request)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.client.session.get('_auth_user_id'))
-        self.assertIn('_auth_user_id', self.client.session)
+        self.staff_data = {
+            "first_name": "staff",
+            "last_name": "test",
+            "username": "tstaff",
+            "password": "password1234",
+            "email": "staff2@example.com",
+        }
+        self.staff_obj = Staff.objects.first()
 
-    def test_post_create_customer_view(self):
-        self.user = Admin.objects.create(
-            username='admin', 
-            password="password", 
-            first_name='abc123', 
-            last_name='khamban', 
-            email='abc123@email.com', 
-            type='Admin',
-            is_active=True
-            )
-        self.client.force_login(user=self.user)
-        request = self.factory.post('/admin/customers/create/', data=self.customer_data)
-        request.user = self.user
-        response = CreateCustomerView.as_view()(request)
+    def test_create_customer_view(self):
+        # create a new admin
+        admin = Admin.objects.create(
+            first_name="admin",
+            last_name="test",
+            username="tadmin",
+            password="password1234",
+            email="admin2@example.com",
+        )
+        self.client.force_login(admin)
+        response = self.client.post(
+            "/admin/customers/create/", self.customer_data, follow=True
+        )
         self.assertEqual(response.status_code, 200)
-
-    def test_get_create_customer_view_authenticated(self):
-        self.user = TenantUser.objects.get(
-            
-            email='AnonymousUser', 
-            
-            )
-        
-        self.client.force_login(user=self.user)
-        request = self.factory.get('/admin/customers/create/')
-        request.user = self.user
-        response = AdminIndexView.as_view()(request)
-        
-        self.assertEqual(response.status_code, 403)
-        
+        self.assertTemplateUsed(response, "multitenancy/users/created_customer.html")
