@@ -209,44 +209,43 @@ class CustomerViewsTestCase(unittest.TestCase):
         response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
         self.assertEqual(response.status_code, 302)
 
+    def test_delete_customer_unauthenticateduser_view(self):
+        self.user = TenantUser.objects.get_or_create(
+            email="AnonymousUser",
+        )
 
-#     def test_delete_customer_unauthenticateduser_view(self):
-#         self.user = TenantUser.objects.get(
-#             email='AnonymousUser',
-#             )
+        self.client.force_login(user=self.user)
+        self.customer = Customer.objects.create(
+            username="customer",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="customer1234@email.com",
+        )
+        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+        request.user = self.user
+        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+        self.assertEqual(response.status_code, 404)
 
-#         self.client.force_login(user=self.user)
-#         self.customer = Customer.objects.create(
-#             username='customer',
-#             password="password",
-#             first_name='abc123',
-#             last_name='khamban',
-#             email='customer1234@email.com',
-#         )
-#         request = self.factory.delete(f'/admin/customers/{self.customer.id}/delete')
-#         request.user = self.user
-#         response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
-#         self.assertEqual(response.status_code, 404)
+    def test_customerlist_index_view(self):
+        self.user = TenantUser.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="abc123@email.com",
+            type="Admin",
+            is_active=True,
+        )
 
+        self.client.force_login(user=self.user)
+        request = self.factory.get("/admin/customers/")
+        request.user = self.user
+        response = CustomerListView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.client.session.get("_auth_user_id"))
+        self.assertIn("_auth_user_id", self.client.session)
 
-#     def test_customerlist_index_view(self):
-#         self.user = TenantUser.objects.get(
-#             username='admin',
-#             password="password",
-#             first_name='abc123',
-#             last_name='khamban',
-#             email='abc123@email.com',
-#             type='Admin',
-#             is_active=True
-#             )
-
-#         self.client.force_login(user=self.user)
-#         request = self.factory.get('/admin/customers/')
-#         request.user = self.user
-#         response = CustomerListView.as_view()(request)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertTrue(self.client.session.get('_auth_user_id'))
-#         self.assertIn('_auth_user_id', self.client.session)
 
 #     def test_customerlist_index_view_authenticated(self):
 #         self.user = TenantUser.objects.get(
