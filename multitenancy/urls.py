@@ -15,7 +15,7 @@ from . import api
 
 
 urlpatterns = [
-    # path('admin/', include(admin_urls)),
+    path("admin/", include(admin_urls)),
     path("admin/", include(users_urls)),
     path("admin/", include(apps_urls)),
     path("admin/", include(subscription_urls)),
