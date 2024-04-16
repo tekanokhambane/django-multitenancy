@@ -149,54 +149,56 @@ class CustomerViewsTestCase(unittest.TestCase):
         except Exception as e:
             print(f"Exception raised: {str(e)}")
 
+    def test_update_customer_authenticatednonadminuser_view(self):
+        self.user = Staff.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="staff",
+            email="staff1@email.com",
+            type="Staff",
+            is_active=True,
+        )
 
-#     def test_update_customer_authenticatednonadminuser_view(self):
-#         self.user = TenantUser.objects.create(
-#             username='admin',
-#             password="password",
-#             first_name='abc123',
-#             last_name='staff',
-#             email='staff1@email.com',
-#             type='Staff',
-#             is_active=True
-#             )
+        self.client.force_login(user=self.user)
+        self.customer = Customer.objects.create(
+            username="customer",
+            password="password",
+            first_name="abc123",
+            last_name="customer1",
+            email="customer12344@email.com",
+        )
+        request = self.factory.post(
+            f"/admin/customers/{self.customer.id}/update", data=self.new_customer_data
+        )
+        request.user = self.user
+        response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
+        self.assertEqual(response.status_code, 404)
 
-#         self.client.force_login(user=self.user)
-#         self.customer = Customer.objects.create(
-#             username='customer',
-#             password="password",
-#             first_name='abc123',
-#             last_name='customer1',
-#             email='customer12344@email.com',
-#         )
-#         request = self.factory.post(f'/admin/customers/{self.customer.id}/update', data=self.new_customer_data)
-#         request.user = self.user
-#         response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
-#         self.assertEqual(response.status_code, 404)
+    def test_delete_customer_view(self):
+        self.user = TenantUser.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="wieure",
+            email="abc12ffj3@email.com",
+            type="Admin",
+            is_active=True,
+        )
 
-#     def test_delete_customer_view(self):
-#         self.user = TenantUser.objects.get(
-#             username='admin',
-#             password="password",
-#             first_name='abc123',
-#             last_name='khamban',
-#             email='abc123@email.com',
-#             type='Admin',
-#             is_active=True
-#             )
+        self.client.force_login(user=self.user)
+        self.customer = Customer.objects.create(
+            username="customer",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="customer12345@email.com",
+        )
+        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+        request.user = self.user
+        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+        self.assertEqual(response.status_code, 302)
 
-#         self.client.force_login(user=self.user)
-#         self.customer = Customer.objects.create(
-#             username='customer',
-#             password="password",
-#             first_name='abc123',
-#             last_name='khamban',
-#             email='customer12345@email.com',
-#         )
-#         request = self.factory.delete(f'/admin/customers/{self.customer.id}/delete')
-#         request.user = self.user
-#         response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
-#         self.assertEqual(response.status_code, 302)
 
 #     def test_delete_customer_unauthenticateduser_view(self):
 #         self.user = TenantUser.objects.get(
