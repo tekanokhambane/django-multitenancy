@@ -309,7 +309,7 @@ class StaffViewsTestCase(TestCase):
             is_active=True,
         )
         user_permission = UserTenantPermissions.objects.create(
-            profile_id=self.user.pk, is_staff=True, is_superuser=False
+            profile_id=self.user.pk, is_staff=True, is_superuser=True
         )
         user_permission.save()
         assert self.user is not None
