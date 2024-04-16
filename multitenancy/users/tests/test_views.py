@@ -1,4 +1,5 @@
 import unittest
+from urllib import response
 from django.test import RequestFactory, TestCase, Client
 from multitenancy.admin.views.adminViews import (
     AdminIndexView,
@@ -172,6 +173,9 @@ class CustomerViewsTestCase(unittest.TestCase):
             f"/admin/customers/{self.customer.id}/update", data=self.new_customer_data
         )
         request.user = self.user
+        # response is permission denied
+        response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
+        self.assertEqual(response.status_code, 403)
 
         # self.assertEqual(response.status_code, 404)
 
