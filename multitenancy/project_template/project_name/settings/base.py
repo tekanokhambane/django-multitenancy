@@ -163,7 +163,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "multitenancy.settings.middleware.TeamMiddleware",
+    # "multitenancy.settings.middleware.TeamMiddleware",
     "account.middleware.LocaleMiddleware",
     "account.middleware.TimezoneMiddleware",
 ]
