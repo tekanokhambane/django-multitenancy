@@ -306,6 +306,7 @@ class StaffViewsTestCase(TestCase):
             email="abc1eoirj23@email.com",
             type="Admin",
             is_active=True,
+            is_superuser=True,
         )
 
         self.client.force_login(user=self.user)
