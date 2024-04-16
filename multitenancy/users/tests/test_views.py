@@ -118,7 +118,7 @@ class CustomerViewsTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_update_customer_unauthenticateduser_view(self):
-        self.user = TenantUser.objects.get(
+        self.user = TenantUser.objects.get_or_create(
             email="AnonymousUser",
         )
 
