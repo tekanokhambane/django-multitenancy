@@ -62,7 +62,7 @@ class CustomerViewsTestCase(unittest.TestCase):
             password="password",
             first_name="abc123",
             last_name="khamban",
-            email="abc123@email.com",
+            email="abc123897w@email.com",
             type="Admin",
             is_active=True,
         )
