@@ -39,11 +39,17 @@ class LoginView(account.views.LoginView):
         if fallback_url is None:
             if self.request.user.is_authenticated:
                 if self.request.user.type == "Admin":  # type: ignore
-                    fallback_url = reverse("admin_dashboard")
+                    fallback_url = reverse(
+                        "admin_dashboard", urlconf="multitenancy.urls"
+                    )
                 elif self.request.user.type == "Staff":  # type: ignore
-                    fallback_url = reverse("team_dashboard")
+                    fallback_url = reverse(
+                        "team_dashboard", urlconf="multitenancy.urls"
+                    )
                 else:
-                    fallback_url = reverse("customer_dashboard")
+                    fallback_url = reverse(
+                        "customer_dashboard", urlconf="multitenancy.urls"
+                    )
         kwargs.setdefault("redirect_field_name", self.get_redirect_field_name())
         return default_redirect(self.request, fallback_url, **kwargs)
 
