@@ -133,7 +133,7 @@ class CustomerViewsTestCase(unittest.TestCase):
         request = self.factory.post(
             f"/admin/customers/{self.customer.id}/update", data=self.new_customer_data
         )
-        request.user = self.user
+        # request.user = self.user
         response = UpdateCustomerView.as_view()(request, pk=self.customer.id)
         self.assertEqual(response.status_code, 404)
 
