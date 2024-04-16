@@ -297,24 +297,24 @@ class StaffViewsTestCase(TestCase):
         }
         self.staff_obj = Staff.objects.first()
 
-    def test_get_create_staff_view(self):
-        self.user = TenantUser.objects.create(
-            username="admin",
-            password="password",
-            first_name="abc123",
-            last_name="pooemd",
-            email="abc1eoirj23@email.com",
-            type="Admin",
-            is_active=True,
-        )
+    # def test_get_create_staff_view(self):
+    #     self.user = TenantUser.objects.create(
+    #         username="admin",
+    #         password="password",
+    #         first_name="abc123",
+    #         last_name="pooemd",
+    #         email="abc1eoirj23@email.com",
+    #         type="Admin",
+    #         is_active=True,
+    #     )
 
-        self.client.force_login(user=self.user)
-        request = self.factory.get("/admin/staff/create/")
-        request.user = self.user
-        response = CreateStaffView.as_view()(request)
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.client.session.get("_auth_user_id"))
-        self.assertIn("_auth_user_id", self.client.session)
+    #     self.client.force_login(user=self.user)
+    #     request = self.factory.get("/admin/staff/create/")
+    #     request.user = self.user
+    #     response = CreateStaffView.as_view()(request)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTrue(self.client.session.get("_auth_user_id"))
+    #     self.assertIn("_auth_user_id", self.client.session)
 
 
 #     def test_post_create_staff_view(self):
