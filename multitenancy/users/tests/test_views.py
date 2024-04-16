@@ -209,23 +209,21 @@ class CustomerViewsTestCase(unittest.TestCase):
         response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
         self.assertEqual(response.status_code, 302)
 
-    def test_delete_customer_unauthenticateduser_view(self):
-        self.user = TenantUser.objects.get_or_create(
-            email="AnonymousUser",
-        )
-
-        self.client.force_login(user=self.user)
-        self.customer = Customer.objects.create(
+    def test_delete_customer_unauthenticated(self):
+        unauthenticated_user = TenantUser.objects.get_or_create(email="AnonymousUser")[
+            0
+        ]
+        customer = Customer.objects.create(
             username="customer",
             password="password",
             first_name="abc123",
             last_name="oiute",
             email="customer123posie4@email.com",
         )
-        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
-        request.user = self.user
-        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
-        self.assertEqual(response.status_code, 404)
+        request = self.factory.delete(f"/admin/customers/{customer.id}/delete")
+        request.user = unauthenticated_user
+        response = DeleteCustomerView.as_view()(request, pk=customer.id)
+        self.assertEqual(response.status_code, 403)
 
     def test_customerlist_index_view(self):
         self.user = TenantUser.objects.create(
