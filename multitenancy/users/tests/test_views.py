@@ -285,6 +285,11 @@ class StaffViewsTestCase(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.client = Client()
+        self.tenant = create_public_tenant(
+            "localhost",
+            "abc1eoirj23@email.com",
+            "password",
+        )
         self.staff_data = {
             "first_name": "staff",
             "last_name": "test",
@@ -308,50 +313,36 @@ class StaffViewsTestCase(TestCase):
         #     type="Admin",
         #     is_active=True,
         # )
-        self.tenant = create_public_tenant(
-            "localhost",
-            "abc1eoirj23@email.com",
-            "password",
-        )
-        self.user = Admin.objects.get(email="abc1eoirj23@email.com")
 
+        self.user = Admin.objects.get(email="abc1eoirj23@email.com")
         self.client.force_login(user=self.user)
         request = self.factory.get("/admin/staff/create/")
         request.user = self.user
         response = CreateStaffView.as_view()(request)
-        # self.assertEqual(response.status_code, 200)
-        # self.assertTrue(self.client.session.get("_auth_user_id"))
-        # self.assertIn("_auth_user_id", self.client.session)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.client.session.get("_auth_user_id"))
+        self.assertIn("_auth_user_id", self.client.session)
 
+    def test_post_create_staff_view(self):
+        self.user = Admin.objects.get(email="abc1eoirj23@email.com")
+        self.client.force_login(user=self.user)
+        request = self.factory.post("/admin/staff/create/", data=self.staff_data)
+        request.user = self.user
+        response = CreateStaffView.as_view()(request)
+        self.assertEqual(response.status_code, 200)
 
-#     def test_post_create_staff_view(self):
-#         self.user = TenantUser.objects.get(
-#             username='admin',
-#             password="password",
-#             first_name='abc123',
-#             last_name='khamban',
-#             email='abc123@email.com',
-#             type='Admin',
-#             is_active=True
-#             )
-#         self.client.force_login(user=self.user)
-#         request = self.factory.post('/admin/staff/create/', data=self.staff_data)
-#         request.user = self.user
-#         response = CreateStaffView.as_view()(request)
-#         self.assertEqual(response.status_code, 200)
+    def test_get_create_staff_view_authenticated(self):
+        self.user = TenantUser.objects.get(
+            email="AnonymousUser",
+        )
 
+        self.client.force_login(user=self.user)
+        request = self.factory.get("/admin/staff/create/")
+        request.user = self.user
+        response = AdminIndexView.as_view()(request)
 
-#     def test_get_create_staff_view_authenticated(self):
-#         self.user = TenantUser.objects.get(
-#             email='AnonymousUser',
-#             )
+        self.assertEqual(response.status_code, 404)
 
-#         self.client.force_login(user=self.user)
-#         request = self.factory.get('/admin/staff/create/')
-#         request.user = self.user
-#         response = AdminIndexView.as_view()(request)
-
-#         self.assertEqual(response.status_code, 404)
 
 #     def test_update_staff_view(self):
 #         self.user = TenantUser.objects.get(

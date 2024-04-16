@@ -82,6 +82,11 @@ class CreateStaffView(LoginRequiredMixin, AdminCreateView):
     success_url = reverse_lazy("staff_list", urlconf="multitenancy.urls")
     template_name = "multitenancy/users/create_staff.html"
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["initial"] = {"type": "Staff"}
+        return kwargs
+
     # def get(self, request, *args, **kwargs):
     #     form = self.form_class(initial={"type": "Staff"})
     #     return render(request, "multitenancy/users/create_staff.html", {"form": form})
