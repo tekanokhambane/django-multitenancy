@@ -9,6 +9,7 @@ from multitenancy.users.views import (
     CreateStaffView,
     DeleteCustomerView,
     CustomerListView,
+    DeleteStaffView,
     UpdateCustomerView,
     UpdateStaffView,
     StaffViewSet,
@@ -187,56 +188,56 @@ class CustomerViewsTestCase(unittest.TestCase):
         except Exception as e:
             print(f"Exception raised: {str(e)}")
 
-    # def test_delete_customer_view(self):
-    #     self.user = TenantUser.objects.create(
-    #         username="admin",
-    #         password="password",
-    #         first_name="abc123",
-    #         last_name="wieure",
-    #         email="abc12ffj3@email.com",
-    #         type="Admin",
-    #         is_active=True,
-    #     )
+    def test_delete_customer_view(self):
+        self.user = TenantUser.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="wieure",
+            email="abc12ffj3@email.com",
+            type="Admin",
+            is_active=True,
+        )
 
-    #     self.client.force_login(user=self.user)
-    #     self.customer = Customer.objects.create(
-    #         username="customer",
-    #         password="password",
-    #         first_name="abc123",
-    #         last_name="lauud",
-    #         email="customer123odi45@email.com",
-    #     )
-    #     request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
-    #     request.user = self.user
-    #     response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
-    #     self.assertEqual(response.status_code, 302)
+        self.client.force_login(user=self.user)
+        self.customer = Customer.objects.create(
+            username="customer",
+            password="password",
+            first_name="abc123",
+            last_name="lauud",
+            email="customer123odi45@email.com",
+        )
+        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+        request.user = self.user
+        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+        self.assertEqual(response.status_code, 302)
 
-    # def test_delete_customer_unauthenticated(self):
-    #     try:
-    #         unauthenticated_user, created = TenantUser.objects.get_or_create(
-    #             email="AnonymousUser"
-    #         )
-    #         assert unauthenticated_user is not None
-    #         assert created is False
+    def test_delete_customer_unauthenticated(self):
+        try:
+            unauthenticated_user, created = TenantUser.objects.get_or_create(
+                email="AnonymousUser"
+            )
+            assert unauthenticated_user is not None
+            assert created is False
 
-    #         customer = Customer.objects.create(
-    #             username="customer",
-    #             password="password",
-    #             first_name="abc123",
-    #             last_name="oiute",
-    #             email="customer123posie4@email.com",
-    #         )
-    #         assert customer is not None
+            customer = Customer.objects.create(
+                username="customer",
+                password="password",
+                first_name="abc123",
+                last_name="oiute",
+                email="customer123posie4@email.com",
+            )
+            assert customer is not None
 
-    #         request = self.factory.delete(f"/admin/customers/{customer.id}/delete")
-    #         assert request is not None
-    #         assert request.user is None
+            request = self.factory.delete(f"/admin/customers/{customer.id}/delete")
+            assert request is not None
+            assert request.user is None
 
-    #         response = DeleteCustomerView.as_view()(request, pk=customer.id)
-    #         assert response is not None
-    #         self.assertEqual(response.status_code, 403)
-    #     except Exception as e:
-    #         print(f"Exception raised: {str(e)}")
+            response = DeleteCustomerView.as_view()(request, pk=customer.id)
+            assert response is not None
+            self.assertEqual(response.status_code, 403)
+        except Exception as e:
+            print(f"Exception raised: {str(e)}")
 
     def test_customerlist_index_view(self):
         self.user = TenantUser.objects.create(
@@ -368,7 +369,7 @@ class StaffViewsTestCase(TestCase):
         response = UpdateStaffView.as_view()(request, pk=self.staff.id)
         self.assertEqual(response.status_code, 200)
 
-    def test_update_customer_unauthenticateduser_view(self):
+    def test_update_staff_unauthenticateduser_view(self):
         try:
             self.user = TenantUser.objects.get(email="AnonymousUser")
             if self.user is None:
@@ -403,38 +404,38 @@ class StaffViewsTestCase(TestCase):
         except Exception as e:
             print(f"Exception raised: {str(e)}")
 
-    def test_delete_customer_view(self):
+    def test_delete_staff_view(self):
         self.user = Admin.objects.get(email="abc1eoirj23@email.com")
         self.client.force_login(user=self.user)
-        self.customer = Customer.objects.create(
-            username="customer",
+        self.staff = Staff.objects.create(
+            username="staff",
             password="password",
             first_name="abc123",
             last_name="khamban",
-            email="customer12345@email.com",
+            email="staff12345@email.com",
         )
-        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+        request = self.factory.delete(f"/admin/staff/{self.staff.id}/delete")
         request.user = self.user
-        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+        response = DeleteStaffView.as_view()(request, pk=self.staff.id)
         self.assertEqual(response.status_code, 302)
 
-    def test_delete_customer_unauthenticateduser_view(self):
+    def test_delete_staff_unauthenticateduser_view(self):
         try:
             self.user = TenantUser.objects.get(email="AnonymousUser")
             if self.user is None:
                 raise ValueError("Could not get AnonymousUser")
 
-            self.customer = Customer.objects.get(
-                username="customer",
+            self.staff = Staff.objects.get(
+                username="staff",
                 password="password",
                 first_name="abc123",
-                last_name="khamban",
-                email="customer1234@email.com",
+                last_name="oipemd",
+                email="staffk1234@email.com",
             )
             if self.customer is None:
-                raise ValueError("Could not get customer")
+                raise ValueError("Could not get Staff")
 
-            request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+            request = self.factory.delete(f"/admin/staff/{self.staff.id}/delete")
             if request is None:
                 raise ValueError("request is None")
 
@@ -442,7 +443,7 @@ class StaffViewsTestCase(TestCase):
             if request.user is None:
                 raise ValueError("request.user is None")
 
-            response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+            response = DeleteStaffView.as_view()(request, pk=self.customer.id)
             if response is None:
                 raise ValueError("Response is None")
 
