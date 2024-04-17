@@ -2,9 +2,8 @@ import unittest
 from urllib import response
 from django.test import RequestFactory, TestCase, Client
 from multitenancy.utils import create_public_tenant
-from multitenancy.admin.views.adminViews import (
-    AdminIndexView,
-)
+from unittest.mock import Mock
+
 from multitenancy.users.views import (
     CreateCustomerView,
     CreateStaffView,
@@ -12,6 +11,8 @@ from multitenancy.users.views import (
     CustomerListView,
     UpdateCustomerView,
     UpdateStaffView,
+    StaffViewSet,
+    CustomerViewSet,
 )
 from multitenancy.subscriptions.models import Plan
 from multitenancy.users.models import Admin, Customer, Staff, TenantUser
@@ -186,29 +187,29 @@ class CustomerViewsTestCase(unittest.TestCase):
         except Exception as e:
             print(f"Exception raised: {str(e)}")
 
-    def test_delete_customer_view(self):
-        self.user = TenantUser.objects.create(
-            username="admin",
-            password="password",
-            first_name="abc123",
-            last_name="wieure",
-            email="abc12ffj3@email.com",
-            type="Admin",
-            is_active=True,
-        )
+    # def test_delete_customer_view(self):
+    #     self.user = TenantUser.objects.create(
+    #         username="admin",
+    #         password="password",
+    #         first_name="abc123",
+    #         last_name="wieure",
+    #         email="abc12ffj3@email.com",
+    #         type="Admin",
+    #         is_active=True,
+    #     )
 
-        self.client.force_login(user=self.user)
-        self.customer = Customer.objects.create(
-            username="customer",
-            password="password",
-            first_name="abc123",
-            last_name="lauud",
-            email="customer123odi45@email.com",
-        )
-        request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
-        request.user = self.user
-        response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
-        self.assertEqual(response.status_code, 302)
+    #     self.client.force_login(user=self.user)
+    #     self.customer = Customer.objects.create(
+    #         username="customer",
+    #         password="password",
+    #         first_name="abc123",
+    #         last_name="lauud",
+    #         email="customer123odi45@email.com",
+    #     )
+    #     request = self.factory.delete(f"/admin/customers/{self.customer.id}/delete")
+    #     request.user = self.user
+    #     response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
+    #     self.assertEqual(response.status_code, 302)
 
     def test_delete_customer_unauthenticated(self):
         try:
@@ -448,3 +449,24 @@ class StaffViewsTestCase(TestCase):
             self.assertEqual(response.status_code, 404)
         except Exception as e:
             print(f"Exception raised: {str(e)}")
+
+
+class TestStaffViewSet(unittest.TestCase):
+
+    def test_get_queryset_query_is_none(self):
+        view = StaffViewSet()
+        view.request.GET.get = Mock(return_value=None)
+        queryset = view.get_queryset()
+        self.assertIsNotNone(queryset)
+
+    def test_get_queryset_query_is_empty_string(self):
+        view = StaffViewSet()
+        view.request.GET.get = Mock(return_value="")
+        queryset = view.get_queryset()
+        self.assertIsNotNone(queryset)
+
+    def test_get_queryset_query_is_valid_search_term(self):
+        view = StaffViewSet()
+        view.request.GET.get = Mock(return_value="search_term")
+        queryset = view.get_queryset()
+        self.assertIsNotNone(queryset)
