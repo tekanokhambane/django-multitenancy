@@ -3,7 +3,7 @@ from urllib import response
 from django.test import RequestFactory, TestCase, Client
 from multitenancy.utils import create_public_tenant
 from unittest.mock import Mock
-
+from rest_framework.test import APITestCase, APIRequestFactory, APIClient
 from multitenancy.users.views import (
     CreateCustomerView,
     CreateStaffView,
@@ -450,24 +450,3 @@ class StaffViewsTestCase(TestCase):
             self.assertEqual(response.status_code, 404)
         except Exception as e:
             print(f"Exception raised: {str(e)}")
-
-
-# class TestStaffViewSet(unittest.TestCase):
-
-#     def test_get_queryset_query_is_none(self):
-#         view = StaffViewSet()
-#         view.request.GET.get = Mock(return_value=None)
-#         queryset = view.get_queryset()
-#         self.assertIsNotNone(queryset)
-
-#     def test_get_queryset_query_is_empty_string(self):
-#         view = StaffViewSet()
-#         view.request.GET.get = Mock(return_value="")
-#         queryset = view.get_queryset()
-#         self.assertIsNotNone(queryset)
-
-#     def test_get_queryset_query_is_valid_search_term(self):
-#         view = StaffViewSet()
-#         view.request.GET.get = Mock(return_value="search_term")
-#         queryset = view.get_queryset()
-#         self.assertIsNotNone(queryset)
