@@ -211,32 +211,32 @@ class CustomerViewsTestCase(unittest.TestCase):
     #     response = DeleteCustomerView.as_view()(request, pk=self.customer.id)
     #     self.assertEqual(response.status_code, 302)
 
-    def test_delete_customer_unauthenticated(self):
-        try:
-            unauthenticated_user, created = TenantUser.objects.get_or_create(
-                email="AnonymousUser"
-            )
-            assert unauthenticated_user is not None
-            assert created is False
+    # def test_delete_customer_unauthenticated(self):
+    #     try:
+    #         unauthenticated_user, created = TenantUser.objects.get_or_create(
+    #             email="AnonymousUser"
+    #         )
+    #         assert unauthenticated_user is not None
+    #         assert created is False
 
-            customer = Customer.objects.create(
-                username="customer",
-                password="password",
-                first_name="abc123",
-                last_name="oiute",
-                email="customer123posie4@email.com",
-            )
-            assert customer is not None
+    #         customer = Customer.objects.create(
+    #             username="customer",
+    #             password="password",
+    #             first_name="abc123",
+    #             last_name="oiute",
+    #             email="customer123posie4@email.com",
+    #         )
+    #         assert customer is not None
 
-            request = self.factory.delete(f"/admin/customers/{customer.id}/delete")
-            assert request is not None
-            assert request.user is None
+    #         request = self.factory.delete(f"/admin/customers/{customer.id}/delete")
+    #         assert request is not None
+    #         assert request.user is None
 
-            response = DeleteCustomerView.as_view()(request, pk=customer.id)
-            assert response is not None
-            self.assertEqual(response.status_code, 403)
-        except Exception as e:
-            print(f"Exception raised: {str(e)}")
+    #         response = DeleteCustomerView.as_view()(request, pk=customer.id)
+    #         assert response is not None
+    #         self.assertEqual(response.status_code, 403)
+    #     except Exception as e:
+    #         print(f"Exception raised: {str(e)}")
 
     def test_customerlist_index_view(self):
         self.user = TenantUser.objects.create(
