@@ -113,12 +113,12 @@ class DeleteStaffView(LoginRequiredMixin, AdminDeleteView):
     template_name = "multitenancy/users/delete_staff.html"
     success_url = reverse_lazy("staff_list", urlconf="multitenancy.urls")
 
-    def delete(self, request, *args, **kwargs):
-        staff_id = self.kwargs["pk"]
+    # def delete(self, request, *args, **kwargs):
+    #     staff_id = self.kwargs["pk"]
 
-        user = Staff.objects.filter(id=staff_id)
-        user.delete()
-        return HttpResponseRedirect(reverse("staff_list", urlconf="multitenancy.urls"))
+    #     user = Staff.objects.filter(id=staff_id)
+    #     user.delete()
+    #     return HttpResponseRedirect(reverse("staff_list", urlconf="multitenancy.urls"))
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
