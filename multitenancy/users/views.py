@@ -117,7 +117,7 @@ class DeleteStaffView(LoginRequiredMixin, AdminDeleteView):
         staff_id = self.kwargs["pk"]
 
         user = Staff.objects.filter(id=staff_id)
-        user.delete_user()
+        user.delete()
         return HttpResponseRedirect(reverse("staff_list", urlconf="multitenancy.urls"))
 
 
