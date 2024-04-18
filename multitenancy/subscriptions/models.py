@@ -95,6 +95,8 @@ class Plan(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):  # new
+        if self.name is None or self.name == "":
+            raise ValueError("The name field cannot be empty.")
         if not self.slug:
             self.slug = slugify(self.name)
         return super().save(*args, **kwargs)

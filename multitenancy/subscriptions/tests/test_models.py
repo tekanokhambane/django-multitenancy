@@ -146,7 +146,7 @@ class TestPlan(unittest.TestCase):
     def test_duplicate_name_validation(self):
         # Create a Plan object with a name that already exists
         with self.assertRaises(ValidationError):
-            plan = Plan.objects.create(name="basic4")
+            plan = Plan.objects.create(name="basic")
             plan.save()
 
     # Test that creating a Plan object without a name raises a validation error
