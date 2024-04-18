@@ -33,8 +33,9 @@ class TestProductFeature(unittest.TestCase):
 
     # Test that a new instance of ProductFeature cannot be created with an empty name.
     def test_empty_name(self):
+        feature = ProductFeature(name="")
         with self.assertRaises(ValueError):
-            feature = ProductFeature(name="")
+            feature
 
     # Test that multiple instances of ProductFeature are ordered by primary key in descending order.
     def test_order_by_primary_key(self):
