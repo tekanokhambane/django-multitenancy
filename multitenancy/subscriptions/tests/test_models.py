@@ -108,7 +108,7 @@ class TestPlan(unittest.TestCase):
     def test_retrieve_plans_by_price(self):
         # Create three Plan objects with different prices
         plan1 = Plan.objects.create(name="plus", price=50)
-        plan2 = Plan.objects.create(name="standard", price=75)
+        plan2 = Plan.objects.create(name="standardplus", price=75)
         plan3 = Plan.objects.create(name="premium", price=100)
 
         # Retrieve all Plan objects with a price of 75

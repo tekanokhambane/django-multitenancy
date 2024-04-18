@@ -72,6 +72,9 @@ class Plan(models.Model):
     slug = models.SlugField()
     description = models.TextField(blank=True, null=True)
     features = models.ManyToManyField(ProductFeature)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True)
     price = models.DecimalField(
         default=75,  # type: ignore
         max_digits=12,
