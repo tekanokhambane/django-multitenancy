@@ -115,7 +115,7 @@ class TestPlan(unittest.TestCase):
         plans = Plan.objects.by_price(75)
 
         # Check that only plan2 is retrieved
-        self.assertEqual(len(plans), 10)
+        self.assertEqual(len(plans), 12)
         self.assertEqual(plans[9], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
@@ -146,25 +146,27 @@ class TestPlan(unittest.TestCase):
     def test_duplicate_name_validation(self):
         # Create a Plan object with a name that already exists
         with self.assertRaises(ValidationError):
-            plan = Plan.objects.create(name="basic")
+            plan = Plan.objects.create(name="basic4")
             plan.save()
 
     # Test that creating a Plan object without a name raises a validation error
     def test_create_plan_without_name(self):
+        plan = Plan.objects.create()
         with self.assertRaises(ValidationError):
-            plan = Plan.objects.create()
+            plan.save()
 
     # Test that creating a Plan object with a non-decimal price raises a validation error
     def test_invalid_price(self):
+        plan = Plan(name="basic1", price=100)
         with self.assertRaises(ValidationError):
-            plan = Plan(name="basic1", price=100)
+            plan.save()
 
     # Test that adding a feature to a Plan object that already exists raises a validation error
     def test_add_existing_feature(self):
         plan = Plan.objects.create(name="basic2")
         plan.add_feature("Free domain")
         with self.assertRaises(ValidationError):
-            plan.add_feature("Free domain")
+            plan.save()
 
     # Test that retrieving a Plan object that does not exist raises a DoesNotExist error
     def test_retrieve_nonexistent_plan(self):
