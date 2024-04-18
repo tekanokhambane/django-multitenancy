@@ -17,7 +17,7 @@ def get_plans():
 
 
 class ProductFeature(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=250, unique=True)
     description = models.TextField()
 
     def save(self, *args, **kwargs):
