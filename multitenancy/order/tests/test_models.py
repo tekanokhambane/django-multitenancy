@@ -940,11 +940,33 @@ class TestOrder(unittest.TestCase):
 
 
 class TestOrderItem(unittest.TestCase):
+    def setUp(self):
+        self.address = Address.objects.create(
+            recipient_name="John Doe",
+            street_address="123 Main St",
+            city="New York",
+            state="NY",
+            postal_code="12345",
+            country="USA",
+        )
+        self.order = Order.objects.create(
+            user=None,
+            order_number="12345",
+            amount=100.00,
+            status="completed",
+            payment_method="credit card",
+            billing_address=self.address,
+            notes="Test order",
+            coupon=None,
+        )
+
     # Test that an OrderItem instance can be created with valid Subscription and Order instances.
     def test_create_order_item_with_valid_instances(self):
         subscription = Subscription.objects.create()
-        order = Order.objects.create()
-        order_item = OrderItem.objects.create(subscription=subscription, order=order)
+
+        order_item = OrderItem.objects.create(
+            subscription=subscription, order=self.order
+        )
 
         self.assertEqual(order_item.subscription, subscription)
         self.assertEqual(order_item.order, order)
@@ -955,10 +977,11 @@ class TestOrderItem(unittest.TestCase):
         subscription = Subscription.objects.create()
 
         # Create an Order instance
-        order = Order.objects.create()
 
         # Create an OrderItem instance with the Subscription and Order instances
-        order_item = OrderItem.objects.create(subscription=subscription, order=order)
+        order_item = OrderItem.objects.create(
+            subscription=subscription, order=self.order
+        )
 
         # Retrieve the Subscription and Order instances from the OrderItem instance
         retrieved_subscription = order_item.subscription
@@ -974,10 +997,11 @@ class TestOrderItem(unittest.TestCase):
         subscription = Subscription.objects.create()
 
         # Create an Order instance
-        order = Order.objects.create()
 
         # Create an OrderItem instance
-        order_item = OrderItem.objects.create(subscription=subscription, order=order)
+        order_item = OrderItem.objects.create(
+            subscription=subscription, order=self.order
+        )
 
         # Delete the OrderItem instance
         order_item.delete()
@@ -989,9 +1013,9 @@ class TestOrderItem(unittest.TestCase):
     def test_create_order_item_with_nonexistent_subscription(self):
         with self.assertRaises(ValueError):
             subscription = Subscription.objects.get(pk=9999)
-            order = Order.objects.create(...)
+
             order_item = OrderItem.objects.create(
-                subscription=subscription, order=order
+                subscription=subscription, order=self.order
             )
 
     # Test that creating an OrderItem instance with a non-existent Order instance raises an error.
@@ -1008,7 +1032,7 @@ class TestOrderItem(unittest.TestCase):
 
         # Attempt to create an OrderItem instance with the inactive Subscription
         with self.assertRaises(Exception):
-            OrderItem.objects.create(subscription=subscription, order=order)
+            OrderItem.objects.create(subscription=subscription, order=self.order)
 
     # Test that an OrderItem instance cannot be created with an Order instance that has a status other than "completed".
     def test_create_order_item_with_incomplete_order(self):
