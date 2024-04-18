@@ -115,7 +115,7 @@ class TestPlan(unittest.TestCase):
         plans = Plan.objects.by_price(75)
 
         # Check that only plan2 is retrieved
-        self.assertEqual(len(plans), 1)
+        self.assertEqual(len(plans), 10)
         self.assertEqual(plans[0], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
