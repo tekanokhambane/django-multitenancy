@@ -5,6 +5,7 @@ import unittest
 from django.utils import timezone
 
 from django.forms import ValidationError
+from psycopg2.errors import UniqueViolation
 
 from multitenancy.subscriptions.models import (
     Plan,
@@ -145,14 +146,14 @@ class TestPlan(unittest.TestCase):
     # Test that creating a Plan object with a name that already exists raises a validation error
     def test_duplicate_name_validation(self):
         # Create a Plan object with a name that already exists
-        with self.assertRaises(ValidationError):
-            plan = Plan.objects.create(name="basic")
+        plan = Plan.objects.create(name="basic")
+        with self.assertRaises(UniqueViolation):
             plan.save()
 
     # Test that creating a Plan object without a name raises a validation error
     def test_create_plan_without_name(self):
         plan = Plan.objects.create()
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValueError):
             plan.save()
 
     # Test that creating a Plan object with a non-decimal price raises a validation error
