@@ -69,12 +69,12 @@ class TestPlan(unittest.TestCase):
 
     # Test that a feature can be added to a Plan object and saved successfully
     def test_add_feature_and_save_successfully(self):
-        plan = Plan.objects.get_or_create(name="basic")
+        plan = Plan.objects.get_or_create(name="free")
         plan.add_feature("Free domain")
         features = plan.features.all()
         for feature in features:
             self.assertEquals(feature.name, "Free domain")
-        self.assertEquals(plan.name, "basic")
+        self.assertEquals(plan.name, "free")
 
 
 #     # Test that a Plan object can be retrieved by name or description using the search method
