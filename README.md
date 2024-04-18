@@ -4,7 +4,7 @@ The aim of this project is to speed up the process of launch your saas app.
 <p align="center">
     <br>
     <a href="https://github.com/tekanokhambane/django-multitenancy/actions">
-        <img src="https://github.com/tekanokhambane/django-multitenancy/workflows/Django Multitenancy CI/badge.svg?event=push" alt="Build Status" />
+        <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/tekanokhambane/django-multitenancy/test.yml?branch=main&logo=github&label=Django%20Multitenancy%20CI">
     </a>
     <a href="https://opensource.org/licenses/BSD-3-Clause">
         <img src="https://img.shields.io/badge/license-BSD-blue.svg" alt="License" />
