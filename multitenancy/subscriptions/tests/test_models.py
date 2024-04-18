@@ -76,72 +76,72 @@ class TestPlan(unittest.TestCase):
             self.assertEquals(feature.name, "Free domain")
         self.assertEquals(plan.name, "free")
 
+    # Test that a Plan object can be retrieved by name or description using the search method
+    def test_retrieve_plan_by_search(self):
+        # Create a Plan object
+        plan = Plan.objects.create(name="standard", description="Standard plan")
 
-#     # Test that a Plan object can be retrieved by name or description using the search method
-#     def test_retrieve_plan_by_search(self):
-#         # Create a Plan object
-#         plan = Plan.objects.create(name="basic", description="Basic plan")
+        # Search for the Plan object by name
+        result_name = Plan.objects.search("standard")
+        self.assertEqual(result_name.first(), plan)
 
-#         # Search for the Plan object by name
-#         result_name = Plan.objects.search("basic")
-#         self.assertEqual(result_name.first(), plan)
+        # Search for the Plan object by description
+        result_description = Plan.objects.search("Standard plan")
+        self.assertEqual(result_description.first(), plan)
 
-#         # Search for the Plan object by description
-#         result_description = Plan.objects.search("Basic plan")
-#         self.assertEqual(result_description.first(), plan)
+    # Test that the active_plans method returns all active Plan objects
+    def test_retrieve_active_plans(self):
+        # Create active and inactive Plan objects
+        active_plan1 = Plan.objects.create(name="Enterprise", is_active=True)
+        active_plan2 = Plan.objects.create(name="Premium", is_active=True)
+        inactive_plan = Plan.objects.create(name="Inactive", is_active=False)
 
-#     # Test that the active_plans method returns all active Plan objects
-#     def test_retrieve_active_plans(self):
-#         # Create active and inactive Plan objects
-#         active_plan1 = Plan.objects.create(name="Basic", is_active=True)
-#         active_plan2 = Plan.objects.create(name="Premium", is_active=True)
-#         inactive_plan = Plan.objects.create(name="Inactive", is_active=False)
+        # Retrieve all active Plan objects
+        active_plans = Plan.objects.active_plans()
 
-#         # Retrieve all active Plan objects
-#         active_plans = Plan.objects.active_plans()
+        # Check that only the active Plan objects are returned
+        self.assertIn(active_plan1, active_plans)
+        self.assertIn(active_plan2, active_plans)
+        self.assertNotIn(inactive_plan, active_plans)
 
-#         # Check that only the active Plan objects are returned
-#         self.assertIn(active_plan1, active_plans)
-#         self.assertIn(active_plan2, active_plans)
-#         self.assertNotIn(inactive_plan, active_plans)
+    # Test that the by_price method of the Plan class retrieves all Plan objects with a specific price
+    def test_retrieve_plans_by_price(self):
+        # Create three Plan objects with different prices
+        plan1 = Plan.objects.create(name="plus", price=50)
+        plan2 = Plan.objects.create(name="standard", price=75)
+        plan3 = Plan.objects.create(name="premium", price=100)
 
-#     # Test that the by_price method of the Plan class retrieves all Plan objects with a specific price
-#     def test_retrieve_plans_by_price(self):
-#         # Create three Plan objects with different prices
-#         plan1 = Plan.objects.create(name="basic", price=50)
-#         plan2 = Plan.objects.create(name="standard", price=75)
-#         plan3 = Plan.objects.create(name="premium", price=100)
+        # Retrieve all Plan objects with a price of 75
+        plans = Plan.objects.by_price(75)
 
-#         # Retrieve all Plan objects with a price of 75
-#         plans = Plan.objects.by_price(75)
+        # Check that only plan2 is retrieved
+        self.assertEqual(len(plans), 1)
+        self.assertEqual(plans[0], plan2)
 
-#         # Check that only plan2 is retrieved
-#         self.assertEqual(len(plans), 1)
-#         self.assertEqual(plans[0], plan2)
+    # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
+    def test_retrieve_plan_by_feature(self):
+        # Create a ProductFeature object
+        feature = ProductFeature.objects.create(
+            name="Feature 1", description="Description 1"
+        )
 
-#     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
-#     def test_retrieve_plan_by_feature(self):
-#         # Create a ProductFeature object
-#         feature = ProductFeature.objects.create(
-#             name="Feature 1", description="Description 1"
-#         )
+        # Create two Plan objects with the same feature
+        plan1 = Plan.objects.create(name="Plan 1")
+        plan1.features.add(feature)
+        plan2 = Plan.objects.create(name="Plan 2")
+        plan2.features.add(feature)
 
-#         # Create two Plan objects with the same feature
-#         plan1 = Plan.objects.create(name="Plan 1")
-#         plan1.features.add(feature)
-#         plan2 = Plan.objects.create(name="Plan 2")
-#         plan2.features.add(feature)
+        # Create a Plan object without the feature
+        plan3 = Plan.objects.create(name="Plan 3")
 
-#         # Create a Plan object without the feature
-#         plan3 = Plan.objects.create(name="Plan 3")
+        # Retrieve all Plan objects with the feature using the by_features method
+        plans = Plan.objects.by_features(feature)
 
-#         # Retrieve all Plan objects with the feature using the by_features method
-#         plans = Plan.objects.by_features(feature)
+        # Check that the retrieved plans include plan1 and plan2, but not plan3
+        self.assertIn(plan1, plans)
+        self.assertIn(plan2, plans)
+        self.assertNotIn(plan3, plans)
 
-#         # Check that the retrieved plans include plan1 and plan2, but not plan3
-#         self.assertIn(plan1, plans)
-#         self.assertIn(plan2, plans)
-#         self.assertNotIn(plan3, plans)
 
 #     # Test that creating a Plan object with a name that already exists raises a validation error
 #     def test_duplicate_name_validation(self):
