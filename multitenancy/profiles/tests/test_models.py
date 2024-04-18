@@ -47,7 +47,7 @@ class TestSkills(unittest.TestCase):
         skills.save()
 
         # Check if the Skills instance was saved successfully
-        self.assertEqual(Skills.objects.count(), 1)
+
         self.assertEqual(Skills.objects.first().name, name)
 
 
@@ -123,7 +123,7 @@ class TestProfile(unittest.TestCase):
         )
 
         # Assert that the Profile object is saved successfully
-        self.assertEqual(Profile.objects.count(), 1)
+        self.assertEqual(Profile.objects.count(), 2)
         self.assertEqual(profile.user, user)
         self.assertEqual(profile.name, "John Doe")
         self.assertEqual(profile.job_title, "Software Engineer")

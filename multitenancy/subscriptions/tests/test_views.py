@@ -11,6 +11,7 @@ from rest_framework.test import force_authenticate
 from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse, reverse_lazy
+from multitenancy.admin.models import Admin
 from multitenancy.subscriptions.filters import PlanFilter
 from multitenancy.subscriptions.forms import PlanForm, ProductFeatureForm
 from django.contrib.auth.models import AnonymousUser
@@ -56,13 +57,12 @@ class PlanViewsTestCase(unittest.TestCase):
         self.client = Client()
 
     def test_get_create_plan_view(self):
-        self.user = TenantUser.objects.create_superuser(
+        self.user = Admin.objects.create(
             username="admin",
             password="password",
             first_name="abc123",
             last_name="khamban",
             email="testaadminabc123@email.com",
-            type="Admin",
             is_active=True,
         )
 

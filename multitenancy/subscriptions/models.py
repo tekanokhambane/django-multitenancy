@@ -26,6 +26,12 @@ class ProductFeature(models.Model):
     class Meta:
         ordering = ("-pk",)
 
+    # prevent empty name
+    def save(self, *args, **kwargs):
+        if not self.name or self.name == "":
+            raise ValueError("Name cannot be empty")
+        return super().save(*args, **kwargs)
+
 
 class PlanQueryset(models.QuerySet):
     def search(self, query):
