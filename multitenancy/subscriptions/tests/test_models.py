@@ -41,13 +41,13 @@ class TestProductFeature(unittest.TestCase):
     # Test that multiple instances of ProductFeature are ordered by primary key in descending order.
     def test_order_by_primary_key(self):
         feature1 = ProductFeature.objects.create(
-            name="Feature 1", description="This is feature 1"
+            name="Feature 11", description="This is feature 1"
         )
         feature2 = ProductFeature.objects.create(
-            name="Feature 2", description="This is feature 2"
+            name="Feature 22", description="This is feature 2"
         )
         feature3 = ProductFeature.objects.create(
-            name="Feature 3", description="This is feature 3"
+            name="Feature 33", description="This is feature 3"
         )
 
         features = ProductFeature.objects.all()
