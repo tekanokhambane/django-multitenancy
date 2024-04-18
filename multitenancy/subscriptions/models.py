@@ -20,17 +20,18 @@ class ProductFeature(models.Model):
     name = models.CharField(max_length=250)
     description = models.TextField()
 
+    def save(self, *args, **kwargs):
+        if (
+            not self.name.strip()
+        ):  # This checks if the name is empty or contains only whitespace
+            raise ValueError("The name field cannot be empty.")
+        super().save(*args, **kwargs)
+
     def __str__(self) -> str:
         return self.name
 
     class Meta:
         ordering = ("-pk",)
-
-    # prevent empty name
-    def save(self, *args, **kwargs):
-        if self.name == "" or self.name is None:
-            raise ValueError("Name cannot be empty")
-        return super().save(*args, **kwargs)
 
 
 class PlanQueryset(models.QuerySet):
