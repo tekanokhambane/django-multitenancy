@@ -146,27 +146,27 @@ class TestPlan(unittest.TestCase):
     # Test that creating a Plan object with a name that already exists raises a validation error
     def test_duplicate_name_validation(self):
         # Create a Plan object with a name that already exists
-        plan = Plan.objects.create(name="basic")
         with self.assertRaises(UniqueViolation):
+            plan = Plan.objects.create(name="basic")
             plan.save()
 
     # Test that creating a Plan object without a name raises a validation error
     def test_create_plan_without_name(self):
-        plan = Plan.objects.create()
         with self.assertRaises(ValueError):
+            plan = Plan.objects.create()
             plan.save()
 
     # Test that creating a Plan object with a non-decimal price raises a validation error
     def test_invalid_price(self):
-        plan = Plan(name="basic1", price=100)
         with self.assertRaises(ValidationError):
+            plan = Plan(name="basic1", price=100)
             plan.save()
 
     # Test that adding a feature to a Plan object that already exists raises a validation error
     def test_add_existing_feature(self):
-        plan = Plan.objects.create(name="basic2")
-        plan.add_feature("Free domain")
         with self.assertRaises(ValidationError):
+            plan = Plan.objects.create(name="basic2")
+            plan.add_feature("Free domain")
             plan.save()
 
     # Test that retrieving a Plan object that does not exist raises a DoesNotExist error
