@@ -116,7 +116,7 @@ class TestPlan(unittest.TestCase):
 
         # Check that only plan2 is retrieved
         self.assertEqual(len(plans), 10)
-        self.assertEqual(plans[-2], plan2)
+        self.assertEqual(plans[:-2], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
     def test_retrieve_plan_by_feature(self):
