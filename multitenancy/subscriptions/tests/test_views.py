@@ -11,7 +11,7 @@ from rest_framework.test import force_authenticate
 from django.http import HttpRequest, HttpResponseRedirect
 from django.test import RequestFactory, TestCase, Client
 from django.urls import reverse, reverse_lazy
-from multitenancy.admin.models import Admin
+from multitenancy.users.models import Admin
 from multitenancy.subscriptions.filters import PlanFilter
 from multitenancy.subscriptions.forms import PlanForm, ProductFeatureForm
 from django.contrib.auth.models import AnonymousUser
