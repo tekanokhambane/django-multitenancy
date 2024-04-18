@@ -35,7 +35,7 @@ class TestProductFeature(unittest.TestCase):
     def test_empty_name(self):
         feature = ProductFeature(name="")
         with self.assertRaises(ValueError):
-            feature
+            feature.save()
 
     # Test that multiple instances of ProductFeature are ordered by primary key in descending order.
     def test_order_by_primary_key(self):
