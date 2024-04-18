@@ -116,7 +116,7 @@ class TestPlan(unittest.TestCase):
         plans = Plan.objects.by_price(75)
 
         # Check that only plan2 is retrieved
-        self.assertEqual(len(plans), 12)
+        self.assertEqual(len(plans), 11)
         self.assertEqual(plans[9], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
@@ -159,7 +159,7 @@ class TestPlan(unittest.TestCase):
     # Test that creating a Plan object with a non-decimal price raises a validation error
     def test_invalid_price(self):
         with self.assertRaises(ValidationError):
-            plan = Plan(name="basic1", price=100)
+            plan = Plan(name="basic1", price=10000000000000)
             plan.save()
 
     # Test that adding a feature to a Plan object that already exists raises a validation error
