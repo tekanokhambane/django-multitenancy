@@ -58,7 +58,7 @@ class TestProductFeature(unittest.TestCase):
 class TestPlan(unittest.TestCase):
     # Test that a Plan object can be created with all required fields and saved successfully
     def test_create_plan_and_save_successfully(self):
-        plan = Plan.objects.get_or_create(
+        plan, created = Plan.objects.get_or_create(
             name="basic", slug="basic", description="Basic plan", price=75
         )
         self.assertEqual(plan.name, "basic")
@@ -69,7 +69,7 @@ class TestPlan(unittest.TestCase):
 
     # Test that a feature can be added to a Plan object and saved successfully
     def test_add_feature_and_save_successfully(self):
-        plan = Plan.objects.get_or_create(name="free")
+        plan, created = Plan.objects.get_or_create(name="free")
         plan.add_feature("Free domain")
         features = plan.features.all()
         for feature in features:
