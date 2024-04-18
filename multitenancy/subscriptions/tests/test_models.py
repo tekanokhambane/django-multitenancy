@@ -55,26 +55,27 @@ class TestProductFeature(unittest.TestCase):
         self.assertEqual(features[2], feature1)
 
 
-# class TestPlan(unittest.TestCase):
-#     # Test that a Plan object can be created with all required fields and saved successfully
-#     def test_create_plan_and_save_successfully(self):
-#         plan = Plan.objects.get_or_create(
-#             name="basic", slug="basic", description="Basic plan", price=75
-#         )
-#         self.assertEqual(plan.name, "basic")
-#         self.assertEqual(plan.slug, "basic")
-#         self.assertEqual(plan.description, "Basic plan")
-#         self.assertEqual(plan.price, 75)
-#         self.assertTrue(plan.pk is not None)
+class TestPlan(unittest.TestCase):
+    # Test that a Plan object can be created with all required fields and saved successfully
+    def test_create_plan_and_save_successfully(self):
+        plan = Plan.objects.get_or_create(
+            name="basic", slug="basic", description="Basic plan", price=75
+        )
+        self.assertEqual(plan.name, "basic")
+        self.assertEqual(plan.slug, "basic")
+        self.assertEqual(plan.description, "Basic plan")
+        self.assertEqual(plan.price, 75)
+        self.assertTrue(plan.pk is not None)
 
-#     # Test that a feature can be added to a Plan object and saved successfully
-#     def test_add_feature_and_save_successfully(self):
-#         plan = Plan.objects.get_or_create(name="basic")
-#         plan.add_feature("Free domain")
-#         features = plan.features.all()
-#         for feature in features:
-#             self.assertEquals(feature.name, "Free domain")
-#         self.assertEquals(plan.name, "basic")
+    # Test that a feature can be added to a Plan object and saved successfully
+    def test_add_feature_and_save_successfully(self):
+        plan = Plan.objects.get_or_create(name="basic")
+        plan.add_feature("Free domain")
+        features = plan.features.all()
+        for feature in features:
+            self.assertEquals(feature.name, "Free domain")
+        self.assertEquals(plan.name, "basic")
+
 
 #     # Test that a Plan object can be retrieved by name or description using the search method
 #     def test_retrieve_plan_by_search(self):
