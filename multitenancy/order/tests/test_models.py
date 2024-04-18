@@ -1,3 +1,4 @@
+from ast import Sub
 from django.db import IntegrityError
 from multitenancy.subscriptions.serializers import SubscriptionSerializer
 
@@ -959,6 +960,13 @@ class TestOrderItem(unittest.TestCase):
             notes="Test order",
             coupon=None,
         )
+        self.user = Customer.objects.create(
+            email="Vw5weffzA@example.com",
+            password="testpassword",
+            first_name="John",
+            last_name="Doe",
+
+        )
 
     # Test that an OrderItem instance can be created with valid Subscription and Order instances.
     def test_create_order_item_with_valid_instances(self):
@@ -1011,7 +1019,7 @@ class TestOrderItem(unittest.TestCase):
 
     # Test that creating an OrderItem instance with a Subscription instance that does not exist raises a ValueError.
     def test_create_order_item_with_nonexistent_subscription(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(Subscription.DoesNotExist):
             subscription = Subscription.objects.get(pk=9999)
 
             order_item = OrderItem.objects.create(
@@ -1037,12 +1045,12 @@ class TestOrderItem(unittest.TestCase):
     # Test that an OrderItem instance cannot be created with an Order instance that has a status other than "completed".
     def test_create_order_item_with_incomplete_order(self):
         # Create an incomplete Order instance
-        incomplete_order = Order.objects.create(status="failed")
 
         subscription = Subscription.objects.create()
 
         # Attempt to create an OrderItem instance with the incomplete Order
         with self.assertRaises(Exception):
+            incomplete_order = Order.objects.create(status="failed")
             OrderItem.objects.create(subscription=subscription, order=incomplete_order)
 
     # Test that multiple OrderItem instances can be created with the same Subscription instance.
