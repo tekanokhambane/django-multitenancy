@@ -617,13 +617,13 @@ class TestSubscription(unittest.TestCase):
     def test_get_subscriptions_started_within_week(self):
         # Create subscriptions with different start dates
         subscription1 = Subscription.objects.create(
-            start_date=timezone.date.today() - timezone.timedelta(days=10)
+            start_date=timezone.now().date().today() - timezone.timedelta(days=10)
         )
         subscription2 = Subscription.objects.create(
-            start_date=timezone.date.today() - timezone.timedelta(days=6)
+            start_date=timezone.now().date().today() - timezone.timedelta(days=6)
         )
         subscription3 = Subscription.objects.create(
-            start_date=timezone.date.today() - timezone.timedelta(days=5)
+            start_date=timezone.now().date().today() - timezone.timedelta(days=5)
         )
 
         # Get subscriptions started within the last week
@@ -638,11 +638,11 @@ class TestSubscription(unittest.TestCase):
     def test_get_ended_within_week(self):
         # Create a subscription that ended within the last week
         subscription1 = Subscription.objects.create(
-            end_date=timezone.now().date() - timezone.timedelta(days=3)
+            end_date=timezone.now().date().today() - timezone.timedelta(days=3)
         )
         # Create a subscription that ended more than a week ago
         subscription2 = Subscription.objects.create(
-            end_date=timezone.now().date() - timezone.timedelta(days=10)
+            end_date=timezone.now().date().today() - timezone.timedelta(days=10)
         )
         # Get all subscriptions that ended within the last week
         subscriptions = Subscription.objects.ended_within_week()

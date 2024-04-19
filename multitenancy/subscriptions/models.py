@@ -228,9 +228,9 @@ class SubscriptionQueryset(models.QuerySet):
         This method returns a queryset of subscriptions that ended within the last week,
         i.e., the end date of the subscription is between today and seven days ago.
         """
-        today = timezone.now().date()
+        today = timezone.now().date().today()
         week_ago = today - timezone.timedelta(days=7)
-        return self.filter(end_date__lte=week_ago)
+        return self.filter(end_date__lte=week_ago, end_date__gte=today)
 
     def renew_within_week(self):
         return self.filter(
