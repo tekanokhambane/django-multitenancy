@@ -230,7 +230,7 @@ class SubscriptionQueryset(models.QuerySet):
         """
         today = timezone.now().date()
         week_ago = today - timezone.timedelta(days=7)
-        return self.filter(end_date__lte=week_ago, end_date__lte=today)
+        return self.filter(end_date__lte=week_ago)
 
     def renew_within_week(self):
         return self.filter(
