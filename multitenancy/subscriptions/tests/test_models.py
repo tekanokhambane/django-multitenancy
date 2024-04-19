@@ -212,6 +212,18 @@ class TestPlan(unittest.TestCase):
 
 
 class TestProductType(unittest.TestCase):
+    def setUp(self):
+        ProductType.objects.all().delete()
+        # self.tenant_app = ProductType.objects.create(
+        #     name=ProductType.Types.TENANT_APP
+        # )
+        # self.domain = ProductType.objects.create(
+        #     name=ProductType.Types.DOMAIN
+        # )
+        # self.third_party_app = ProductType.objects.create(
+        #     name=ProductType.Types.THIRD_PARTY_APP
+        # )
+
     # Test that a ProductType object is created with the default values
     def test_create_product_type_with_default_values(self):
         product_type = ProductType.objects.create()
@@ -253,9 +265,7 @@ class TestProductType(unittest.TestCase):
     # Test that a ProductType object is successfully deleted
     def test_delete_product_type(self):
         # Create a ProductType object
-        product_type = ProductType.objects.filter(
-            name=ProductType.Types.TENANT_APP
-        ).first()
+        product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
 
         # Delete the ProductType object
         product_type.delete()
