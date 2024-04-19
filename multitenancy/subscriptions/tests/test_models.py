@@ -13,6 +13,7 @@ from multitenancy.subscriptions.models import (
     ProductFeature,
     ProductType,
     Subscription,
+    get_plans,
 )
 
 
@@ -180,9 +181,7 @@ class TestPlan(unittest.TestCase):
 
     # Test that the slug field is automatically generated when a Plan object is saved without a slug
     def test_slug_auto_generation(self):
-        plan = Plan(name="standard1", price=100)
-        plan.full_clean()
-        plan.save()
+        plan = Plan(name=get_plans()[0], price=100)
         self.assertIsNotNone(plan.slug)
 
     # Test that the price_weekly property of the Plan class returns the correct value
