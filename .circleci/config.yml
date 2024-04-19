@@ -1,44 +1,48 @@
 version: 2.1
+
 jobs:
   build:
-    services:
-      postgres:
-        image: postgres:12
-        env:
+    docker:
+      - image: python:3.9
+      - image: postgres:12
+        environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: testing
           POSTGRES_DB: test_project
         ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-    docker:
-    - image: cimg/python:3.9
+          - "5432:5432"
+
     steps:
-    - checkout
-    - run:
-        name: Install dependencies
-        command: |
-          python -m pip install --upgrade pip
-          pip install coverage
-          pip install -r requirements.txt
-    - run:
-        name: Create Groups table
-        command: |
-          cp -r multitenancy/test/* .
-          ls -r multitenancy
-          ls
-          python manage.py makemigrations
-    - run:
-        name: Run tests
-        command: coverage run manage.py test
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            pip install --upgrade pip
+            pip install coverage
+            pip install -r requirements.txt
+      - run:
+          name: Create Groups table
+          command: |
+            cp -r multitenancy/test/* .
+            python manage.py makemigrations
+            python manage.py migrate
+      - run:
+          name: Run tests
+          command: coverage run manage.py test
+
 workflows:
-  Django_Multitenancy_CI:
+  version: 2
+  build:
     jobs:
-    - build:
-        filters:
-          branches:
-            only:
-            - main
-          tags: {}
-# Translated via CircleCI's Configuration Translator
-# Info :: Could not translate "pull_request" trigger event to an equivalent in CircleCI's config.yml
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore: /.*/
