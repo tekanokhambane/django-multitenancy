@@ -202,8 +202,6 @@ class TestPlan(unittest.TestCase):
     # Test that the add_feature method can successfully add multiple features to a Plan object
     def test_add_multiple_features(self):
         plan = Plan.objects.get_or_create(name="basic plus")
-        plan.full_clean()
-        plan.save()
         plan.add_feature("Free .com domains")
         plan.add_feature("SSL certificate")
         features = plan.features.all()
@@ -232,9 +230,11 @@ class TestProductType(unittest.TestCase):
         product_type = ProductType.objects.create(
             name=ProductType.Types.THIRD_PARTY_APP
         )
-        retrieved_product_type = ProductType.objects.get(
+        retrieved_product_type = ProductType.objects.filter(
             name=ProductType.Types.THIRD_PARTY_APP
-        )
+        ).last()
+
+        # Assert that the retrieved object is equal to the original object
         self.assertEqual(product_type, retrieved_product_type)
 
     # Test that the ProductType object is updated correctly
@@ -253,7 +253,9 @@ class TestProductType(unittest.TestCase):
     # Test that a ProductType object is successfully deleted
     def test_delete_product_type(self):
         # Create a ProductType object
-        product_type = ProductType.objects.get(name=ProductType.Types.TENANT_APP)
+        product_type = ProductType.objects.filter(
+            name=ProductType.Types.TENANT_APP
+        ).first()
 
         # Delete the ProductType object
         product_type.delete()

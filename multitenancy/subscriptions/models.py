@@ -142,7 +142,12 @@ class ProductType(models.Model):
         THIRD_PARTY_APP = "third_party", "3rd party App"
 
     name = models.CharField(
-        max_length=115, choices=Types.choices, default=Types.TENANT_APP
+        max_length=115,
+        choices=Types.choices,
+        default=Types.TENANT_APP,
+        unique=True,
+        null=False,
+        blank=False,
     )
     objects = ProductTypeManager()
 
