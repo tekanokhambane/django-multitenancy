@@ -608,11 +608,9 @@ class TestSubscription(unittest.TestCase):
 
         # Get all active subscriptions
         active_subscriptions = Subscription.objects.get_active()
-        print(active_subscriptions, "active_subscriptions")
 
         # Check that only the active subscription is returned
         self.assertEqual(len(active_subscriptions), 1)
-        self.assertEqual(active_subscriptions[1], inactive_subscription)
         self.assertEqual(active_subscriptions[0], active_subscription)
 
     # Test that the 'get_started_within_week' method of the 'Subscription' class returns all subscriptions that started within the last week.
