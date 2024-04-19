@@ -244,7 +244,7 @@ class SubscriptionQueryset(models.QuerySet):
         return self.filter(status__exact=query)
 
     def get_active(self):
-        return self.filter(status__contains="active")
+        return self.filter(status="active")
 
     def search(self, query=None):
         if query is None or query == "":
