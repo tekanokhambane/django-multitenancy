@@ -483,13 +483,15 @@ class TestSubscription(unittest.TestCase):
         subscribe = Subscription.objects.create(status="active")
         # Save the initial values
         initial_status = subscribe.status
-        initial_end_date = subscribe.end_date + datetime.timedelta(days=30)
+        initial_end_date = subscribe.end_date
         initial_renewal_date = subscribe.renewal_date
         # Activate the subscription
         subscribe.activate_subscription(30)
         # Check that the status, end date, and renewal date remain unchanged
         self.assertEqual(subscribe.status, initial_status)
-        self.assertEqual(subscribe.end_date, initial_end_date)
+        self.assertEqual(
+            subscribe.end_date, initial_end_date + datetime.timedelta(days=30)
+        )
         self.assertEqual(subscribe.renewal_date, initial_renewal_date)
 
     # Test that the duration of an expired subscription can be updated successfully
@@ -546,7 +548,7 @@ class TestSubscription(unittest.TestCase):
         self.assertNotIn(subscription3, result)
 
         # Test search with product type query
-        result = Subscription.objects.search(query="type3")
+        result = Subscription.objects.search(query=ProductType.Types.TENANT_APP)
         self.assertEqual(len(result), 1)
         self.assertNotIn(subscription1, result)
         self.assertNotIn(subscription2, result)
