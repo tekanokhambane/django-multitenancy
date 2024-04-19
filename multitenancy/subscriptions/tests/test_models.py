@@ -320,6 +320,7 @@ class TestSubscription(unittest.TestCase):
     def setUp(self):
         super().setUp()
         ProductType.objects.all().delete()
+        Subscription.objects.all().delete()
 
     # Test that the 'start_subscription' method correctly starts a subscription with a weekly cycle
     def test_start_subscription_weekly_cycle(self):
