@@ -453,95 +453,95 @@ class TestSubscription(unittest.TestCase):
         self.assertEquals(subscribe.status, "active")
         self.assertEquals(subscribe.reason, "Subscription renewed")
 
+    # Test that cancelling an inactive subscription does not change its status or end date
+    def test_cancel_inactive_subscription(self):
+        # Create an inactive subscription
+        subscribe = Subscription.objects.create(status="inactive")
 
-#     # Test that cancelling an inactive subscription does not change its status or end date
-#     def test_cancel_inactive_subscription(self):
-#         # Create an inactive subscription
-#         subscribe = Subscription.objects.create(status="inactive")
+        # Cancel the subscription
+        subscribe.cancel_subscription()
 
-#         # Cancel the subscription
-#         subscribe.cancel_subscription()
+        # Assert that the status and end date remain unchanged
+        self.assertEquals(subscribe.status, "inactive")
+        self.assertEquals(subscribe.end_date, datetime.date.today())
 
-#         # Assert that the status and end date remain unchanged
-#         self.assertEquals(subscribe.status, "inactive")
-#         self.assertEquals(subscribe.end_date, datetime.date.today())
+    # Test that activating an already active subscription does not change its status or dates
+    def test_activate_active_subscription(self):
+        # Create a subscription and set its status to active
+        subscribe = Subscription.objects.create(status="active")
+        # Save the initial values
+        initial_status = subscribe.status
+        initial_end_date = subscribe.end_date
+        initial_renewal_date = subscribe.renewal_date
+        # Activate the subscription
+        subscribe.activate_subscription(30)
+        # Check that the status, end date, and renewal date remain unchanged
+        self.assertEqual(subscribe.status, initial_status)
+        self.assertEqual(subscribe.end_date, initial_end_date)
+        self.assertEqual(subscribe.renewal_date, initial_renewal_date)
 
-#     # Test that activating an already active subscription does not change its status or dates
-#     def test_activate_active_subscription(self):
-#         # Create a subscription and set its status to active
-#         subscribe = Subscription.objects.create(status="active")
-#         # Save the initial values
-#         initial_status = subscribe.status
-#         initial_end_date = subscribe.end_date
-#         initial_renewal_date = subscribe.renewal_date
-#         # Activate the subscription
-#         subscribe.activate_subscription(30)
-#         # Check that the status, end date, and renewal date remain unchanged
-#         self.assertEqual(subscribe.status, initial_status)
-#         self.assertEqual(subscribe.end_date, initial_end_date)
-#         self.assertEqual(subscribe.renewal_date, initial_renewal_date)
+    # Test that the duration of an expired subscription can be updated successfully
+    def test_update_duration_expired_subscription(self):
+        # Create an expired subscription
+        subscribe = Subscription.objects.create(status="expired")
+        # Update the duration
+        subscribe.update_duration(30)
 
-#     # Test that the duration of an expired subscription can be updated successfully
-#     def test_update_duration_expired_subscription(self):
-#         # Create an expired subscription
-#         subscribe = Subscription.objects.create(status="expired")
-#         # Update the duration
-#         subscribe.update_duration(30)
+        # Check if the duration is updated correctly
+        self.assertEquals(subscribe.subscription_duration, 30)
 
-#         # Check if the duration is updated correctly
-#         self.assertEquals(subscribe.subscription_duration, 30)
+    # Test that the search method in the Subscription class returns the correct subscriptions based on the provided query.
+    def test_search_subscription(self):
+        # Create test subscriptions
+        subscription1 = Subscription.objects.create(
+            reference="ref1",
+            reason="reason1",
+            product_type=ProductType.objects.create(name="type1"),
+        )
+        subscription2 = Subscription.objects.create(
+            reference="ref2",
+            reason="reason2",
+            product_type=ProductType.objects.create(name="type2"),
+        )
+        subscription3 = Subscription.objects.create(
+            reference="ref3",
+            reason="reason3",
+            product_type=ProductType.objects.create(name="type3"),
+        )
 
-#     # Test that the search method in the Subscription class returns the correct subscriptions based on the provided query.
-#     def test_search_subscription(self):
-#         # Create test subscriptions
-#         subscription1 = Subscription.objects.create(
-#             reference="ref1",
-#             reason="reason1",
-#             product_type=ProductType.objects.create(name="type1"),
-#         )
-#         subscription2 = Subscription.objects.create(
-#             reference="ref2",
-#             reason="reason2",
-#             product_type=ProductType.objects.create(name="type2"),
-#         )
-#         subscription3 = Subscription.objects.create(
-#             reference="ref3",
-#             reason="reason3",
-#             product_type=ProductType.objects.create(name="type3"),
-#         )
+        # Test search with empty query
+        result = Subscription.objects.search()
+        all_subscriptions = Subscription.objects.count()
+        self.assertEqual(len(result), all_subscriptions)
+        self.assertIn(subscription1, result)
+        self.assertIn(subscription2, result)
+        self.assertIn(subscription3, result)
 
-#         # Test search with empty query
-#         result = Subscription.objects.search()
-#         all_subscriptions = Subscription.objects.count()
-#         self.assertEqual(len(result), all_subscriptions)
-#         self.assertIn(subscription1, result)
-#         self.assertIn(subscription2, result)
-#         self.assertIn(subscription3, result)
+        # Test search with reference query
+        result = Subscription.objects.search(query="ref1")
+        self.assertEqual(len(result), 1)
+        self.assertIn(subscription1, result)
+        self.assertNotIn(subscription2, result)
+        self.assertNotIn(subscription3, result)
 
-#         # Test search with reference query
-#         result = Subscription.objects.search(query="ref1")
-#         self.assertEqual(len(result), 1)
-#         self.assertIn(subscription1, result)
-#         self.assertNotIn(subscription2, result)
-#         self.assertNotIn(subscription3, result)
+        # Test search with reason query
+        result = Subscription.objects.search(query="reason2")
+        self.assertEqual(len(result), 1)
+        self.assertNotIn(subscription1, result)
+        self.assertIn(subscription2, result)
+        self.assertNotIn(subscription3, result)
 
-#         # Test search with reason query
-#         result = Subscription.objects.search(query="reason2")
-#         self.assertEqual(len(result), 1)
-#         self.assertNotIn(subscription1, result)
-#         self.assertIn(subscription2, result)
-#         self.assertNotIn(subscription3, result)
+        # Test search with product type query
+        result = Subscription.objects.search(query="type3")
+        self.assertEqual(len(result), 1)
+        self.assertNotIn(subscription1, result)
+        self.assertNotIn(subscription2, result)
+        self.assertIn(subscription3, result)
 
-#         # Test search with product type query
-#         result = Subscription.objects.search(query="type3")
-#         self.assertEqual(len(result), 1)
-#         self.assertNotIn(subscription1, result)
-#         self.assertNotIn(subscription2, result)
-#         self.assertIn(subscription3, result)
+        # Test search with non-matching query
+        result = Subscription.objects.search(query="nonexistent")
+        self.assertEqual(len(result), 0)
 
-#         # Test search with non-matching query
-#         result = Subscription.objects.search(query="nonexistent")
-#         self.assertEqual(len(result), 0)
 
 #     # Test that the 'Subscription' class can filter subscriptions based on their status.
 #     def test_filter_subscriptions_by_status(self):
