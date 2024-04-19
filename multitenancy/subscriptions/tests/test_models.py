@@ -123,8 +123,8 @@ class TestPlan(unittest.TestCase):
         plans = Plan.objects.by_price(75)
 
         # Check that only plan2 is retrieved
-        self.assertEqual(len(plans), 13)
-        self.assertEqual(plans[12], plan2)
+        self.assertEqual(len(plans), 1)
+        self.assertEqual(plans[0], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
     def test_retrieve_plan_by_feature(self):
@@ -209,7 +209,7 @@ class TestPlan(unittest.TestCase):
         plan, created = Plan.objects.get_or_create(name="basic plus")
         plan.add_feature("Free .com domains")
         plan.add_feature("SSL certificate")
-        features = plan.features.all()
+        features = sorted(plan.features.all(), key=lambda x: x.name)
         self.assertEqual(len(features), 2)
         self.assertEqual(features[0].name, "Free .com domain")
         self.assertEqual(features[1].name, "SSL certificate")
