@@ -208,6 +208,15 @@ class SubscriptionQueryset(models.QuerySet):
         return self.filter(cycle=Subscription.Cycles.ANNUALLY)
 
     def started_within_week(self):
+        """
+        Return subscriptions that started within the last week.
+
+        This method returns a queryset of subscriptions that started within the last week,
+        i.e., the start date of the subscription is between today and seven days ago.
+
+        Returns:
+            QuerySet: A queryset of subscriptions that started within the last week.
+        """
         return self.filter(
             start_date__gte=timezone.now().date().today() - timezone.timedelta(days=7)
         )
@@ -221,7 +230,7 @@ class SubscriptionQueryset(models.QuerySet):
         """
         today = timezone.now().date()
         week_ago = today - timezone.timedelta(days=7)
-        return self.filter(end_date__gte=week_ago, end_date__lte=today)
+        return self.filter(end_date__lte=week_ago, end_date__lte=today)
 
     def renew_within_week(self):
         return self.filter(
