@@ -199,53 +199,53 @@ class TestPlan(unittest.TestCase):
         plan = Plan.objects.create(name="basic00", price=100)
         self.assertEqual(plan.price_annually, 1200)
 
+    # Test that the add_feature method can successfully add multiple features to a Plan object
+    def test_add_multiple_features(self):
+        plan = Plan.objects.get_or_create(name="basic plus")
+        plan.add_feature("Free .com domains")
+        plan.add_feature("SSL certificate")
+        features = plan.features.all()
+        self.assertEqual(len(features), 2)
+        self.assertEqual(features[0].name, "Free .com domain")
+        self.assertEqual(features[1].name, "SSL certificate")
+        self.assertEqual(plan.name, "basic plus")
 
-#     # Test that the add_feature method can successfully add multiple features to a Plan object
-#     def test_add_multiple_features(self):
-#         plan = Plan.objects.get_or_create(name="basic")
-#         plan.add_feature("Free domain")
-#         plan.add_feature("SSL certificate")
-#         features = plan.features.all()
-#         self.assertEqual(len(features), 2)
-#         self.assertEqual(features[0].name, "Free domain")
-#         self.assertEqual(features[1].name, "SSL certificate")
-#         self.assertEqual(plan.name, "basic")
 
+class TestProductType(unittest.TestCase):
+    # Test that a ProductType object is created with the default values
+    def test_create_product_type_with_default_values(self):
+        product_type = ProductType.objects.create()
+        self.assertEqual(product_type.name, ProductType.Types.TENANT_APP)
 
-# class TestProductType(unittest.TestCase):
-#     # Test that a ProductType object is created with the default values
-#     def test_create_product_type_with_default_values(self):
-#         product_type = ProductType.objects.create()
-#         self.assertEqual(product_type.name, ProductType.Types.TENANT_APP)
+    # Test that a ProductType object can be created with custom values
+    def test_create_product_type_with_custom_values(self):
+        # Create a ProductType object with custom values
+        product_type = ProductType.objects.create(name=ProductType.Types.DOMAIN)
 
-#     # Test that a ProductType object can be created with custom values
-#     def test_create_product_type_with_custom_values(self):
-#         # Create a ProductType object with custom values
-#         product_type = ProductType.objects.create(name=ProductType.Types.DOMAIN)
+        # Assert that the object is created successfully
+        self.assertEqual(product_type.name, ProductType.Types.DOMAIN)
 
-#         # Assert that the object is created successfully
-#         self.assertEqual(product_type.name, ProductType.Types.DOMAIN)
+    # Test that a ProductType object can be retrieved
+    def test_retrieve_product_type(self):
+        product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+        retrieved_product_type = ProductType.objects.get(
+            name=ProductType.Types.TENANT_APP
+        )
+        self.assertEqual(product_type, retrieved_product_type)
 
-#     # Test that a ProductType object can be retrieved
-#     def test_retrieve_product_type(self):
-#         product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
-#         retrieved_product_type = ProductType.objects.get(
-#             name=ProductType.Types.TENANT_APP
-#         )
-#         self.assertEqual(product_type, retrieved_product_type)
+    # Test that the ProductType object is updated correctly
+    def test_update_product_type(self):
+        # Create a ProductType object
+        product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
 
-#     # Test that the ProductType object is updated correctly
-#     def test_update_product_type(self):
-#         # Create a ProductType object
-#         product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+        # Update the ProductType object
+        product_type.name = ProductType.Types.DOMAIN
+        product_type.save()
 
-#         # Update the ProductType object
-#         product_type.name = ProductType.Types.DOMAIN
-#         product_type.save()
+        # Check if the ProductType object is updated correctly
+        updated_product_type = ProductType.objects.get(pk=product_type.pk)
+        self.assertEqual(updated_product_type.name, ProductType.Types.DOMAIN)
 
-#         # Check if the ProductType object is updated correctly
-#         updated_product_type = ProductType.objects.get(pk=product_type.pk)
-#         self.assertEqual(updated_product_type.name, ProductType.Types.DOMAIN)
 
 #     # Test that a ProductType object is successfully deleted
 #     def test_delete_product_type(self):
