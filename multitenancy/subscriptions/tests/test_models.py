@@ -178,27 +178,28 @@ class TestPlan(unittest.TestCase):
         with self.assertRaises(Plan.DoesNotExist):
             Plan.objects.get(name="nonexistent")
 
+    # Test that the slug field is automatically generated when a Plan object is saved without a slug
+    def test_slug_auto_generation(self):
+        plan = Plan(name="standard1", price=100)
+        plan.full_clean()
+        plan.save()
+        self.assertIsNotNone(plan.slug)
 
-#     # Test that the slug field is automatically generated when a Plan object is saved without a slug
-#     def test_slug_auto_generation(self):
-#         plan = Plan(name="basic")
-#         plan.save()
-#         self.assertIsNotNone(plan.slug)
+    # Test that the price_weekly property of the Plan class returns the correct value
+    def test_price_weekly(self):
+        plan = Plan.objects.create(name="basics", price=100)
+        self.assertEqual(plan.price_weekly, 25)
 
-#     # Test that the price_weekly property of the Plan class returns the correct value
-#     def test_price_weekly(self):
-#         plan = Plan.objects.create(name="basic", price=100)
-#         self.assertEqual(plan.price_weekly, 25)
+    # Test that the price_quartely property of the Plan class returns the correct value
+    def test_price_quartely(self):
+        plan = Plan.objects.create(name="basic0", price=100)
+        self.assertEqual(plan.price_quartely, 300)
 
-#     # Test that the price_quartely property of the Plan class returns the correct value
-#     def test_price_quartely(self):
-#         plan = Plan.objects.create(name="basic", price=100)
-#         self.assertEqual(plan.price_quartely, 300)
+    # Test that the price_annually property of the Plan class returns the correct value
+    def test_price_annually(self):
+        plan = Plan.objects.create(name="basic00", price=100)
+        self.assertEqual(plan.price_annually, 1200)
 
-#     # Test that the price_annually property of the Plan class returns the correct value
-#     def test_price_annually(self):
-#         plan = Plan.objects.create(name="basic", price=100)
-#         self.assertEqual(plan.price_annually, 1200)
 
 #     # Test that the add_feature method can successfully add multiple features to a Plan object
 #     def test_add_multiple_features(self):
