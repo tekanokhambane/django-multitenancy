@@ -373,86 +373,86 @@ class TestSubscription(unittest.TestCase):
         )
         self.assertEquals(subscribe.subscription_duration, 365)
 
+    # Test that an active subscription can be successfully renewed
+    def test_renew_active_subscription(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("weekly")
+        subscribe.renew()
 
-#     # Test that an active subscription can be successfully renewed
-#     def test_renew_active_subscription(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("weekly")
-#         subscribe.renew()
+        self.assertEquals(subscribe.reason, "Subscription renewed")
 
-#         self.assertEquals(subscribe.reason, "Subscription renewed")
+    # Test that cancelling an active subscription sets the status to 'cancelled' and the end date to today's date.
+    def test_cancel_active_subscription(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("weekly")
+        subscribe.cancel_subscription()
 
-#     # Test that cancelling an active subscription sets the status to 'cancelled' and the end date to today's date.
-#     def test_cancel_active_subscription(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("weekly")
-#         subscribe.cancel_subscription()
+        self.assertEquals(subscribe.status, "cancelled")
+        self.assertEquals(subscribe.end_date, datetime.date.today())
 
-#         self.assertEquals(subscribe.status, "cancelled")
-#         self.assertEquals(subscribe.end_date, datetime.date.today())
+    # Test that an inactive subscription can be activated successfully
+    def test_activate_inactive_subscription(self):
+        # Create an inactive subscription
+        subscription = Subscription.objects.create(status="inactive")
 
-#     # Test that an inactive subscription can be activated successfully
-#     def test_activate_inactive_subscription(self):
-#         # Create an inactive subscription
-#         subscription = Subscription.objects.create(status="inactive")
+        # Activate the subscription
+        subscription.activate_subscription(30)
 
-#         # Activate the subscription
-#         subscription.activate_subscription(30)
+        # Check if the subscription is now active
+        self.assertEqual(subscription.status, "active")
 
-#         # Check if the subscription is now active
-#         self.assertEqual(subscription.status, "active")
+        # Check if the renewal date is set to today
+        self.assertEqual(subscription.renewal_date, datetime.date.today())
 
-#         # Check if the renewal date is set to today
-#         self.assertEqual(subscription.renewal_date, datetime.date.today())
+        # Check if the end date is set correctly based on the duration
+        self.assertEqual(
+            subscription.end_date, datetime.date.today() + datetime.timedelta(days=30)
+        )
 
-#         # Check if the end date is set correctly based on the duration
-#         self.assertEqual(
-#             subscription.end_date, datetime.date.today() + datetime.timedelta(days=30)
-#         )
+        # Check if the reason is updated correctly
+        self.assertEqual(subscription.reason, "Subscription activated")
 
-#         # Check if the reason is updated correctly
-#         self.assertEqual(subscription.reason, "Subscription activated")
+    # Test that the duration of a subscription is updated correctly
+    def test_update_duration(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("weekly")
+        subscribe.update_duration(14)
 
-#     # Test that the duration of a subscription is updated correctly
-#     def test_update_duration(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("weekly")
-#         subscribe.update_duration(14)
+        self.assertEquals(subscribe.subscription_duration, 14)
 
-#         self.assertEquals(subscribe.subscription_duration, 14)
+    # Test that the is_active property of a Subscription instance returns True if the status is "active", and False otherwise.
+    def test_is_active_subscription(self):
+        # Create a Subscription instance with status "active"
+        subscription = Subscription.objects.create(status="active")
 
-#     # Test that the is_active property of a Subscription instance returns True if the status is "active", and False otherwise.
-#     def test_is_active_subscription(self):
-#         # Create a Subscription instance with status "active"
-#         subscription = Subscription.objects.create(status="active")
+        # Check if the is_active property returns True
+        self.assertTrue(subscription.is_active)
 
-#         # Check if the is_active property returns True
-#         self.assertTrue(subscription.is_active)
+        # Create a Subscription instance with status "inactive"
+        subscription = Subscription.objects.create(status="inactive")
 
-#         # Create a Subscription instance with status "inactive"
-#         subscription = Subscription.objects.create(status="inactive")
+        # Check if the is_active property returns False
+        self.assertFalse(subscription.is_active)
 
-#         # Check if the is_active property returns False
-#         self.assertFalse(subscription.is_active)
+    # Test that starting a subscription with an invalid cycle raises an error
+    def test_start_subscription_with_invalid_cycle(self):
+        subscribe = Subscription.objects.create()
+        with self.assertRaises(ValueError):
+            subscribe.start_subscription("invalid_cycle")
 
-#     # Test that starting a subscription with an invalid cycle raises an error
-#     def test_start_subscription_with_invalid_cycle(self):
-#         subscribe = Subscription.objects.create()
-#         with self.assertRaises(ValueError):
-#             subscribe.start_subscription("invalid_cycle")
+    # Test that a subscription can be renewed when it is expired
+    def test_renew_expired_subscription(self):
+        # Create an expired subscription
+        subscribe = Subscription.objects.create(status="expired")
+        subscribe.start_subscription("weekly")
 
-#     # Test that a subscription can be renewed when it is expired
-#     def test_renew_expired_subscription(self):
-#         # Create an expired subscription
-#         subscribe = Subscription.objects.create(status="expired")
-#         subscribe.start_subscription("weekly")
+        # Renew the subscription
+        subscribe.renew()
 
-#         # Renew the subscription
-#         subscribe.renew()
+        # Assert that the subscription is now active
+        self.assertEquals(subscribe.status, "active")
+        self.assertEquals(subscribe.reason, "Subscription renewed")
 
-#         # Assert that the subscription is now active
-#         self.assertEquals(subscribe.status, "active")
-#         self.assertEquals(subscribe.reason, "Subscription renewed")
 
 #     # Test that cancelling an inactive subscription does not change its status or end date
 #     def test_cancel_inactive_subscription(self):
