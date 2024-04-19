@@ -118,8 +118,8 @@ class TestPlan(unittest.TestCase):
         plans = Plan.objects.by_price(75)
 
         # Check that only plan2 is retrieved
-        self.assertEqual(len(plans), 12)
-        self.assertEqual(plans[11], plan2)
+        self.assertEqual(len(plans), 13)
+        self.assertEqual(plans[12], plan2)
 
     # Test that the by_features method of the Plan class retrieves all Plan objects with a specific feature
     def test_retrieve_plan_by_feature(self):
@@ -202,6 +202,8 @@ class TestPlan(unittest.TestCase):
     # Test that the add_feature method can successfully add multiple features to a Plan object
     def test_add_multiple_features(self):
         plan = Plan.objects.get_or_create(name="basic plus")
+        plan.full_clean()
+        plan.save()
         plan.add_feature("Free .com domains")
         plan.add_feature("SSL certificate")
         features = plan.features.all()
@@ -227,9 +229,11 @@ class TestProductType(unittest.TestCase):
 
     # Test that a ProductType object can be retrieved
     def test_retrieve_product_type(self):
-        product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+        product_type = ProductType.objects.create(
+            name=ProductType.Types.THIRD_PARTY_APP
+        )
         retrieved_product_type = ProductType.objects.get(
-            name=ProductType.Types.TENANT_APP
+            name=ProductType.Types.THIRD_PARTY_APP
         )
         self.assertEqual(product_type, retrieved_product_type)
 
@@ -246,70 +250,69 @@ class TestProductType(unittest.TestCase):
         updated_product_type = ProductType.objects.get(pk=product_type.pk)
         self.assertEqual(updated_product_type.name, ProductType.Types.DOMAIN)
 
+    # Test that a ProductType object is successfully deleted
+    def test_delete_product_type(self):
+        # Create a ProductType object
+        product_type = ProductType.objects.get(name=ProductType.Types.TENANT_APP)
 
-#     # Test that a ProductType object is successfully deleted
-#     def test_delete_product_type(self):
-#         # Create a ProductType object
-#         product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+        # Delete the ProductType object
+        product_type.delete()
 
-#         # Delete the ProductType object
-#         product_type.delete()
+        # Check that the ProductType object is deleted
+        self.assertFalse(ProductType.objects.filter(pk=product_type.pk).exists())
 
-#         # Check that the ProductType object is deleted
-#         self.assertFalse(ProductType.objects.filter(pk=product_type.pk).exists())
+    # Test that a ProductType object can be created with the maximum length of the name field
+    def test_create_product_type_with_max_length_name(self):
+        # Create a ProductType object with the maximum length of the name field
+        name = "a" * 115
+        product_type = ProductType.objects.create(name=name)
 
-#     # Test that a ProductType object can be created with the maximum length of the name field
-#     def test_create_product_type_with_max_length_name(self):
-#         # Create a ProductType object with the maximum length of the name field
-#         name = "a" * 115
-#         product_type = ProductType.objects.create(name=name)
+        # Assert that the ProductType object is created successfully
+        self.assertEqual(product_type.name, name)
 
-#         # Assert that the ProductType object is created successfully
-#         self.assertEqual(product_type.name, name)
+    # Test that creating a ProductType object with an invalid name field raises a validation error
+    def test_invalid_name_field(self):
+        with self.assertRaises(ValidationError):
+            ProductType.objects.create(name="invalid_name")
 
-#     # Test that creating a ProductType object with an invalid name field raises a validation error
-#     def test_invalid_name_field(self):
-#         with self.assertRaises(ValidationError):
-#             ProductType.objects.create(name="invalid_name")
+    # Test that a ProductType object cannot be created with a null name field
+    def test_create_product_type_with_null_name(self):
+        with self.assertRaises(ValueError):
+            ProductType.objects.create(name=None)
 
-#     # Test that a ProductType object cannot be created with a null name field
-#     def test_create_product_type_with_null_name(self):
-#         with self.assertRaises(ValueError):
-#             ProductType.objects.create(name=None)
+    # Test that creating a ProductType object with a name field that already exists raises an error
+    def test_create_existing_name(self):
+        with self.assertRaises(Exception):
+            ProductType.objects.create(name=ProductType.Types.TENANT_APP)
 
-#     # Test that creating a ProductType object with a name field that already exists raises an error
-#     def test_create_existing_name(self):
-#         with self.assertRaises(Exception):
-#             ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+    # Test that the 'create_defaults' method of the ProductTypeManager class creates the default product types correctly
+    def test_create_defaults(self):
+        manager = ProductType.objects
+        manager.create_defaults()
+        # Assert that the default product types are created
+        self.assertEqual(
+            ProductType.objects.filter(name=ProductType.Types.TENANT_APP).count(), 1
+        )
+        self.assertEqual(
+            ProductType.objects.filter(name=ProductType.Types.DOMAIN).count(), 1
+        )
+        self.assertEqual(
+            ProductType.objects.filter(name=ProductType.Types.THIRD_PARTY_APP).count(),
+            1,
+        )
 
-#     # Test that the 'create_defaults' method of the ProductTypeManager class creates the default product types correctly
-#     def test_create_defaults(self):
-#         manager = ProductType.objects
-#         manager.create_defaults()
-#         # Assert that the default product types are created
-#         self.assertEqual(
-#             ProductType.objects.filter(name=ProductType.Types.TENANT_APP).count(), 1
-#         )
-#         self.assertEqual(
-#             ProductType.objects.filter(name=ProductType.Types.DOMAIN).count(), 1
-#         )
-#         self.assertEqual(
-#             ProductType.objects.filter(name=ProductType.Types.THIRD_PARTY_APP).count(),
-#             1,
-#         )
+    # Test that the 'subscriptions' related name attribute of the ForeignKey field is set correctly
+    def test_related_name_attribute(self):
+        product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
+        subscription = Subscription.objects.create(product_type=product_type)
+        self.assertEqual(subscription.product_type, product_type)
+        self.assertEqual(product_type.subscriptions.first(), subscription)
 
-#     # Test that the 'subscriptions' related name attribute of the ForeignKey field is set correctly
-#     def test_related_name_attribute(self):
-#         product_type = ProductType.objects.create(name=ProductType.Types.TENANT_APP)
-#         subscription = Subscription.objects.create(product_type=product_type)
-#         self.assertEqual(subscription.product_type, product_type)
-#         self.assertEqual(product_type.subscriptions.first(), subscription)
-
-#     # Test that the 'Types' inner class of the ProductType class is defined correctly
-#     def test_types_inner_class(self):
-#         self.assertEqual(ProductType.Types.TENANT_APP, "tenant")
-#         self.assertEqual(ProductType.Types.DOMAIN, "domain")
-#         self.assertEqual(ProductType.Types.THIRD_PARTY_APP, "third_party")
+    # Test that the 'Types' inner class of the ProductType class is defined correctly
+    def test_types_inner_class(self):
+        self.assertEqual(ProductType.Types.TENANT_APP, "tenant")
+        self.assertEqual(ProductType.Types.DOMAIN, "domain")
+        self.assertEqual(ProductType.Types.THIRD_PARTY_APP, "third_party")
 
 
 # class TestSubscription(unittest.TestCase):
