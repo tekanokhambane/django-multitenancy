@@ -325,7 +325,9 @@ class TestSubscription(unittest.TestCase):
         self.assertEquals(subscribe.status, "active")
         self.assertEquals(subscribe.cycle, "weekly")
         self.assertEquals(subscribe.reason, "Start Subscription")
-        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.renewal_date, datetime.date.today() + datetime.timedelta(days=7)
+        )
         self.assertEquals(
             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=7)
         )
@@ -339,7 +341,9 @@ class TestSubscription(unittest.TestCase):
         self.assertEquals(subscribe.status, "active")
         self.assertEquals(subscribe.cycle, "monthly")
         self.assertEquals(subscribe.reason, "Start Subscription")
-        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.renewal_date, datetime.date.today() + datetime.timedelta(days=30)
+        )
         self.assertEquals(
             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=30)
         )
@@ -353,7 +357,9 @@ class TestSubscription(unittest.TestCase):
         self.assertEquals(subscribe.status, "active")
         self.assertEquals(subscribe.cycle, "quartely")
         self.assertEquals(subscribe.reason, "Start Subscription")
-        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.renewal_date, datetime.date.today() + datetime.timedelta(days=90)
+        )
         self.assertEquals(
             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=90)
         )
@@ -367,7 +373,9 @@ class TestSubscription(unittest.TestCase):
         self.assertEquals(subscribe.status, "active")
         self.assertEquals(subscribe.cycle, "annually")
         self.assertEquals(subscribe.reason, "Start Subscription")
-        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.renewal_date, datetime.date.today() + datetime.timedelta(days=365)
+        )
         self.assertEquals(
             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=365)
         )
@@ -496,17 +504,19 @@ class TestSubscription(unittest.TestCase):
         subscription1 = Subscription.objects.create(
             reference="ref1",
             reason="reason1",
-            product_type=ProductType.objects.create(name="type1"),
+            product_type=ProductType.objects.create(name=ProductType.Types.TENANT_APP),
         )
         subscription2 = Subscription.objects.create(
             reference="ref2",
             reason="reason2",
-            product_type=ProductType.objects.create(name="type2"),
+            product_type=ProductType.objects.create(name=ProductType.Types.DOMAIN),
         )
         subscription3 = Subscription.objects.create(
             reference="ref3",
             reason="reason3",
-            product_type=ProductType.objects.create(name="type3"),
+            product_type=ProductType.objects.create(
+                name=ProductType.Types.THIRD_PARTY_APP
+            ),
         )
 
         # Test search with empty query

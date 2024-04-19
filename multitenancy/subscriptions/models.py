@@ -360,23 +360,22 @@ class Subscription(models.Model):
 
     def start_subscription(self, cycle):
         # calculate the subscription_duration based on the subscription cycle
-        durations = {
-            "weekly": 7,
-            "monthly": 30,
-            "quartely": 90,
-            "annually": 365,
-        }
-        self.status = "active"
-        self.cycle = cycle
-        self.reason = "Start Subscription"
-        self.renewal_date = datetime.date.today() + datetime.timedelta(
-            days=durations[cycle]
-        )
-        self.save()
 
         if cycle not in self.Cycles.values:
             raise ValueError("Invalid cycle")
         else:
+            durations = {
+                "weekly": 7,
+                "monthly": 30,
+                "quartely": 90,
+                "annually": 365,
+            }
+            self.status = "active"
+            self.cycle = cycle
+            self.reason = "Start Subscription"
+            self.renewal_date = datetime.date.today() + datetime.timedelta(
+                days=durations[cycle]
+            )
             self.subscription_duration = durations[cycle]
             self.end_date = self.renewal_date
             self.save()
