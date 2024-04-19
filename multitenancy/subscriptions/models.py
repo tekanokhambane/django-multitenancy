@@ -229,7 +229,7 @@ class SubscriptionQueryset(models.QuerySet):
         i.e., the end date of the subscription is between today and seven days ago.
         """
         today = timezone.now().date().today()
-        week_ago = today - timezone.timedelta(days=7)
+        week_ago = timezone.timedelta(days=7)
         return self.filter(end_date__lte=week_ago, end_date__gte=today)
 
     def renew_within_week(self):
