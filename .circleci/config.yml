@@ -1,52 +1,32 @@
-# This config was automatically generated from your source code
-# Stacks detected: cicd:github-actions:.github/workflows,deps:python:.,file:manage.py:multitenancy/test,file:setup.py:.
 version: 2.1
-orbs:
-  python: circleci/python@2
 jobs:
-  test-python:
-    # Install dependencies and run tests
+  build:
     docker:
-      - image: cimg/python:3.8-node
+    - image: cimg/python:3.9
     steps:
-      - checkout
-      - python/install-packages:
-          pkg-manager: pip-dist
-      - run:
-          name: Run tests
-          command: python manage.py test
-  build-package:
-    # build python package
-    docker:
-      - image: cimg/python:3.8-node
-    steps:
-      - checkout
-      - run:
-          name: Create the ~/artifacts directory if it doesn't exist
-          command: mkdir -p ~/artifacts
-      - python/dist
-      - store_artifacts:
-          path: dist
-          destination: ~/artifacts
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
-      - run:
-          name: found github actions config
-          command: ':'
+    - checkout
+    - run:
+        name: Install dependencies
+        command: |
+          python -m pip install --upgrade pip
+          pip install coverage
+          pip install -r requirements.txt
+    - run:
+        name: Create Groups table
+        command: |
+          cp -r multitenancy/test/* .
+          python manage.py makemigrations
+    - run:
+        name: Run tests
+        command: coverage run manage.py test
 workflows:
-  build-and-test:
+  Django_Multitenancy_CI:
     jobs:
-      - test-python
-      - build-package:
-          requires:
-            - test-python
-    # - deploy:
-    #     requires:
-    #       - build-package
+    - build:
+        filters:
+          branches:
+            only:
+            - main
+          tags: {}
+# Translated via CircleCI's Configuration Translator
+# Info :: Could not translate "pull_request" trigger event to an equivalent in CircleCI's config.yml
