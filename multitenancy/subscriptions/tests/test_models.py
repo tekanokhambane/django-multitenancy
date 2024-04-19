@@ -553,7 +553,7 @@ class TestSubscription(unittest.TestCase):
         self.assertNotIn(subscription3, result)
 
         # Test search with product type query
-        result = Subscription.objects.search(query=ProductType.Types.DOMAIN)
+        result = Subscription.objects.search(query=ProductType.Types.THIRD_PARTY_APP)
         self.assertEqual(len(result), 1)
         self.assertNotIn(subscription1, result)
         self.assertNotIn(subscription2, result)
