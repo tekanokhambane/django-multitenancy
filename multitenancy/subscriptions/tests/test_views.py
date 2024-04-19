@@ -54,7 +54,7 @@ class PlanViewsTestCase(unittest.TestCase):
 
     def setUp(self):
         Plan.objects.all().delete()
-        TenantUser.objects.all().delete_user()
+        TenantUser.objects.all().delete()
         self.factory = RequestFactory()
         self.client = Client()
         #  self.user = Admin.objects.create(
