@@ -481,12 +481,14 @@ class TestSubscription(unittest.TestCase):
     def test_activate_active_subscription(self):
         # Create a subscription and set its status to active
         subscribe = Subscription.objects.create(status="active")
+
+        # Activate the subscription
+        subscribe.activate_subscription(30)
+
         # Save the initial values
         initial_status = subscribe.status
         initial_end_date = subscribe.end_date
         initial_renewal_date = subscribe.renewal_date
-        # Activate the subscription
-        subscribe.activate_subscription(30)
         # Check that the status, end date, and renewal date remain unchanged
         self.assertEqual(subscribe.status, initial_status)
         self.assertEqual(
