@@ -112,7 +112,7 @@ class PlanViewsTestCase(unittest.TestCase):
             name="enterprise",
         )
         self.request = self.factory.get(f"/billing/plans/{self.plan}/")
-        self.request.user = self.admin
+        self.request.user = self.user
         view = PlanDetailView.as_view()
         response = view(self.request, pk=self.plan.pk)
         self.assertEqual(response.status_code, 200)
