@@ -607,6 +607,7 @@ class TestSubscription(unittest.TestCase):
 
         # Get all active subscriptions
         active_subscriptions = Subscription.objects.get_active()
+        print(active_subscriptions)
 
         # Check that only the active subscription is returned
         self.assertEqual(len(active_subscriptions), 1)
@@ -616,13 +617,13 @@ class TestSubscription(unittest.TestCase):
     def test_get_subscriptions_started_within_week(self):
         # Create subscriptions with different start dates
         subscription1 = Subscription.objects.create(
-            start_date=datetime.date.today() - datetime.timedelta(days=8)
+            start_date=timezone.date.today() - timezone.timedelta(days=10)
         )
         subscription2 = Subscription.objects.create(
-            start_date=datetime.date.today() - datetime.timedelta(days=6)
+            start_date=timezone.date.today() - timezone.timedelta(days=6)
         )
         subscription3 = Subscription.objects.create(
-            start_date=datetime.date.today() - datetime.timedelta(days=5)
+            start_date=timezone.date.today() - timezone.timedelta(days=5)
         )
 
         # Get subscriptions started within the last week

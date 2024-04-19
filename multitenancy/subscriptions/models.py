@@ -208,10 +208,10 @@ class SubscriptionQueryset(models.QuerySet):
         return self.filter(cycle=Subscription.Cycles.ANNUALLY)
 
     def started_within_week(self):
-        return self.filter(start_date__gte=timezone.now() - timezone.timedelta(days=7))
+        return self.filter(start_date__gte=timezone.now().date().today() - timezone.timedelta(days=7))
 
     def ended_within_week(self):
-        return self.filter(end_date__lte=timezone.now() - timezone.timedelta(days=7))
+        return self.filter(end_date__lte=timezone.now().date().today() - timezone.timedelta(days=7))
 
     def renew_within_week(self):
         return self.filter(
