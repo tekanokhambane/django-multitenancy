@@ -626,6 +626,8 @@ class TestSubscription(unittest.TestCase):
             start_date=timezone.now().date().today() - timezone.timedelta(days=5)
         )
 
+        print(subscription1.start_date)
+
         # Get subscriptions started within the last week
         subscriptions = Subscription.objects.started_within_week()
 
