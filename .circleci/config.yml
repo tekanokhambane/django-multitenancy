@@ -1,7 +1,6 @@
 version: 2.1
 jobs:
   build:
-    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:12
