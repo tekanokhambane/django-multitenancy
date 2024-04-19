@@ -71,10 +71,10 @@ class TestPlan(unittest.TestCase):
     # Test that a feature can be added to a Plan object and saved successfully
     def test_add_feature_and_save_successfully(self):
         plan, created = Plan.objects.get_or_create(name="free")
-        plan.add_feature("Free domain")
+        plan.add_feature("1GB Storage")
         features = plan.features.all()
         for feature in features:
-            self.assertEquals(feature.name, "Free domain")
+            self.assertEquals(feature.name, "1GB Storage")
         self.assertEquals(plan.name, "free")
 
     # Test that a Plan object can be retrieved by name or description using the search method
@@ -145,10 +145,12 @@ class TestPlan(unittest.TestCase):
 
     # Test that creating a Plan object with a name that already exists raises a validation error
     def test_duplicate_name_validation(self):
-        # Create a Plan object with a name that already exists
+        # First, create a Plan with the name "basic"
+        Plan.objects.create(name="basic7")
+
+        # Now, attempt to create another Plan with the same name, which should raise UniqueViolation
         with self.assertRaises(UniqueViolation):
-            plan = Plan.objects.create(name="basic")
-            plan.save()
+            Plan.objects.create(name="basic7")
 
     # Test that creating a Plan object without a name raises a validation error
     def test_create_plan_without_name(self):
@@ -164,8 +166,9 @@ class TestPlan(unittest.TestCase):
 
     # Test that adding a feature to a Plan object that already exists raises a validation error
     def test_add_existing_feature(self):
+        plan = Plan.objects.create(name="basic2")
+        plan.add_feature("Free domain")
         with self.assertRaises(ValidationError):
-            plan = Plan.objects.create(name="basic2")
             plan.add_feature("Free domain")
             plan.save()
 

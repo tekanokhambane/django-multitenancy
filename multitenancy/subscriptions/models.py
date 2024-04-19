@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.db.models import Q
 from calendar import monthrange
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import slugify
@@ -80,6 +81,12 @@ class Plan(models.Model):
         max_digits=12,
         verbose_name="Price",
         decimal_places=2,
+        validators=[MinValueValidator(0), MaxValueValidator(100000)],
+        error_messages={
+            "min_value": "The price must be greater than or equal to 0.",
+            "max_value": "The price must be less than or equal to 100000.",
+        },
+        help_text="Price per month",
     )
     objects = PlanManager()
 
