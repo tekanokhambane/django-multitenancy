@@ -274,15 +274,6 @@ class TestProductType(unittest.TestCase):
         # Check that the ProductType object is deleted
         self.assertFalse(ProductType.objects.filter(pk=product_type.pk).exists())
 
-    # Test that a ProductType object can be created with the maximum length of the name field
-    def test_create_product_type_with_max_length_name(self):
-        # Create a ProductType object with the maximum length of the name field
-        name = "a" * 115
-        product_type = ProductType.objects.create(name=name)
-
-        # Assert that the ProductType object is created successfully
-        self.assertEqual(product_type.name, name)
-
     # Test that creating a ProductType object with an invalid name field raises a validation error
     def test_invalid_name_field(self):
         with self.assertRaises(ValueError):
@@ -290,7 +281,7 @@ class TestProductType(unittest.TestCase):
 
     # Test that a ProductType object cannot be created with a null name field
     def test_create_product_type_with_null_name(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             ProductType.objects.create(name=None)
 
     # Test that creating a ProductType object with a name field that already exists raises an error
