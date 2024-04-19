@@ -563,88 +563,87 @@ class TestSubscription(unittest.TestCase):
         result = Subscription.objects.search(query="nonexistent")
         self.assertEqual(len(result), 0)
 
+    # Test that the 'Subscription' class can filter subscriptions based on their status.
+    def test_filter_subscriptions_by_status(self):
+        # Create test subscriptions with different statuses
+        active_subscription = Subscription.objects.create(status="active")
+        inactive_subscription = Subscription.objects.create(status="inactive")
+        cancelled_subscription = Subscription.objects.create(status="cancelled")
+        expired_subscription = Subscription.objects.create(status="expired")
 
-#     # Test that the 'Subscription' class can filter subscriptions based on their status.
-#     def test_filter_subscriptions_by_status(self):
-#         # Create test subscriptions with different statuses
-#         active_subscription = Subscription.objects.create(status="active")
-#         inactive_subscription = Subscription.objects.create(status="inactive")
-#         cancelled_subscription = Subscription.objects.create(status="cancelled")
-#         expired_subscription = Subscription.objects.create(status="expired")
+        # Filter subscriptions by status
+        active_subscriptions = Subscription.objects.get_status("active")
+        inactive_subscriptions = Subscription.objects.get_status("inactive")
+        cancelled_subscriptions = Subscription.objects.get_status("cancelled")
+        expired_subscriptions = Subscription.objects.get_status("expired")
 
-#         # Filter subscriptions by status
-#         active_subscriptions = Subscription.objects.get_status("active")
-#         inactive_subscriptions = Subscription.objects.get_status("inactive")
-#         cancelled_subscriptions = Subscription.objects.get_status("cancelled")
-#         expired_subscriptions = Subscription.objects.get_status("expired")
+        # Check if the correct subscriptions are returned
+        self.assertIn(active_subscription, active_subscriptions)
+        self.assertNotIn(active_subscription, inactive_subscriptions)
+        self.assertNotIn(active_subscription, cancelled_subscriptions)
+        self.assertNotIn(active_subscription, expired_subscriptions)
 
-#         # Check if the correct subscriptions are returned
-#         self.assertIn(active_subscription, active_subscriptions)
-#         self.assertNotIn(active_subscription, inactive_subscriptions)
-#         self.assertNotIn(active_subscription, cancelled_subscriptions)
-#         self.assertNotIn(active_subscription, expired_subscriptions)
+        self.assertNotIn(inactive_subscription, active_subscriptions)
+        self.assertIn(inactive_subscription, inactive_subscriptions)
+        self.assertNotIn(inactive_subscription, cancelled_subscriptions)
+        self.assertNotIn(inactive_subscription, expired_subscriptions)
 
-#         self.assertNotIn(inactive_subscription, active_subscriptions)
-#         self.assertIn(inactive_subscription, inactive_subscriptions)
-#         self.assertNotIn(inactive_subscription, cancelled_subscriptions)
-#         self.assertNotIn(inactive_subscription, expired_subscriptions)
+        self.assertNotIn(cancelled_subscription, active_subscriptions)
+        self.assertNotIn(cancelled_subscription, inactive_subscriptions)
+        self.assertIn(cancelled_subscription, cancelled_subscriptions)
+        self.assertNotIn(cancelled_subscription, expired_subscriptions)
 
-#         self.assertNotIn(cancelled_subscription, active_subscriptions)
-#         self.assertNotIn(cancelled_subscription, inactive_subscriptions)
-#         self.assertIn(cancelled_subscription, cancelled_subscriptions)
-#         self.assertNotIn(cancelled_subscription, expired_subscriptions)
+        self.assertNotIn(expired_subscription, active_subscriptions)
+        self.assertNotIn(expired_subscription, inactive_subscriptions)
+        self.assertNotIn(expired_subscription, cancelled_subscriptions)
+        self.assertIn(expired_subscription, expired_subscriptions)
 
-#         self.assertNotIn(expired_subscription, active_subscriptions)
-#         self.assertNotIn(expired_subscription, inactive_subscriptions)
-#         self.assertNotIn(expired_subscription, cancelled_subscriptions)
-#         self.assertIn(expired_subscription, expired_subscriptions)
+    # Test that the 'get_active' method of the 'SubscriptionQueryset' returns all active subscriptions
+    def test_get_active_subscriptions(self):
+        # Create active and inactive subscriptions
+        active_subscription = Subscription.objects.create(status="active")
+        inactive_subscription = Subscription.objects.create(status="inactive")
 
-#     # Test that the 'get_active' method of the 'SubscriptionQueryset' returns all active subscriptions
-#     def test_get_active_subscriptions(self):
-#         # Create active and inactive subscriptions
-#         active_subscription = Subscription.objects.create(status="active")
-#         inactive_subscription = Subscription.objects.create(status="inactive")
+        # Get all active subscriptions
+        active_subscriptions = Subscription.objects.get_active()
 
-#         # Get all active subscriptions
-#         active_subscriptions = Subscription.objects.get_active()
+        # Check that only the active subscription is returned
+        self.assertEqual(len(active_subscriptions), 1)
+        self.assertEqual(active_subscriptions[0], active_subscription)
 
-#         # Check that only the active subscription is returned
-#         self.assertEqual(len(active_subscriptions), 1)
-#         self.assertEqual(active_subscriptions[0], active_subscription)
+    # Test that the 'get_started_within_week' method of the 'Subscription' class returns all subscriptions that started within the last week.
+    def test_get_subscriptions_started_within_week(self):
+        # Create subscriptions with different start dates
+        subscription1 = Subscription.objects.create(
+            start_date=datetime.date.today() - datetime.timedelta(days=8)
+        )
+        subscription2 = Subscription.objects.create(
+            start_date=datetime.date.today() - datetime.timedelta(days=6)
+        )
+        subscription3 = Subscription.objects.create(
+            start_date=datetime.date.today() - datetime.timedelta(days=5)
+        )
 
-#     # Test that the 'get_started_within_week' method of the 'Subscription' class returns all subscriptions that started within the last week.
-#     def test_get_subscriptions_started_within_week(self):
-#         # Create subscriptions with different start dates
-#         subscription1 = Subscription.objects.create(
-#             start_date=datetime.date.today() - datetime.timedelta(days=8)
-#         )
-#         subscription2 = Subscription.objects.create(
-#             start_date=datetime.date.today() - datetime.timedelta(days=6)
-#         )
-#         subscription3 = Subscription.objects.create(
-#             start_date=datetime.date.today() - datetime.timedelta(days=5)
-#         )
+        # Get subscriptions started within the last week
+        subscriptions = Subscription.objects.started_within_week()
 
-#         # Get subscriptions started within the last week
-#         subscriptions = Subscription.objects.started_within_week()
+        # Check if the correct subscriptions are returned
+        self.assertIn(subscription2, subscriptions)
+        self.assertIn(subscription3, subscriptions)
+        self.assertNotIn(subscription1, subscriptions)
 
-#         # Check if the correct subscriptions are returned
-#         self.assertIn(subscription2, subscriptions)
-#         self.assertIn(subscription3, subscriptions)
-#         self.assertNotIn(subscription1, subscriptions)
-
-#     # Test that the 'ended_within_week' method of the 'SubscriptionQueryset' class returns all subscriptions that ended within the last week
-#     def test_get_ended_within_week(self):
-#         # Create a subscription that ended within the last week
-#         subscription1 = Subscription.objects.create(
-#             end_date=timezone.now().date() - timezone.timedelta(days=3)
-#         )
-#         # Create a subscription that ended more than a week ago
-#         subscription2 = Subscription.objects.create(
-#             end_date=timezone.now().date() - timezone.timedelta(days=10)
-#         )
-#         # Get all subscriptions that ended within the last week
-#         subscriptions = Subscription.objects.ended_within_week()
-#         # Check that the correct subscriptions are returned
-#         self.assertIn(subscription1, subscriptions)
-#         self.assertNotIn(subscription2, subscriptions)
+    # Test that the 'ended_within_week' method of the 'SubscriptionQueryset' class returns all subscriptions that ended within the last week
+    def test_get_ended_within_week(self):
+        # Create a subscription that ended within the last week
+        subscription1 = Subscription.objects.create(
+            end_date=timezone.now().date() - timezone.timedelta(days=3)
+        )
+        # Create a subscription that ended more than a week ago
+        subscription2 = Subscription.objects.create(
+            end_date=timezone.now().date() - timezone.timedelta(days=10)
+        )
+        # Get all subscriptions that ended within the last week
+        subscriptions = Subscription.objects.ended_within_week()
+        # Check that the correct subscriptions are returned
+        self.assertIn(subscription1, subscriptions)
+        self.assertNotIn(subscription2, subscriptions)
