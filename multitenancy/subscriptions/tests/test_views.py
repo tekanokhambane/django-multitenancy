@@ -54,7 +54,7 @@ class PlanViewsTestCase(unittest.TestCase):
 
     def setUp(self):
         Plan.objects.all().delete()
-        TenantUser.objects.all().delete()
+        Admin.objects.all().delete()
         self.factory = RequestFactory()
         self.client = Client()
         #  self.user = Admin.objects.create(
@@ -66,7 +66,7 @@ class PlanViewsTestCase(unittest.TestCase):
         #     is_active=True,
         # )
 
-        self.user = TenantUser.objects.create_superuser(
+        self.user = Admin.objects.create(
             username="admin",
             password="password",
             first_name="abc123",
