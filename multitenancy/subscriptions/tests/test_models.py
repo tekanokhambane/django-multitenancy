@@ -215,15 +215,6 @@ class TestProductType(unittest.TestCase):
     def setUp(self):
         super().setUp()
         ProductType.objects.all().delete()
-        # self.tenant_app = ProductType.objects.create(
-        #     name=ProductType.Types.TENANT_APP
-        # )
-        # self.domain = ProductType.objects.create(
-        #     name=ProductType.Types.DOMAIN
-        # )
-        # self.third_party_app = ProductType.objects.create(
-        #     name=ProductType.Types.THIRD_PARTY_APP
-        # )
 
     # Test that a ProductType object is created with the default values
     def test_create_product_type_with_default_values(self):
@@ -320,62 +311,63 @@ class TestProductType(unittest.TestCase):
         self.assertEqual(ProductType.Types.THIRD_PARTY_APP, "third_party")
 
 
-# class TestSubscription(unittest.TestCase):
-#     # Test that the 'start_subscription' method correctly starts a subscription with a weekly cycle
-#     def test_start_subscription_weekly_cycle(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("weekly")
+class TestSubscription(unittest.TestCase):
+    # Test that the 'start_subscription' method correctly starts a subscription with a weekly cycle
+    def test_start_subscription_weekly_cycle(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("weekly")
 
-#         self.assertEquals(subscribe.status, "active")
-#         self.assertEquals(subscribe.cycle, "weekly")
-#         self.assertEquals(subscribe.reason, "Start Subscription")
-#         self.assertEquals(subscribe.renewal_date, datetime.date.today())
-#         self.assertEquals(
-#             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=7)
-#         )
-#         self.assertEquals(subscribe.subscription_duration, 7)
+        self.assertEquals(subscribe.status, "active")
+        self.assertEquals(subscribe.cycle, "weekly")
+        self.assertEquals(subscribe.reason, "Start Subscription")
+        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.end_date, datetime.date.today() + datetime.timedelta(days=7)
+        )
+        self.assertEquals(subscribe.subscription_duration, 7)
 
-#     # Test that starting a subscription with a monthly cycle sets the correct attributes and dates
-#     def test_start_subscription_monthly_cycle(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("monthly")
+    # Test that starting a subscription with a monthly cycle sets the correct attributes and dates
+    def test_start_subscription_monthly_cycle(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("monthly")
 
-#         self.assertEquals(subscribe.status, "active")
-#         self.assertEquals(subscribe.cycle, "monthly")
-#         self.assertEquals(subscribe.reason, "Start Subscription")
-#         self.assertEquals(subscribe.renewal_date, datetime.date.today())
-#         self.assertEquals(
-#             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=30)
-#         )
-#         self.assertEquals(subscribe.subscription_duration, 30)
+        self.assertEquals(subscribe.status, "active")
+        self.assertEquals(subscribe.cycle, "monthly")
+        self.assertEquals(subscribe.reason, "Start Subscription")
+        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.end_date, datetime.date.today() + datetime.timedelta(days=30)
+        )
+        self.assertEquals(subscribe.subscription_duration, 30)
 
-#     # Test that the start_subscription method sets the subscription status to active, cycle to quarterly, reason to "Start Subscription", renewal date to today, end date to today + 90 days, and subscription duration to 90.
-#     def test_start_subscription_quarterly_cycle(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("quartely")
+    # Test that the start_subscription method sets the subscription status to active, cycle to quarterly, reason to "Start Subscription", renewal date to today, end date to today + 90 days, and subscription duration to 90.
+    def test_start_subscription_quarterly_cycle(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("quartely")
 
-#         self.assertEquals(subscribe.status, "active")
-#         self.assertEquals(subscribe.cycle, "quartely")
-#         self.assertEquals(subscribe.reason, "Start Subscription")
-#         self.assertEquals(subscribe.renewal_date, datetime.date.today())
-#         self.assertEquals(
-#             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=90)
-#         )
-#         self.assertEquals(subscribe.subscription_duration, 90)
+        self.assertEquals(subscribe.status, "active")
+        self.assertEquals(subscribe.cycle, "quartely")
+        self.assertEquals(subscribe.reason, "Start Subscription")
+        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.end_date, datetime.date.today() + datetime.timedelta(days=90)
+        )
+        self.assertEquals(subscribe.subscription_duration, 90)
 
-#     # Test that starting a subscription with an annual cycle sets the correct attributes and dates
-#     def test_start_subscription_annual_cycle(self):
-#         subscribe = Subscription.objects.create()
-#         subscribe.start_subscription("annually")
+    # Test that starting a subscription with an annual cycle sets the correct attributes and dates
+    def test_start_subscription_annual_cycle(self):
+        subscribe = Subscription.objects.create()
+        subscribe.start_subscription("annually")
 
-#         self.assertEquals(subscribe.status, "active")
-#         self.assertEquals(subscribe.cycle, "annually")
-#         self.assertEquals(subscribe.reason, "Start Subscription")
-#         self.assertEquals(subscribe.renewal_date, datetime.date.today())
-#         self.assertEquals(
-#             subscribe.end_date, datetime.date.today() + datetime.timedelta(days=365)
-#         )
-#         self.assertEquals(subscribe.subscription_duration, 365)
+        self.assertEquals(subscribe.status, "active")
+        self.assertEquals(subscribe.cycle, "annually")
+        self.assertEquals(subscribe.reason, "Start Subscription")
+        self.assertEquals(subscribe.renewal_date, datetime.date.today())
+        self.assertEquals(
+            subscribe.end_date, datetime.date.today() + datetime.timedelta(days=365)
+        )
+        self.assertEquals(subscribe.subscription_duration, 365)
+
 
 #     # Test that an active subscription can be successfully renewed
 #     def test_renew_active_subscription(self):
