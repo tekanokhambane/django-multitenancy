@@ -31,12 +31,11 @@ class Profile(models.Model):
     website = models.URLField(max_length=250, blank=True)
     twitter_username = models.CharField("Twitter Username", max_length=100, blank=True)
 
-    created_at = models.DateTimeField(default=timezone.now)
-    modified_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
 
-    def save(self, *args, **kwargs):
-        self.modified_at = timezone.now()
-        return super(Profile, self).save(*args, **kwargs)
+    def __str__(self) -> str:
+        return self.name or self.user.username
 
     @property
     def display_name(self):
