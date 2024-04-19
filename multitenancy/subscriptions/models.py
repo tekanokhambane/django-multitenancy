@@ -370,6 +370,7 @@ class Subscription(models.Model):
             "weekly": 7,
             "monthly": 30,
             "quartely": 90,
+            "annually": 365,
         }
         if cycle not in self.Cycles.values:
             raise ValueError("Invalid cycle")

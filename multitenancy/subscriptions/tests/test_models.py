@@ -59,6 +59,11 @@ class TestProductFeature(unittest.TestCase):
 
 
 class TestPlan(unittest.TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        Plan.objects.all().delete()
+        ProductFeature.objects.all().delete()
+
     # Test that a Plan object can be created with all required fields and saved successfully
     def test_create_plan_and_save_successfully(self):
         plan, created = Plan.objects.get_or_create(
