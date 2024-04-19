@@ -413,9 +413,9 @@ class Subscription(models.Model):
         # update the renewal status
         self.status = "active"
         # Set the renewal date to today
-        self.renewal_date = datetime.date.today()
+        self.renewal_date = datetime.date.today() + datetime.timedelta(days=duration)
         # Calculate and update the new end date for the subscription
-        self.end_date = self.renewal_date + datetime.timedelta(days=duration)
+        self.end_date = self.renewal_date 
         # Update the reason
         self.reason = "Subscription activated"
         self.save()
