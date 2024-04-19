@@ -201,7 +201,7 @@ class TestPlan(unittest.TestCase):
 
     # Test that the add_feature method can successfully add multiple features to a Plan object
     def test_add_multiple_features(self):
-        plan = Plan.objects.get_or_create(name="basic plus")
+        plan, created = Plan.objects.get_or_create(name="basic plus")
         plan.add_feature("Free .com domains")
         plan.add_feature("SSL certificate")
         features = plan.features.all()
