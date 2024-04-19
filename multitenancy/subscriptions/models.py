@@ -97,6 +97,10 @@ class Plan(models.Model):
         return self.name
 
     def add_feature(self, feature):
+        # create a new ProductFeature object and add it to the features field
+        # if it doesn't already exist, else raise ValueError
+        if ProductFeature.objects.filter(name=feature).exists():
+            raise ValueError("The feature already exists.")
         new_feature = ProductFeature.objects.create(name=feature)
         self.features.add(new_feature)
         self.save()
