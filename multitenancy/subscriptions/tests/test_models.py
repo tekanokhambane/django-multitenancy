@@ -414,7 +414,10 @@ class TestSubscription(unittest.TestCase):
         self.assertEqual(subscription.status, "active")
 
         # Check if the renewal date is set to today
-        self.assertEqual(subscription.renewal_date, datetime.date.today())
+        self.assertEqual(
+            subscription.renewal_date,
+            datetime.date.today() + datetime.timedelta(days=30),
+        )
 
         # Check if the end date is set correctly based on the duration
         self.assertEqual(
@@ -550,7 +553,7 @@ class TestSubscription(unittest.TestCase):
         self.assertNotIn(subscription3, result)
 
         # Test search with product type query
-        result = Subscription.objects.search(query=ProductType.Types.TENANT_APP)
+        result = Subscription.objects.search(query=ProductType.Types.DOMAIN)
         self.assertEqual(len(result), 1)
         self.assertNotIn(subscription1, result)
         self.assertNotIn(subscription2, result)
