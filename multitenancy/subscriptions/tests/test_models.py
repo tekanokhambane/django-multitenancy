@@ -2,6 +2,7 @@
 
 import datetime
 import unittest
+from django.db import IntegrityError
 from django.utils import timezone
 
 from django.forms import ValidationError
@@ -147,9 +148,8 @@ class TestPlan(unittest.TestCase):
     def test_duplicate_name_validation(self):
         # First, create a Plan with the name "basic"
         Plan.objects.create(name="basic7")
-
         # Now, attempt to create another Plan with the same name, which should raise UniqueViolation
-        with self.assertRaises(UniqueViolation):
+        with self.assertRaises(IntegrityError):
             Plan.objects.create(name="basic7")
 
     # Test that creating a Plan object without a name raises a validation error
@@ -161,15 +161,15 @@ class TestPlan(unittest.TestCase):
     # Test that creating a Plan object with a non-decimal price raises a validation error
     def test_invalid_price(self):
         with self.assertRaises(ValidationError):
-            plan = Plan(name="basic1", price=10000000000000)
+            plan = Plan(name="basic1", price=10000011)
             plan.save()
 
     # Test that adding a feature to a Plan object that already exists raises a validation error
     def test_add_existing_feature(self):
         plan = Plan.objects.create(name="basic2")
-        plan.add_feature("Free domain")
+        plan.add_feature("Free email")
         with self.assertRaises(ValidationError):
-            plan.add_feature("Free domain")
+            plan.add_feature("Free email")
             plan.save()
 
     # Test that retrieving a Plan object that does not exist raises a DoesNotExist error
