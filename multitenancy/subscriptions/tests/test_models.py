@@ -213,6 +213,7 @@ class TestPlan(unittest.TestCase):
 
 class TestProductType(unittest.TestCase):
     def setUp(self):
+        super().setUp()
         ProductType.objects.all().delete()
         # self.tenant_app = ProductType.objects.create(
         #     name=ProductType.Types.TENANT_APP
@@ -284,7 +285,7 @@ class TestProductType(unittest.TestCase):
 
     # Test that creating a ProductType object with an invalid name field raises a validation error
     def test_invalid_name_field(self):
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(ValueError):
             ProductType.objects.create(name="invalid_name")
 
     # Test that a ProductType object cannot be created with a null name field
@@ -294,6 +295,7 @@ class TestProductType(unittest.TestCase):
 
     # Test that creating a ProductType object with a name field that already exists raises an error
     def test_create_existing_name(self):
+        ProductType.objects.create(name=ProductType.Types.TENANT_APP)
         with self.assertRaises(Exception):
             ProductType.objects.create(name=ProductType.Types.TENANT_APP)
 

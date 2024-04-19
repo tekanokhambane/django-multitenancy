@@ -151,6 +151,18 @@ class ProductType(models.Model):
     )
     objects = ProductTypeManager()
 
+    def save(self, *args, **kwargs):
+        # Name should be the Types value of the enum only
+        if self.name is not None and self.name not in self.Types.values():
+            raise ValueError("Invalid name for ProductType.")
+        return super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ("-pk",)
+
+    def __str__(self):
+        return self.name
+
 
 class SubscriptionQueryset(models.QuerySet):
     def active(self):
