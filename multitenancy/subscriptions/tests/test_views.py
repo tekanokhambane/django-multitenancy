@@ -57,14 +57,6 @@ class PlanViewsTestCase(unittest.TestCase):
         Admin.objects.all().delete()
         self.factory = RequestFactory()
         self.client = Client()
-        #  self.user = Admin.objects.create(
-        #     username="admin",
-        #     password="password",
-        #     first_name="abc123",
-        #     last_name="khamban",
-        #     email="testaadminabc123@email.com",
-        #     is_active=True,
-        # )
 
         self.user = Admin.objects.create(
             username="admin",
@@ -98,15 +90,7 @@ class PlanViewsTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_plan_detail_view(self):
-        # self.admin = TenantUser.objects.create_superuser(
-        #     username="admin",
-        #     password="password",
-        #     first_name="abc123",
-        #     last_name="khamban",
-        #     email="test2adminabc123@email.com",
-        #     type="Admin",
-        #     is_active=True,
-        # )
+
         self.client.force_login(user=self.user)
         self.plan = Plan.objects.create(
             name="enterprise",
@@ -118,55 +102,67 @@ class PlanViewsTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-# class TestPlanListView(unittest.TestCase):
-#     def setUp(self):
-#         self.factory = RequestFactory()
-#         self.client = Client()
+class TestPlanListView(unittest.TestCase):
+    def setUp(self):
+        Plan.objects.all().delete()
+        Admin.objects.all().delete()
+        self.factory = RequestFactory()
+        self.client = Client()
+        self.user = Admin.objects.create(
+            username="admin",
+            password="password",
+            first_name="abc123",
+            last_name="khamban",
+            email="testadminabc123@email.com",
+            type="Admin",
+            is_active=True,
+        )
 
-#     # Test that the PlanListView class returns a list of plans when the user is authenticated as an admin.
-#     def test_plan_list_view_returns_plans_for_authenticated_admin(self):
-#         # Create a mock user with admin privileges
-#         user = User.objects.create(username="admin", type="Admin")
-#         self.client.force_login(user)
+    # Test that the PlanListView class returns a list of plans when the user is authenticated as an admin.
+    def test_plan_list_view_returns_plans_for_authenticated_admin(self):
+        # Create a mock user with admin privileges
 
-#         # Make a GET request to the PlanListView
-#         response = self.client.get(reverse("plan-list"))
+        self.client.force_login(self.user)
 
-#         # Assert that the response status code is 200 (OK)
-#         self.assertEqual(response.status_code, 200)
+        # Make a GET request to the PlanListView
+        response = self.client.get(reverse("plan-list"))
 
-#         # Assert that the response contains the plans
-#         self.assertContains(response, "Plan 1")
-#         self.assertContains(response, "Plan 2")
-#         self.assertContains(response, "Plan 3")
+        # Assert that the response status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
 
-#     # Test that the PlanFilter filters plans by id correctly
-#     def test_filter_plans_by_id(self):
-#         # Create some plans with different ids
-#         plan1 = Plan.objects.create(
-#             name="Plan 1", slug="plan-1", description="Plan 1 description", price=100
-#         )
-#         plan2 = Plan.objects.create(
-#             name="Plan 2", slug="plan-2", description="Plan 2 description", price=200
-#         )
-#         plan3 = Plan.objects.create(
-#             name="Plan 3", slug="plan-3", description="Plan 3 description", price=300
-#         )
+        # Assert that the response contains the plans
+        self.assertContains(response, "Plan 1")
+        self.assertContains(response, "Plan 2")
+        self.assertContains(response, "Plan 3")
 
-#         # Create a request with a filter for plan2's id
-#         request = self.client.get("/plans/", {"id": plan2.id})
+    # Test that the PlanFilter filters plans by id correctly
+    def test_filter_plans_by_id(self):
+        # Create some plans with different ids
+        plan1 = Plan.objects.create(
+            name="Plan 1", slug="plan-1", description="Plan 1 description", price=100
+        )
+        plan2 = Plan.objects.create(
+            name="Plan 2", slug="plan-2", description="Plan 2 description", price=200
+        )
+        plan3 = Plan.objects.create(
+            name="Plan 3", slug="plan-3", description="Plan 3 description", price=300
+        )
 
-#         # Instantiate the PlanListView and get the context data
-#         view = PlanListView()
-#         view.request = request
-#         context = view.get_context_data()
+        # Create a request with a filter for plan2's id
+        request = self.client.get("/plans/", {"id": plan2.id})
 
-#         # Get the filtered queryset from the context
-#         filtered_queryset = context["filter"].qs
+        # Instantiate the PlanListView and get the context data
+        view = PlanListView()
+        view.request = request
+        context = view.get_context_data()
 
-#         # Assert that only plan2 is in the filtered queryset
-#         self.assertEqual(len(filtered_queryset), 1)
-#         self.assertEqual(filtered_queryset[0], plan2)
+        # Get the filtered queryset from the context
+        filtered_queryset = context["filter"].qs
+
+        # Assert that only plan2 is in the filtered queryset
+        self.assertEqual(len(filtered_queryset), 1)
+        self.assertEqual(filtered_queryset[0], plan2)
+
 
 #     # Test that PlanListView returns an empty list when no plans exist
 #     def test_empty_plan_list(self):
