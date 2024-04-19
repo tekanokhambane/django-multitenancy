@@ -648,7 +648,7 @@ class TestSubscription(unittest.TestCase):
         )
         # Get all subscriptions that ended within the last week
         subscriptions = Subscription.objects.ended_within_week()
-        print(subscriptions, "subscriptions")
+        print(subscriptions, "subscriptions", subscription1, subscription2)
         # Check that the correct subscriptions are returned
         self.assertIn(subscription1, subscriptions)
         self.assertNotIn(subscription2, subscriptions)
