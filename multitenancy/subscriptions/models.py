@@ -376,6 +376,7 @@ class Subscription(models.Model):
             self.renewal_date = datetime.date.today() + datetime.timedelta(
                 days=durations[cycle]
             )
+            self.save()
             self.subscription_duration = durations[cycle]
             self.end_date = self.renewal_date
             self.save()
