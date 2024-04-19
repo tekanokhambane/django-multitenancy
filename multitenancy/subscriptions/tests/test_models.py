@@ -492,7 +492,9 @@ class TestSubscription(unittest.TestCase):
         self.assertEqual(
             subscribe.end_date, initial_end_date + datetime.timedelta(days=30)
         )
-        self.assertEqual(subscribe.renewal_date, initial_renewal_date)
+        self.assertEqual(
+            subscribe.renewal_date, initial_renewal_date + datetime.timedelta(days=30)
+        )
 
     # Test that the duration of an expired subscription can be updated successfully
     def test_update_duration_expired_subscription(self):
