@@ -152,9 +152,27 @@ class ProductType(models.Model):
     objects = ProductTypeManager()
 
     def save(self, *args, **kwargs):
-        # Name should be the Types value of the enum only
-        if self.name is not None and self.name not in self.Types.values():
-            raise ValueError("Invalid name for ProductType.")
+        """
+        Save the instance to the database after validating the name field.
+
+        Args:
+            *args: Additional positional arguments.
+            **kwargs: Additional keyword arguments.
+
+        Raises:
+            ValueError: If the name field is not a valid value from the Types enum.
+            TypeError: If the name field is None.
+
+        Returns:
+            None
+        """
+        if self.name is None:
+            raise TypeError("The name field of ProductType cannot be None.")
+        if self.name not in self.Types.values:
+            raise ValueError(
+                f"Invalid name {self.name} for ProductType. "
+                f"Must be one of {self.Types.values}."
+            )
         return super().save(*args, **kwargs)
 
     class Meta:
