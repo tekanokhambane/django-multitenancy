@@ -208,10 +208,20 @@ class SubscriptionQueryset(models.QuerySet):
         return self.filter(cycle=Subscription.Cycles.ANNUALLY)
 
     def started_within_week(self):
-        return self.filter(start_date__gte=timezone.now().date().today() - timezone.timedelta(days=7))
+        return self.filter(
+            start_date__gte=timezone.now().date().today() - timezone.timedelta(days=7)
+        )
 
+    # Return subscriptions that ended within the last week
     def ended_within_week(self):
-        return self.filter(end_date__lte=timezone.now().date().today() - timezone.timedelta(days=7))
+        """
+        Return subscriptions that ended within the last week.
+        This method returns a queryset of subscriptions that ended within the last week,
+        i.e., the end date of the subscription is between today and seven days ago.
+        """
+        today = timezone.now().date()
+        week_ago = today - timezone.timedelta(days=7)
+        return self.filter(end_date__gte=week_ago, end_date__lte=today)
 
     def renew_within_week(self):
         return self.filter(
@@ -415,7 +425,7 @@ class Subscription(models.Model):
         # Set the renewal date to today
         self.renewal_date = datetime.date.today() + datetime.timedelta(days=duration)
         # Calculate and update the new end date for the subscription
-        self.end_date = self.renewal_date 
+        self.end_date = self.renewal_date
         # Update the reason
         self.reason = "Subscription activated"
         self.save()
