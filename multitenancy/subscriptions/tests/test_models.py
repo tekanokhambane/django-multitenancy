@@ -317,6 +317,10 @@ class TestProductType(unittest.TestCase):
 
 
 class TestSubscription(unittest.TestCase):
+    def setUp(self):
+        super().setUp()
+        ProductType.objects.all().delete()
+
     # Test that the 'start_subscription' method correctly starts a subscription with a weekly cycle
     def test_start_subscription_weekly_cycle(self):
         subscribe = Subscription.objects.create()
@@ -479,7 +483,7 @@ class TestSubscription(unittest.TestCase):
         subscribe = Subscription.objects.create(status="active")
         # Save the initial values
         initial_status = subscribe.status
-        initial_end_date = subscribe.end_date
+        initial_end_date = subscribe.end_date + datetime.timedelta(days=30)
         initial_renewal_date = subscribe.renewal_date
         # Activate the subscription
         subscribe.activate_subscription(30)
