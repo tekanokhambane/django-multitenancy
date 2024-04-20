@@ -125,7 +125,7 @@ class TestPlanListView(unittest.TestCase):
         self.client.force_login(self.user)
 
         # Make a GET request to the PlanListView
-        response = self.client.get(reverse("plan-list"))
+        response = self.client.get(reverse("plan_list"))
 
         # Assert that the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
@@ -152,7 +152,7 @@ class TestPlanListView(unittest.TestCase):
         request = self.client.get("/plans/", {"id": plan2.id})
 
         # Instantiate the PlanListView and get the context data
-        view = PlanListView()
+        view = PlanListView().as_view()
         view.request = request
         context = view.get_context_data()
 
