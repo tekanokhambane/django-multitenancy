@@ -143,7 +143,9 @@ class TestPlanListView(TestCase):
 
         # Assert that the response is a redirect to the login page
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, "/login/")
+        self.assertEqual(
+            response.url, "/admin/acounts/login/?next=/admin/billing/plans/"
+        )
 
 
 # class TestCreatePlanView(unittest.TestCase):
