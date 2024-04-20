@@ -125,7 +125,7 @@ class TestPlanListView(unittest.TestCase):
         self.client.force_login(self.user)
 
         # Make a GET request to the PlanListView
-        response = self.client.get(reverse("plan_list"))
+        response = self.factory.get("/admin/billing/plans/")
 
         # Assert that the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
@@ -148,8 +148,10 @@ class TestPlanListView(unittest.TestCase):
             name="Plan 3", slug="plan-3", description="Plan 3 description", price=300
         )
 
+        self.client.force_login(self.user)
+
         # Create a request with a filter for plan2's id
-        request = self.client.get("/plans/", {"id": plan2.id})
+        request = self.factory.get("/plans/", {"id": plan2.id})
 
         # Instantiate the PlanListView and get the context data
         view = PlanListView().as_view()
