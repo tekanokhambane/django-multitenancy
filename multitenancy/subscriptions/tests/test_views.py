@@ -129,197 +129,21 @@ class TestPlanListView(TestCase):
 
         self.assertTemplateUsed("multitenancy/subscriptions/plan_list.html")
 
-    # Test that the PlanFilter filters plans by id correctly
-    # def test_filter_plans_by_id(self):
-    #     # Create some plans with different ids
-    #     plan1 = Plan.objects.create(
-    #         name="Plan 1", slug="plan-1", description="Plan 1 description", price=100
-    #     )
-    #     plan2 = Plan.objects.create(
-    #         name="Plan 2", slug="plan-2", description="Plan 2 description", price=200
-    #     )
-    #     plan3 = Plan.objects.create(
-    #         name="Plan 3", slug="plan-3", description="Plan 3 description", price=300
-    #     )
+    # Test that the PlanListView redirects to the login page when the user is not authenticated
+    def test_redirect_to_login_page_when_user_not_authenticated(self):
+        # Create a request object with an unauthenticated user
+        request = HttpRequest()
+        request.user = AnonymousUser()
 
-    #     self.client.force_login(self.user)
+        # Create an instance of the PlanListView
+        view = PlanListView()
 
-    #     # Create a request with a filter for plan2's id
-    #     request = self.factory.get("/plans/", {"id": plan2.id})
+        # Call the dispatch method of the view with the request
+        response = view.dispatch(request)
 
-    #     # Instantiate the PlanListView and get the context data
-    #     view = PlanListView()
-    #     view.request = request
-    #     context = view.get_context_data()
-
-    #     # Get the filtered queryset from the context
-    #     filtered_queryset = context["filter"].qs
-
-    #     # Assert that only plan2 is in the filtered queryset
-    #     self.assertEqual(len(filtered_queryset), 1)
-    #     self.assertEqual(filtered_queryset[0], plan2)
-
-
-#     # Test that PlanListView returns an empty list when no plans exist
-#     def test_empty_plan_list(self):
-#         # Create an instance of PlanListView
-#         view = PlanListView()
-
-#         # Mock the request object
-#         request = MagicMock()
-#         view.request = request
-
-#         # Mock the GET attribute of the request object
-#         request.GET = {}
-
-#         # Mock the PlanFilter object
-#         filter = MagicMock()
-#         filter.qs = []
-#         PlanFilter.return_value = filter
-
-#         # Call the get_context_data method of PlanListView
-#         context = view.get_context_data()
-
-#         # Assert that the 'filter' key in the context dictionary is an empty list
-#         self.assertEqual(context["filter"], [])
-
-#         # Assert that the queryset attribute of the PlanFilter object was called with the correct arguments
-#         filter.qs.assert_called_once_with(Plan.objects.all())
-
-#     # Test that the PlanListView class returns a list of plans when the user is authenticated and is an admin.
-#     def test_plan_list_view_returns_plans(self):
-#         # Create a user with admin privileges
-#         admin_user = User.objects.create(username="admin", type="Admin")
-#         admin_user.set_password("admin123")
-#         admin_user.save()
-
-#         # Log in the admin user
-#         self.client.login(username="admin", password="admin123")
-
-#         # Make a GET request to the PlanListView
-#         response = self.client.get("/plans/")
-
-#         # Check that the response status code is 200 (OK)
-#         self.assertEqual(response.status_code, 200)
-
-#         # Check that the response contains the plans
-#         self.assertContains(response, "Plan 1")
-#         self.assertContains(response, "Plan 2")
-#         self.assertContains(response, "Plan 3")
-
-#     # Test that the PlanListView redirects to the login page when the user is not authenticated
-#     def test_redirect_to_login_page_when_user_not_authenticated(self):
-#         # Create a request object with an unauthenticated user
-#         request = HttpRequest()
-#         request.user = AnonymousUser()
-
-#         # Create an instance of the PlanListView
-#         view = PlanListView()
-
-#         # Call the dispatch method of the view with the request
-#         response = view.dispatch(request)
-
-#         # Assert that the response is a redirect to the login page
-#         self.assertEqual(response.status_code, 302)
-#         self.assertEqual(response.url, "/login/")
-
-#     # Test that the PlanListView returns a list of plans sorted by price
-#     def test_plan_list_sorted_by_price(self):
-#         # Create test plans with different prices
-#         plan1 = Plan.objects.create(name="Plan 1", slug="plan-1", price=100)
-#         plan2 = Plan.objects.create(name="Plan 2", slug="plan-2", price=50)
-#         plan3 = Plan.objects.create(name="Plan 3", slug="plan-3", price=75)
-
-#         # Make a GET request to the PlanListView
-#         response = self.client.get(reverse("plan-list"))
-
-#         # Check that the response status code is 200 (OK)
-#         self.assertEqual(response.status_code, 200)
-
-#         # Check that the plans are sorted by price in descending order
-#         plans = response.context["object_list"]
-#         self.assertEqual(plans[0], plan1)
-#         self.assertEqual(plans[1], plan3)
-#         self.assertEqual(plans[2], plan2)
-
-#     # Test that the PlanListView returns a list of plans filtered by name
-#     def test_plan_list_view_filter_by_name(self):
-#         # Create test plans
-#         plan1 = Plan.objects.create(name="Plan 1", slug="plan-1", price=100)
-#         plan2 = Plan.objects.create(name="Plan 2", slug="plan-2", price=200)
-#         plan3 = Plan.objects.create(name="Plan 3", slug="plan-3", price=300)
-
-#         # Make a GET request to the PlanListView with a filter for 'Plan 2'
-#         response = self.client.get("/plans/?name=Plan%202")
-
-#         # Check that the response status code is 200 (OK)
-#         self.assertEqual(response.status_code, 200)
-
-#         # Check that only 'Plan 2' is in the context object
-#         self.assertQuerysetEqual(response.context["filter"].qs, ["<Plan: Plan 2>"])
-
-#     # Test that the PlanListView returns a list of plans filtered by features
-#     def test_plan_list_view_filter_by_features(self):
-#         # Create some plans with different features
-#         feature1 = ProductFeature.objects.create(name="Feature 1")
-#         feature2 = ProductFeature.objects.create(name="Feature 2")
-#         plan1 = Plan.objects.create(name="Plan 1", slug="plan-1", price=100)
-#         plan1.features.add(feature1)
-#         plan2 = Plan.objects.create(name="Plan 2", slug="plan-2", price=200)
-#         plan2.features.add(feature2)
-#         plan3 = Plan.objects.create(name="Plan 3", slug="plan-3", price=300)
-#         plan3.features.add(feature1, feature2)
-
-#         # Create a request with filter parameters
-#         request = self.client.get("/plans/?feature=Feature 1")
-
-#         # Call the view and get the response
-#         response = PlanListView.as_view()(request)
-
-#         # Check that the response contains the filtered plans
-#         self.assertEqual(response.status_code, 200)
-#         self.assertQuerysetEqual(
-#             response.context_data["filter"].qs,
-#             [repr(plan1), repr(plan3)],
-#             ordered=False,
-#         )
-
-#     # Test that the PlanListView returns a list of plans filtered by price correctly.
-#     def test_plan_list_view_filter_by_price(self):
-#         # Create test plans
-#         plan1 = Plan.objects.create(name="Plan 1", slug="plan-1", price=100)
-#         plan2 = Plan.objects.create(name="Plan 2", slug="plan-2", price=200)
-#         plan3 = Plan.objects.create(name="Plan 3", slug="plan-3", price=300)
-
-#         # Make GET request to PlanListView with filter parameter
-#         response = self.client.get("/plans/?price__lte=200")
-
-#         # Check that the response status code is 200
-#         self.assertEqual(response.status_code, 200)
-
-#         # Check that only plan1 and plan2 are in the response context
-#         self.assertIn(plan1, response.context["object_list"])
-#         self.assertIn(plan2, response.context["object_list"])
-#         self.assertNotIn(plan3, response.context["object_list"])
-
-#     # Test that the PlanListView returns a list of plans filtered by slug
-#     def test_plan_list_view_filter_by_slug(self):
-#         # Create a plan with a specific slug
-#         plan = Plan.objects.create(
-#             name="Test Plan",
-#             slug="test-plan",
-#             description="Test Description",
-#             price=100,
-#         )
-
-#         # Make a GET request to the PlanListView with the specific slug as a query parameter
-#         response = self.client.get("/plans/?slug=test-plan")
-
-#         # Check that the response contains the plan with the specific slug
-#         self.assertContains(response, plan.name)
-#         self.assertContains(response, plan.slug)
-#         self.assertContains(response, plan.description)
-#         self.assertContains(response, plan.price)
+        # Assert that the response is a redirect to the login page
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, "/login/")
 
 
 # class TestCreatePlanView(unittest.TestCase):
