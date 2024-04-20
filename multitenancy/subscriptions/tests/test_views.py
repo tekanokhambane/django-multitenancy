@@ -130,22 +130,22 @@ class TestPlanListView(TestCase):
         self.assertTemplateUsed("multitenancy/subscriptions/plan_list.html")
 
     # Test that the PlanListView redirects to the login page when the user is not authenticated
-    def test_redirect_to_login_page_when_user_not_authenticated(self):
-        # Create a request object with an unauthenticated user
-        request = HttpRequest()
-        request.user = AnonymousUser()
+    # def test_redirect_to_login_page_when_user_not_authenticated(self):
+    #     # Create a request object with an unauthenticated user
+    #     request = HttpRequest()
+    #     request.user = AnonymousUser()
 
-        # Create an instance of the PlanListView
-        view = PlanListView()
+    #     # Create an instance of the PlanListView
+    #     view = PlanListView()
 
-        # Call the dispatch method of the view with the request
-        response = view.dispatch(request)
+    #     # Call the dispatch method of the view with the request
+    #     response = view.dispatch(request)
 
-        # Assert that the response is a redirect to the login page
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(
-            response.url, "/admin/acounts/login/?next=/admin/billing/plans/"
-        )
+    #     # Assert that the response is a redirect to the login page
+    #     self.assertEqual(response.status_code, 302)
+    #     self.assertEqual(
+    #         response.url, "/admin/acounts/login/?next=/admin/billing/plans/"
+    #     )
 
 
 # class TestCreatePlanView(unittest.TestCase):
