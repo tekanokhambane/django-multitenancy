@@ -1,89 +1,71 @@
 {% extends "multitenancy/admin/base.html" %}
 {% load static %}
-
-{% block page_title %}Manage Staff{% endblock page_title %}
-
-{%block breadcrumbs%}
-
-<li class="breadcrumb-item active">Staff</li>
-{% endblock%}
-
-
+{% block page_title %}
+    Manage Staff
+{% endblock page_title %}
+{% block breadcrumbs %}<li class="breadcrumb-item active">Staff</li>{% endblock %}
 {% block main_content %}
-
-<!-- Main content -->
-<section class="content">
-    <div class="container-fluid">
-        <!-- /.row -->
-        <div class="row">
-            <div class="col-md">
-                <div class="mb-5 mr-3">
-                    <form method="get" id="filter-form" class="input-group input-group-md" style="width: 250px;">
-                        <input type="text" name="q" class="form-control float-right" placeholder="Search Staff">
-                        <div class="input-group-append">
-                            <button type="submit" disabled id="" class="btn btn-success"><i
-                                    class="fas fa-search"></i></button>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-md">
+                    <div class="mb-5 mr-3"></div>
+                </div>
+                <div class="col-md">
+                    <div class="mb-5 mr-3">
+                        <a href="{% url "create_staff" %}"
+                           class="btn btn-success text-light shadow float-right"><i class="fas fa-plus"></i> Invite User</i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h3 class="card-title">Staff</h3>
                         </div>
-                        <form />
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="mb-5 mr-3">
-                   <a href="{% url "create_staff" %}" class="btn btn-success text-light shadow float-right"><i class="fas fa-plus"></i> Add new staff</i></a> 
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="staff-table"
+                                   class="table table-bordered table-striped  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Avatar</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Last Login</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Avatar</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Username</th>
+                                        <th>Email</th>
+                                        <th>Last Login</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-
-                <div class="card text-dark">
-                    <div class="card-header">
-                        <h3 class="card-title">Staff</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="staff-table" class="table table-bordered table-striped  table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Avatar</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Last Login</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-        
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Avatar</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
-                                    <th>Username</th>
-                                    <th>Email</th>
-                                    <th>Last Login</th>
-                                    
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
-
-
-    </div><!-- /.container-fluid -->
-</section>
-<!-- /.content -->
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 {% endblock main_content %}
-
 {% block custom_js %}
-<script src="{% static "multitenancy/users/js/staff.js" %}"></script>
+    <script src="{% static "multitenancy/users/js/staff.js" %}"></script>
 {% endblock custom_js %}

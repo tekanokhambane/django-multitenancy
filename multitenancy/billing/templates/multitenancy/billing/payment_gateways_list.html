@@ -1,77 +1,66 @@
 {% extends "multitenancy/admin/base.html" %}
 {% load static %}
-
-{% block page_title %}Manage Payment Gateways{% endblock page_title %}
-{%block breadcrumbs%}
-
-<li class="breadcrumb-item "><a href="{% url 'billing' %}">Billing</a></li>
-<li class="breadcrumb-item active">Payment Gateway</li>
-{% endblock%}
-
-
+{% block page_title %}
+    Manage Payment Gateways
+{% endblock page_title %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item ">
+        <a href="{% url 'billing' %}">Billing</a>
+    </li>
+    <li class="breadcrumb-item active">Payment Gateway</li>
+{% endblock %}
 {% block main_content %}
-
-<!-- Main content -->
-<section class="content">
-    <div class="container-fluid">
-        <!-- /.row -->
-        <div class="row">
-            <div class="col-md">
-                <div class="mb-5 mr-3">
-                    <form method="get" id="filter-form" class="input-group input-group-md" style="width: 250px;">
-                        <input type="text" name="q" class="form-control float-right" placeholder="Search payment gateway">
-                        <div class="input-group-append">
-                            <button type="submit" disabled id="" class="btn btn-success"><i
-                                    class="fas fa-search"></i></button>
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-md">
+                    <div class="mb-5 mr-3"></div>
+                </div>
+                <div class="col-md">
+                    <div class="mb-5 mr-3">
+                        <button type="button"
+                                class="btn btn-success shadow float-right"
+                                data-toggle="modal"
+                                data-target="#modal-lg">
+                            <i class="fas fa-cash-register"> </i> Add Payment Gateway
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="card text-dark">
+                        <div class="card-header">
+                            <h3 class="card-title">Payment Gateways</h3>
                         </div>
-                    </form>
-                </div>
-            </div>
-            <div class="col-md">
-                <div class="mb-5 mr-3">
-                    <button type="button" class="btn btn-success shadow float-right" data-toggle="modal"
-                        data-target="#modal-lg">
-                        <i class="fas fa-cash-register"> </i> Add Payment Gateway
-                    </button>
-
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <table id="payment-gateway-table"
+                                   class="table table-bordered table-striped  table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Default</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12">
-
-                <div class="card text-dark">
-                    <div class="card-header">
-                        <h3 class="card-title">Payment Gateways</h3>
-                    </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <table id="payment-gateway-table" class="table table-bordered table-striped  table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Description</th>
-                                    <th>Status</th>
-                                    <th>Default</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                            </tbody>
-
-                        </table>
-                    </div>
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
-<!-- /.content -->
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 {% endblock main_content %}
-
 {% block custom_js %}
-<script src="{% static "multitenancy/billing/js/gateways.js" %}"></script>
+    <script src="{% static "multitenancy/billing/js/gateways.js" %}"></script>
 {% endblock custom_js %}

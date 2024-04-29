@@ -1,44 +1,28 @@
 {% extends "multitenancy/admin/base.html" %}
 {% load bootstrap4 %}
-
-{% block page_title %}Create Staff{% endblock page_title %}
-
-{%block breadcrumbs%}
-<li class="breadcrumb-item " ><a href="{% url 'staff_list' %}">Staff</a></li>
-
-<li class="breadcrumb-item active">Create Staff</li>
-{% endblock%}
-
-
+{% block page_title %}
+    Create Staff
+{% endblock page_title %}
+{% block breadcrumbs %}
+    <li class="breadcrumb-item ">
+        <a href="{% url 'staff_list' %}">Staff</a>
+    </li>
+    <li class="breadcrumb-item active">Create Staff</li>
+{% endblock %}
 {% block main_content %}
-
-<!-- Main content -->
-<section class="content">
-    <div class="container text-dark">
-        <form method="POST" enctype="multipart/form-data">
-
-            <!-- Security token -->
-            {% csrf_token %}
-        
-            
-            {% bootstrap_field form.first_name %}
-            {% bootstrap_field form.last_name %}
-            {% bootstrap_field form.username %}
-            {% bootstrap_field form.email %}
-            {% bootstrap_field form.type %}
-            {% bootstrap_field form.password %}
-            
-            
-            <input type="submit" class="btn btn-info" value="Submit">
-            <a class="btn btn-danger text-light" href="{% url "staff_list" %}" >Cancel</a>
-        </form>
-        
-
-    </div><!-- /.container-fluid -->
-</section>
-<!-- /.content -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container text-dark">
+            <form method="POST" enctype="multipart/form-data">
+                <!-- Security token -->
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                <input type="submit" class="btn btn-info" value="Submit">
+                <a class="btn btn-danger text-light" href="{% url "staff_list" %}">Cancel</a>
+            </form>
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 {% endblock main_content %}
-
-{%block custom_js%}
-
-{%endblock%}
+{% block custom_js %}{% endblock %}
