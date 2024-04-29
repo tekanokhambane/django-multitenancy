@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 import datetime
+from django.utils import timezone
 from django.db import models
 from django.conf import settings
 from multitenancy.subscriptions.models import Subscription
@@ -28,10 +29,10 @@ class Coupon(models.Model):
         help_text="Discount amount",
     )
     start_date = models.DateField(
-        default=datetime.date.today, help_text="Start date of coupon validity"
+        default=timezone.now, help_text="Start date of coupon validity"
     )
     end_date = models.DateField(
-        default=datetime.date.today, help_text="End date of coupon validity"
+        null=True, blank=True, help_text="End date of coupon validity"
     )
     usage_limit = models.PositiveIntegerField(
         validators=[MinValueValidator(0)],
@@ -47,12 +48,14 @@ class Coupon(models.Model):
         help_text="Minimum order amount required to use the coupon",
     )
     redeem_by = models.DateField(
-        default=datetime.date.today,
+        default=timezone.now() + datetime.timedelta(days=30),
         help_text="Date by which the coupon must be redeemed",
     )
     usage_count = models.PositiveIntegerField(
         default=0,
         validators=[MinValueValidator(0)],
+        editable=False,
+        db_index=True,
         help_text="Number of times the coupon has been used",
     )
     # the valid_for field will have to be connected to a Product model
@@ -60,6 +63,14 @@ class Coupon(models.Model):
 
 
 class Order(models.Model):
+    """
+    Represents an order in the system, containing information about the order such as the user, date created, order number, amount, status, payment method, billing address, notes, and any associated coupon.
+
+    The `Order` model provides methods to retrieve various properties of the order, such as the total amount, status display, payment method display, billing address, notes, and coupon. It also provides methods to set and remove the coupon associated with the order.
+
+    The model also includes helper methods to check if the order is completed or failed.
+    """
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE
     )
