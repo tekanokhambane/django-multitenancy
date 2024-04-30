@@ -13,7 +13,7 @@
                 <div class="image"> 
                     <img src="{{details.logo.logo.url}}" href="{{details.info.website.url}}" height="100px" style="align-self: center; margin-bottom: 20px;" class="" alt="">
                 </div> 
-                <form method="POST" action="{% url "account_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
+                <form method="POST" action="{% url "accounts_signup" %}" autocapitalize="off" {% if form.is_multipart %} enctype="multipart/form-data"{% endif %}>
                     <legend class="">{% trans "Log in to an existing account" %}</legend>
 
                     <div class="" style="display: grid; grid-template-columns: repeat(2,1fr);gap: 20px;">

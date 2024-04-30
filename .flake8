@@ -1,6 +1,6 @@
 [flake8]
 max-line-length = 120
-exclude = .git,__pycache__,.tox,.eggs,*.egg,node_modules,env,.venv,migrations,docs, pinax,demo,tests,setup.py
+exclude = .git,__pycache__,.tox,.eggs,*.egg,node_modules,env,.venv,migrations,docs, multitenancy,demo,tests,setup.py
 import-order-style = pep8
 max-complexity = 20
 

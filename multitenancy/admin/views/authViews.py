@@ -65,6 +65,8 @@ class SignupView(account.views.SignupView):
                 "Configured auth backends failed to authenticate on signup"
             )
         auth.login(
-            self.request, user, backend="tenant_users.permissions.backend.UserBackend"
+            self.request,
+            user,
+            backend="account.auth_backends.EmailAuthenticationBackend",
         )
         self.request.session.set_expiry(0)

@@ -13,9 +13,7 @@ develop-eggs/
 dist/
 downloads/
 /tenantscrm
-/pinax
 manage.py
-/account
 /helpdesk
 eggs/
 .eggs/
