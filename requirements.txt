@@ -1,7 +1,7 @@
 oauthlib
 requests_oauthlib
 unidecode
-django==4.2
+django==4.2.11
 django-cogwheels
 django-bootstrap4==22.3
 django-polymorphic==3.1.0
