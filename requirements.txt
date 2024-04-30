@@ -1,7 +1,7 @@
 oauthlib
 requests_oauthlib
 unidecode
-django==3.2.25
+django==4.2
 django-cogwheels
 django-bootstrap4==22.3
 django-polymorphic==3.1.0
@@ -18,15 +18,15 @@ multitenancy-helpdesk==0.1.0b6
 django-crontab==0.7.1
 django-storages==1.11.1
 django-tenant-users==1.0.0
-django-tenants==3.3.2
+django-tenants==3.6.1
 django-timezone-field==4.2.1
-django-user-accounts==3.0.4
+django-user-accounts==3.3.1
 google-cloud-storage==2.1.0
 gunicorn==20.0.4
 django-environ==0.8.1
 django-formtools==2.3
 django-countries[pyuca]==7.5.1
-django-markdown-deux==1.0.5
+django-markdown-deux==1.0.6
 jsonfield==3.1.0
 channels==4.0.0
 django-select2==7.10.1

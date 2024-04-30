@@ -1,9 +1,10 @@
 import os
+import re
 import uuid
 from django.db import models
 from django.db.models import Q
 from tenant_users.tenants.models import UserProfile, UserProfileManager
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
@@ -41,6 +42,22 @@ class TenantUserQuerySet(models.QuerySet):
 
 
 class TenantUserManager(UserProfileManager):
+
+    def create_user(self, email=None, password=None, is_staff=False, **extra_fields):
+        if not email:
+            raise ValueError("Users must have an email address")
+
+        if email:
+            if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
+                raise ValueError("Invalid email address")
+
+        if not password:
+            user.set_unusable_password()
+        user = self.model(
+            email=self.normalize_email(email),
+        )
+        return super().create_user(email, password, is_staff, **extra_fields)
+
     def get_queryset(self):
         return TenantUserQuerySet(self.model, using=self._db)
 
@@ -98,18 +115,6 @@ class TenantUser(UserProfile):
         else:
             return False
 
-    def get_username(self) -> str:
-        uname = self.username
-        return uname
-
-    def add_role(self, role):
-        if role not in self.roles:
-            self.roles.append(role)
-
-    def remove_role(self, role):
-        if role in self.roles:
-            self.roles.remove(role)
-
 
 class AdminManager(models.Manager):
     def get_queryset(self, *args, **kwargs):
@@ -131,11 +136,6 @@ class CustomerManager(models.Manager):
 class Admin(TenantUser):
     objects = AdminManager()
 
-    @property
-    def get_profile(self):
-        profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
-        return profile
-
     def create_public_superuser(self, *args, **kwargs):
         UserTenantPermissions.objects.create(
             profile_id=self.pk, is_staff=True, is_superuser=True
@@ -147,6 +147,9 @@ class Admin(TenantUser):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = TenantUser.Types.ADMIN
+            self.create_public_superuser()
+        if not self.username:
+            self.username = self.email
 
         return super().save(*args, **kwargs)
 
@@ -162,11 +165,6 @@ class Staff(TenantUser):
     def account(self):
         return self.account
 
-    def add_user_perms(self, *args, **kwargs):
-        UserTenantPermissions.objects.create(
-            profile_id=self.pk, is_staff=True, is_superuser=False
-        )
-
     @property
     def get_profile(self):
         profile = Profile.objects.get_or_create(user_id=self.id, name=self.username)  # type: ignore
@@ -178,6 +176,8 @@ class Staff(TenantUser):
     def save(self, *args, **kwargs):
         if not self.pk:
             self.type = TenantUser.Types.STAFF
+        if not self.username:
+            self.username = self.email
         return super().save(*args, **kwargs)
 
 
@@ -204,6 +204,9 @@ def create_user_profile(sender, instance, created, **kwargs):
             Profile.objects.create(user=instance)
         elif instance.type == TenantUser.Types.STAFF:
             Profile.objects.create(user=instance)
+            # UserTenantPermissions.objects.create(
+            #     profile_id=instance.pk, is_staff=True, is_superuser=False
+            # )
 
 
 post_save.connect(create_user_profile, sender=TenantUser)
