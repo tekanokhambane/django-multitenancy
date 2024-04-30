@@ -1,0 +1,54 @@
+{% extends "multitenancy/admin/base.html" %}
+
+{% load bootstrap4 %}
+{% block custom_css %}
+    {{ form.media.css }}
+{% endblock custom_css %}
+
+
+{% block page_title %}Pay Refund{% endblock page_title %}
+
+{%block breadcrumbs%}
+<li class="breadcrumb-item " ><a href="{% url 'refunds_list' %}">Refunds</a></li>
+
+<li class="breadcrumb-item active">Pay Refund</li>
+{% endblock%}
+
+
+{% block main_content %}
+
+<!-- Main content -->
+<section class="content">
+    <div class="container text-dark">
+        <form method="POST" enctype="multipart/form-data">
+
+            <!-- Security token -->
+            {% csrf_token %}
+        
+            
+            {% bootstrap_field form.invoice %}
+            {% bootstrap_field form.amount %}
+            {% bootstrap_field form.reason %}
+            {% bootstrap_field form.status %}
+           
+            
+            
+            <input type="submit" class="btn btn-info" value="Submit">
+            <a class="btn btn-danger text-light" href="{% url "refunds_list" %}" >Cancel</a>
+        </form>
+        
+
+    </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+{% endblock main_content %}
+
+{% block scripts %}
+    
+{% endblock scripts %}
+
+{%block custom_js%}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {{ form.media.js }}
+    <script>
+{%endblock%}
