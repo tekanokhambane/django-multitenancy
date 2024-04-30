@@ -15,8 +15,12 @@
                 </div>
                 <div class="col-md">
                     <div class="mb-5 mr-3">
-                        <a href="{% url "create_staff" %}"
-                           class="btn btn-success text-light shadow float-right"><i class="fas fa-plus"></i> Invite User</i></a>
+                        <button type="button"
+                                class="btn btn-success text-light shadow float-right"
+                                data-toggle="modal"
+                                data-target="#modal-default">
+                            <i class="fas fa-plus"></i> Invite User</i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -62,6 +66,7 @@
                 </div>
             </div>
         </div>
+        {% include "multitenancy/users/includes/invite_user_modal.html" %}
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->

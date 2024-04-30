@@ -1,19 +1,29 @@
+from django.conf import settings
 from rest_framework import viewsets
 from django.shortcuts import render
 from rest_framework.decorators import api_view
-from django.http import HttpResponseRedirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls.base import reverse, reverse_lazy
 from rest_framework.reverse import reverse
 from rest_framework import permissions
+from django.core.mail import send_mail
 from account.mixins import LoginRequiredMixin
 from multitenancy.admin.views.baseViews import (
     AdminDeleteView,
     AdminCreateView,
     AdminUpdateView,
     AdminTemplateView,
+    AdminView,
 )
 from tenant_users.permissions.models import UserTenantPermissions
-from .forms import CustomerForm, CustomerUpdateForm, StaffForm, StaffUpdateForm
+from .forms import (
+    CustomerForm,
+    CustomerUpdateForm,
+    StaffForm,
+    StaffUpdateForm,
+    UserInviteForm,
+)
 from .serializers import UserSerializer
 from .models import Customer, TenantUser, Staff
 
@@ -69,36 +79,34 @@ class StaffListView(LoginRequiredMixin, AdminTemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
+        form = UserInviteForm()
+        context["form"] = form
         query = self.request.GET.get("q")
         f = TenantUser.objects.filter(type="Staff").search(query=query)
         context["filter"] = f
         return context
 
 
-class CreateStaffView(LoginRequiredMixin, AdminCreateView):
-    model = Staff
-    form_class = StaffForm
-    # success_url = '/admin/customers/'
-    success_url = reverse_lazy("staff_list", urlconf="multitenancy.urls")
-    template_name = "multitenancy/users/create_staff.html"
+class InviteUserView(LoginRequiredMixin, AdminView):
 
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs["initial"] = {"type": "Staff"}
-        return kwargs
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get("email")
+        if TenantUser.objects.filter(email=email).exists():
+            return JsonResponse({"success": False, "message": "User already exists"})
+        try:
+            subject = "Invitation to join staff"
 
-    # def get(self, request, *args, **kwargs):
-    #     form = self.form_class(initial={"type": "Staff"})
-    #     return render(request, "multitenancy/users/create_staff.html", {"form": form})
-
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        user = form.instance
-        user_permission = UserTenantPermissions.objects.create(
-            profile_id=user.pk, is_staff=True, is_superuser=False
-        )
-        user_permission.save()
-        return response
+            invite_link = request.scheme + "://" + request.get_host()
+            # use a template to write the message
+            message = (
+                f"Click here to join staff:  {invite_link}/admin/join-staff/{email}/"
+            )
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, message, from_email, [email])
+            return JsonResponse({"success": True, "message": "Invitation sent"})
+        except Exception as e:
+            print(e)
+            return JsonResponse({"success": False, "message": str(e)})
 
 
 class UpdateStaffView(LoginRequiredMixin, AdminUpdateView):
