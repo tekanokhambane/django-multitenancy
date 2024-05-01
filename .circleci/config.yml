@@ -17,7 +17,7 @@ jobs:
           command: |
             pip install --upgrade pip
             pip install coverage
-            pip install -r requirements.txt
+            pip install -r requirements-test.txt
       - run:
           name: Create Groups table
           command: |
