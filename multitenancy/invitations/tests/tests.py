@@ -12,8 +12,9 @@ User = get_user_model()
 class TestsJoinInvitation(TestCase):
 
     def setUp(self):
-        self.to_user = User.objects.create(username="foo1")
-        self.from_user = User.objects.create(username="foo2")
+        User.objects.all().delete()
+        self.to_user = User.objects.create(username="foo1", email="me2@you.com")
+        self.from_user = User.objects.create(username="foo2", email="mee@you.com")
         self.signup_code = SignupCode.create(email="me@you.com")
         self.signup_code.save()
         self.status = JoinInvitation.STATUS_ACCEPTED
@@ -39,7 +40,7 @@ class TestsManagement(TestCase):
         """
         Ensure correct number of invites after topoff.
         """
-        user = User.objects.create(username="eldarion")
+        user = User.objects.create(username="eldarion", email="eldarion@me.com")
         call_command("topoff_invites", "10")
         call_command("topoff_invites", "10")
         istat = InvitationStat.objects.get(user=user)

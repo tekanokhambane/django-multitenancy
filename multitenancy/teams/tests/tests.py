@@ -22,6 +22,7 @@ class BaseTeamTests(TestCase):
         )
 
     def setUp(self):
+        User.objects.all().delete()
         self.user = self.make_user("jtauber")
 
 
