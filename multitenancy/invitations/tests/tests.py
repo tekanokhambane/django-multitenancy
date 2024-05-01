@@ -4,7 +4,7 @@ from django.core.management import call_command
 from account.models import SignupCode
 from multitenancy.invitations.forms import InviteForm
 from multitenancy.invitations.models import InvitationStat, JoinInvitation
-from test_plus.test import TestCase
+from test_plus.tests import TestCase
 
 
 class TestsJoinInvitation(TestCase):

@@ -3,7 +3,7 @@ import json
 from django.contrib.auth.models import User
 
 from multitenancy.teams.models import Membership, Team, avatar_upload
-from test_plus.test import TestCase
+from test_plus.tests import TestCase
 
 
 class BaseTeamTests(TestCase):
