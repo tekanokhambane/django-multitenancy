@@ -1,10 +1,12 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 
 from account.models import SignupCode
 from multitenancy.invitations.forms import InviteForm
 from multitenancy.invitations.models import InvitationStat, JoinInvitation
 from test_plus.tests import TestCase
+
+User = get_user_model()
 
 
 class TestsJoinInvitation(TestCase):

@@ -1,9 +1,11 @@
 import json
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 from multitenancy.teams.models import Membership, Team, avatar_upload
 from test_plus.tests import TestCase
+
+User = get_user_model()
 
 
 class BaseTeamTests(TestCase):
