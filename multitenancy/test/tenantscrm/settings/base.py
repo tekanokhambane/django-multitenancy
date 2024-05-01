@@ -75,6 +75,7 @@ TENANT_TYPES = {
             "django.contrib.humanize",  # Required for elapsed time formatting
             "markdown_deux",  # Required for Knowledgebase item formatting
             "bootstrap4form",  # Required for nicer formatting of forms with the default templates
+            "helpdesk",
             # Django
             "django.contrib.sites",
             "django.contrib.admin",
