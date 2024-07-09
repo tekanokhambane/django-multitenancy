@@ -12,7 +12,6 @@ The aim of this project is to speed up the process of launch your saas app.
 </p>
 
 
-#### :warning: This package is still in its alpha stage and is not ready for production
 
 ![django-multitenancy screenshot](https://github.com/tekanokhambane/django-multitenancy/blob/main/.github/dango-multitenancy-screenshot.png)
 
