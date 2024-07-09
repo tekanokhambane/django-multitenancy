@@ -16,8 +16,8 @@ The aim of this project is to speed up the process of launch your saas app.
 ![django-multitenancy screenshot](https://github.com/tekanokhambane/django-multitenancy/blob/main/.github/dango-multitenancy-screenshot.png)
 
 ## Requirements
-- Python 3.6+
-- Django 3.0+
+- Python 3.10+
+- Django 4.2+
 
 ## Installation
 1. Clone the repository:
